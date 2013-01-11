@@ -13,7 +13,8 @@
     ],
     "autoload": {
         "psr-0": {
-            "itbz\\inroute": "src/"
+            "itbz\\inroute": "src/",
+            "itbz\\test": "tests/"
         }
     },
     "require": {
