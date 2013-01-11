@@ -20,7 +20,7 @@ namespace itbz\inroute;
  *
  * @package itbz\inroute
  */
-class DefaultCaller implements Caller
+class DefaultCaller implements CallerInterface
 {
     /**
      * {@inheritdoc}

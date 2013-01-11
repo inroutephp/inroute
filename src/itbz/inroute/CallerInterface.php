@@ -20,7 +20,7 @@ namespace itbz\inroute;
  *
  * @package itbz\inroute
  */
-interface Caller
+interface CallerInterface
 {
     /**
      * Call a system controller
