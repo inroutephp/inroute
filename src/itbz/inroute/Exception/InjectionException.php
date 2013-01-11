@@ -11,7 +11,7 @@
  * @package itbz\inroute
  */
 
-namespace itbz\inroute;
+namespace itbz\inroute\Exception;
 
 use itbz\inroute\Exception;
 
