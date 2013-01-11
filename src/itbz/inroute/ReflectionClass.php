@@ -43,7 +43,7 @@ class ReflectionClass extends \ReflectionClass
      */
     public function hasConstructor()
     {
-        return !!$this->getConstructor(); 
+        return !!$this->getConstructor();
     }
 
     /**
@@ -82,7 +82,7 @@ class ReflectionClass extends \ReflectionClass
         foreach ($docblock->getTagsByName('inject') as $tag) {
             $values = array_filter(explode(" ", $tag->getDescription()));
             $key = reset($values);
-            
+
             if (!isset($injections[$key])) {
                 $msg = "Trying to inject unknown paramater $key into {$this->getName()}";
                 throw new InjectionException($msg);
