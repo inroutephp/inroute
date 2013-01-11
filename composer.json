@@ -1,0 +1,22 @@
+{
+    "name": "itbz/inroute",
+    "description": "",
+    "keywords": [""],
+    "homepage": "https://github.com/itbz/inroute",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hannes Forsgård",
+            "email": "hannes.forsgard@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "itbz\\inroute": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
