@@ -1,7 +1,7 @@
 {
     "name": "itbz/inroute",
-    "description": "",
-    "keywords": [""],
+    "description": "DI container and router wrapper for powerful and easy REST development with PHP",
+    "keywords": ["Dependency Injection", "Router", "REST"],
     "homepage": "https://github.com/itbz/inroute",
     "type": "library",
     "license": "MIT",
