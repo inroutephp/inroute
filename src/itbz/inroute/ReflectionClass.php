@@ -24,6 +24,20 @@ use itbz\inroute\Exception\InjectionException;
 class ReflectionClass extends \ReflectionClass
 {
     /**
+     * All constructor parameters
+     *
+     * @var array
+     */
+    private $constructorParams;
+
+    /**
+     * Parameters required for injection to work
+     *
+     * @var array
+     */
+    private $requiredInjections;
+
+    /**
      * Check if the reflected class should be processed
      *
      * Classes to be processed must be tagged with the @inroute tag
@@ -58,42 +72,30 @@ class ReflectionClass extends \ReflectionClass
             return array();
         }
 
-        $injections = array();  // Array of injections to create for this class
-        $required = array();    // List of required parameters
-
-        // Loop over constructor parameters
-        foreach ($this->getConstructor()->getParameters() as $param) {
-            $key = '$' . $param->getName();
-            $class = $param->getClass();
-
-            if ($class) {
-                $injections[$key] = array('class' => $class->getName());
-            } else {
-                $injections[$key] = array('class' => '');
-            }
-
-            if (!$param->isOptional()) {
-                $required[$key] = true;
-            }
-        }
-
-        // Loop over docblock inject tags
+        $params = $this->getConstructorParams();
+        $required = $this->getRequiredInjections();
+        $injections = array();
         $docblock = new DocBlock($this->getConstructor());
-        foreach ($docblock->getTagsByName('inject') as $tag) {
-            $values = array_filter(explode(" ", $tag->getDescription()));
-            $key = reset($values);
 
-            if (!isset($injections[$key])) {
+        foreach ($docblock->getTagsByName('inject') as $tag) {
+            list($key, $factory) = array_filter(explode(" ", $tag->getDescription()));
+
+            if (!isset($params[$key])) {
                 $msg = "Trying to inject unknown paramater $key into {$this->getName()}";
                 throw new InjectionException($msg);
             }
 
-            $injections[$key]['factory'] = end($values);
-            unset($required[$key]);
-        }
+            $injections[$params[$key][0]] = array(      // Keep the original order
+                'name' => $key,
+                'class' => $params[$key][1],
+                'factory' => $factory
+            );
 
-        // Check if any required parameter is missing
-        if (!empty($required)) {
+            unset($required[$key]);                     // Requirement satisfied
+        }
+        ksort($injections);
+
+        if (!empty($required)) {                        // Is required parameter missing
             $param = key($required);
             $msg = "Parameter $param must be injected into {$this->getName()}";
             throw new InjectionException($msg);
@@ -118,13 +120,68 @@ class ReflectionClass extends \ReflectionClass
             if ($docblock->hasTag('route')) {
                 $tags = $docblock->getTagsByName('route');
                 $routes[] = array(
-                    'class' => $this->getName(),
-                    'method' => $method->getName(),
+                    'name' => $method->getName(),
                     'desc' => $tags[0]->getDescription()
                 );
             }
         }
 
         return $routes;
+    }
+
+    /**
+     * Get parameters required for injection to work
+     *
+     * @return array
+     */
+    public function getRequiredInjections()
+    {
+        if (!is_array($this->requiredInjections)) {
+            $this->parseConstructorParams();
+        }
+
+        return $this->requiredInjections;
+    }
+
+    /**
+     * Get array describing constructor parameters
+     *
+     * @return array
+     */
+    public function getConstructorParams()
+    {
+        if (!is_array($this->constructorParams)) {
+            $this->parseConstructorParams();
+        }
+
+        return $this->constructorParams;
+    }
+
+    /**
+     * Parse constructor parameters and fill private fields
+     *
+     * @return void
+     */
+    private function parseConstructorParams()
+    {
+        $this->requiredInjections = array();
+        $this->constructorParams = array();
+
+        if ($this->hasConstructor()) {
+            foreach ($this->getConstructor()->getParameters() as $count => $param) {
+                $key = '$' . $param->getName();
+                $class = $param->getClass();
+
+                if ($class) {
+                    $this->constructorParams[$key] = array($count, $class->getName());
+                } else {
+                    $this->constructorParams[$key] = array($count, '');
+                }
+
+                if (!$param->isOptional()) {
+                    $this->requiredInjections[$key] = true;
+                }
+            }
+        }
     }
 }

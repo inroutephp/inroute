@@ -39,4 +39,42 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $refl = new ReflectionClass('itbz\test\InjectedParameterMissing');
         $refl->getInjections();
     }
+
+    public function testGetRequiredInjections()
+    {
+        $refl = new ReflectionClass('itbz\test\Working');
+        $refl = new ReflectionClass('itbz\test\Working');
+        $expected = array(
+            '$bar' => true,
+            '$x' => true,
+        );
+        $this->assertEquals($expected, $refl->getRequiredInjections());
+    }
+
+    public function testGetInjections()
+    {
+        $refl = new ReflectionClass('itbz\test\Working');
+        $expected = array(
+            array(
+                'name' => '$bar',
+                'class' => 'DateTime',
+                'factory' => 'foobar'
+            ),
+            array(
+                'name' => '$x',
+                'class' => '',
+                'factory' => 'xfactory'
+            )
+        );
+        $this->assertEquals($expected, $refl->getInjections());
+    }
+
+    public function testGetRoutes()
+    {
+        $refl = new ReflectionClass('itbz\test\Working');
+        $routes = $refl->getRoutes();
+        $this->assertTrue(is_array($routes));
+        $this->assertEquals(2, count($routes));
+        $this->assertArrayHasKey('name', $routes[0]);
+    }
 }
