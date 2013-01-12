@@ -4,44 +4,35 @@ namespace itbz\inroute;
 
 include "vendor/autoload.php";
 
-/**
- * @inroute
- */
-class Controller
-{
-    /**
-     * @inject $a   someObjectFactory
-     * @inje ct $b someOtherFactory
-     * @inject     $c    yeah
-     */
-    public function __construct(SomeObject $a, $c)
-    {
-        $this->a = $a;
-    }
-
-    /**
-     * @route GET /domain/{:name}
-     */
-    public function view(Route $route)
-    {
-        var_dump($route);
-    }
-}
-
-// Jag håller på och skriver test för denna första del i ReflectionClassTest...
-
-$reflect = new ReflectionClass("itbz\inroute\Controller");
-
 header('Content-Type: text/plain');
 
-if ($reflect->isInroute()) {
-    print_r($reflect->getInjections());
-    print_r($reflect->getRoutes());
-}
+$factories =  array(
+    'itbz\test\Working' => array(
+        array(
+            'name' => '$bar',
+            'class' => 'DateTime',
+            'factory' => 'foobar'
+        ),
+        array(
+            'name' => '$x',
+            'class' => '',
+            'factory' => 'xfactory'
+        )
+    )
+);
 
+/*
+    fungerar inte alls om class är array, det måste jag specialbehandla någon stans..
+
+    jag tycker att skriva mina templates på detta sätt fungerar sådär
+        testa med mustache istället!
+
+        det är också bra för mig!
+ */
+
+include "src/itbz/inroute/Template/Dependencies.php";
 
 die();
-
 
 // @inject leder till kod i den här stilen
 class Dependencies
@@ -138,7 +129,6 @@ $routes = array(
 
     1) Titta på olika routers och bestämma mig för en
     2) Definiera Route-gränssnittet (och implementera för den router jag valt)
-    3) Hitta någon parser som kan parsa mina @inject och @route keywords (phpDocumentor ?)
     4) Kontrollera så att allt fungerar med namespaces
     5) Autogenerera kod med hjälp av enkla templates
     6) Skriv plasksite.php
