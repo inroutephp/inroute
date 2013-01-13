@@ -6,31 +6,57 @@ include "vendor/autoload.php";
 
 header('Content-Type: text/plain');
 
+
+// Reflection måste
+//    returnera data enligt formeln nedan
+//    se till att class inte kan vara array
+//    eftersom jag har signature så spelar inte ordningen på argumenten
+//          längre någon roll; här kan jag förenkla ReflectionClass..
+
 $factories =  array(
-    'itbz\test\Working' => array(
-        array(
-            'name' => '$bar',
-            'class' => 'DateTime',
-            'factory' => 'foobar'
-        ),
-        array(
-            'name' => '$x',
-            'class' => '',
-            'factory' => 'xfactory'
+    array(
+        'name' => 'itbz_test_Working',
+        'class' => 'itbz\test\Working',
+        'signature' => '$bar, $x',
+        'params' => array(
+            array(
+                'name' => '$bar',
+                'class' => 'DateTime',
+                'factory' => 'foobar'
+            ),
+            array(
+                'name' => '$x',
+                'class' => '',
+                'factory' => 'xfactory'
+            )
         )
     )
 );
 
-/*
-    fungerar inte alls om class är array, det måste jag specialbehandla någon stans..
+$template = 'class Dependencies {
+    private $container;
+    public function __construct($container) {
+        $this->container = $container;
+    }
+    {{#factories}}
+    function {{name}}{
+        {{#params}}
+        {{name}} = $this->container["{{factory}}"]();
+        {{#class}}
+        if (!{{name}} instanceof \{{class}}) {
+            throw new DependencyExpection("DI-container method \'{{factory}}\' must return a {{class}} instance.");
+        }
+        {{/class}}
+        {{/params}}
 
-    jag tycker att skriva mina templates på detta sätt fungerar sådär
-        testa med mustache istället!
+        return new \{{class}}({{signature}});
+    }
+    {{/factories}}
+}';
 
-        det är också bra för mig!
- */
 
-include "src/itbz/inroute/Template/Dependencies.php";
+$mustache = new \Mustache_Engine;
+echo $mustache->render($template, array('factories' => $factories));
 
 die();
 
@@ -59,41 +85,24 @@ class Dependencies
     }
 }
 
-
-// bogus..
-class Route {}
-class SomeObject {}
-
-
-// Ska egentligen skapas med hjälp av plask.json i plasksite.php (gateway)
 /*
-    I en json-konfigurationsfil så ska
-        sökvägen till en fil som returnerar en Caller finnas..
-        samt sökvägen till en fil som returnerar en container..
-        om vad DIC returnerar ska kontrolleras ska vara en inställning
+    Generator ska skapa en fil (inroute.php) som returnerar ett object som
+        är alla de genererade rutterna, och injektionerna
 
-    Dessa filer samt den autogenererade koden ska laddas i en gateway
-        plasksite.php (behöver inte läsa json, utan skapas från template...)
+    Sedan är det upp till användaren att köra dispatch med en url och $_server
+*/
 
-        Det ska vara upp till användaren att skriva en index.php där gateway anropas
-            jag vet inte om användaren använder mod_rewrite eller någon annan lösning
-            jag vill att användaren ska ha ett bra ställa att kicka in logg med
-                exemplevis monolog. (Gärna med aspects!! Så tycker jag att logning
-                ska implementeras, se till att mitt projekt har bra tänk för detta!!)
- */
-$wwwRoot = 'någon definierad root siten använder sig av..';
-$caller = new DefaultCaller;
-$container = array(
-    'someObjectFactory' => function(){
-        return new SomeObject;
-    }
+$inroute_json = array(
+    "root" => "github/inroute/",
+    "caller" => "itbz\\inroute\\DefaultCaller",
+    "DIC" => "project\\Container",
+    "source" => "project\\Controllers"
 );
-$deps = new Dependencies($container);
 
 
 // @route skapar kod i den här stilen
-$actionTest = function() use ($deps, $caller) {
-    $view = $deps->PlaskingView();
+$actionTest = function() use ($dependencies, $caller) {
+    $view = $dependencies->PlaskingView();
     
     // Ska egentligen hämtas från min router...
     // Jag vill skriva ett eget Route-object
@@ -105,10 +114,7 @@ $actionTest = function() use ($deps, $caller) {
     $caller->call(array($view, 'view'), $route);
 };
 
-// kär min lilla test..
-$actionTest();
 
-// Om jag väljer Aura-router..
 $routes = array(
     $wwwRoot . 'domain' => array(
         'routes' => array(
@@ -127,11 +133,10 @@ $routes = array(
 
     TODO:
 
-    1) Titta på olika routers och bestämma mig för en
+    1) Titta på olika routers och bestämma mig för en: Aura
     2) Definiera Route-gränssnittet (och implementera för den router jag valt)
     4) Kontrollera så att allt fungerar med namespaces
     5) Autogenerera kod med hjälp av enkla templates
-    6) Skriv plasksite.php
     7) Baka ihop allt i en phar att användas i build-cykel
 
 
@@ -140,13 +145,14 @@ $routes = array(
     
     development:
 
-    $plask = new Plask('plask.json');
-    $plask->run($requestUri, $_SERVER);
+    $builder = new InrouteBuilder('inroute.json');
+    $inroute = $builder->build();
+    $inroute->dispatch($requestUri, $_SERVER);
 
     production:
 
-    > php plask.phar build plask.json
-    $plask = include plasksite.php;
-    $plask->run($requestUri, $_SERVER);
+    > php inroute.phar build inroute.json
+    $inroute = include inroute.php;
+    $inroute->dispatch($requestUri, $_SERVER);
 
  */
