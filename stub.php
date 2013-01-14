@@ -28,13 +28,13 @@ $factories =  array(
     )
 );
 
-$template = 'class Dependencies {
+$depsTmpl = 'class Dependencies {
     private $container;
     public function __construct($container) {
         $this->container = $container;
     }
     {{#factories}}
-    function {{name}}{
+    function {{name}}(){
         {{#params}}
         {{name}} = $this->container["{{factory}}"]();
         {{#class}}
@@ -55,7 +55,56 @@ $template = 'class Dependencies {
 
 
 $mustache = new \Mustache_Engine;
-echo $mustache->render($template, array('factories' => $factories));
+echo $mustache->render($depsTmpl, array('factories' => $factories));
+
+echo "\n\n";
+
+
+// ROUTES, getRoutes måste returnera enligt rätt format!
+
+$routes = array(
+    array(
+        'name' => 'home',
+        'path' => '/',
+        'method' => 'GET',
+        'cntrlfactory' => 'itbz_test_Working',
+        'cntrlmethod' => 'foo'
+    )
+);
+
+$routeTmpl = 'function append_routes(\Aura\Router\Map $map, Dependencies $deps, CallerInterface $caller) {
+    {{#routes}}
+    $map->add("{{name}}", "{{root}}{{path}}", array(
+        "values" => array(
+            "method" => "{{method}}",
+            "controller" => function ($args) use ($map, $deps, $caller) {
+                $cntrl = $deps->{{cntrlfactory}}();
+                $route = createRouteObj(); //TODO
+                $caller->call(array($cntrl, "{{cntrlmethod}}"), $route);
+            }
+        )
+    ));
+    {{/routes}}
+    return $map;
+}';
+echo $mustache->render($routeTmpl, array('routes' => $routes, 'root' => '/root'));
+
+echo "\n\n";
+
+$static = '$pimple = "do real shit!!!";' . "\n";
+$static .= '$deps = new Dependencies($pimple);' . "\n";
+$static .= '$caller = new DefaultCaller();' . "\n";
+$static .= '$map = new \Aura\Router\Map();' . "\n";
+$static .= '$map = append_routes($map, $deps, $caller);' . "\n";
+$static .= 'return $map;' . "\n";
+
+echo $static;
+
+$source = $mustache->render($depsTmpl, array('factories' => $factories));
+$source .= $mustache->render($routeTmpl, array('routes' => $routes));
+$source .= $static;
+
+$map = eval($source);
 
 die();
 
@@ -66,6 +115,9 @@ die();
     Sedan är det upp till användaren att köra dispatch med en url och $_server
 */
 
+
+// Själva generator-classes ska ta dessa världen som argument
+// json ska bara läsas av min phar wrapper...
 $inroute_json = array(
     "root" => "github/inroute/",
     "caller" => "itbz\\inroute\\DefaultCaller",
@@ -73,44 +125,12 @@ $inroute_json = array(
     "source" => "project\\Controllers"
 );
 
-
-// @route skapar kod i den här stilen
-$actionTest = function() use ($dependencies, $caller) {
-    $view = $dependencies->PlaskingView();
-    
-    // Ska egentligen hämtas från min router...
-    // Jag vill skriva ett eget Route-object
-    //      så att jag kan byta mellan olika Routers utan
-    //      att användarkod behöver förändras...
-    $route = new Route;
-    $route->test = 'yeah';
-
-    $caller->call(array($view, 'view'), $route);
-};
-
-
-$routes = array(
-    $wwwRoot . 'domain' => array(
-        'routes' => array(
-            array(
-                'path' => '/{:name}',
-                'method' => array('GET'),
-                'values' => array(
-                    'action' => $actionTest
-                )
-            )
-        )
-    )
-);
-
 /*
 
     TODO:
 
-    1) Titta på olika routers och bestämma mig för en: Aura
     2) Definiera Route-gränssnittet (och implementera för den router jag valt)
     4) Kontrollera så att allt fungerar med namespaces
-    5) Autogenerera kod med hjälp av enkla templates
     7) Baka ihop allt i en phar att användas i build-cykel
 
 
