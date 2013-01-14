@@ -11,14 +11,14 @@ class Working
      * @inject $bar foobar
      * @inject $y xx
      */
-    public function __construct(Working $bar, array $x, $y = 'optional')
+    public function __construct(\DateTime $bar, array $x, $y = 'optional')
     {
     }
 
     /**
      * @route GET /domain/{:name}
      */
-    public function foo(Route $route)
+    public function foo($route)
     {
         var_dump($route);
     }
@@ -26,7 +26,7 @@ class Working
     /**
      * @route POST /domain/{:name}
      */
-    public function bar(Route $route)
+    public function bar($route)
     {
         var_dump($route);
     }

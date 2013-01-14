@@ -20,6 +20,14 @@
     "require": {
         "php": ">=5.3.0",
         "phpdocumentor/reflection-docblock": "dev-master",
-        "mustache/mustache": "2.*"
-    }
+        "mustache/mustache": "2.*",
+        "Aura/Router": "dev-master",
+        "pimple/pimple": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/itbz/Aura.Router"
+        }
+    ]
 }

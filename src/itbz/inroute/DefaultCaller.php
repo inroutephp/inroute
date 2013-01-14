@@ -30,7 +30,7 @@ class DefaultCaller implements CallerInterface
      *
      * @return void
      */
-    public function call($controller, Route $route)
+    public function call($controller, \Aura\Router\Route $route)
     {
         call_user_func($controller, $route);
     }

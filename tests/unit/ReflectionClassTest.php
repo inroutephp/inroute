@@ -52,7 +52,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             array(
                 'name' => '$bar',
-                'class' => 'itbz\test\Working',
+                'class' => 'DateTime',
                 'array' => false,
                 'factory' => 'foobar'
             ),
