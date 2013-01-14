@@ -6,13 +6,6 @@ include "vendor/autoload.php";
 
 header('Content-Type: text/plain');
 
-
-// Reflection måste
-//    returnera data enligt formeln nedan
-//    se till att class inte kan vara array
-//    eftersom jag har signature så spelar inte ordningen på argumenten
-//          längre någon roll; här kan jag förenkla ReflectionClass..
-
 $factories =  array(
     array(
         'name' => 'itbz_test_Working',
@@ -22,11 +15,13 @@ $factories =  array(
             array(
                 'name' => '$bar',
                 'class' => 'DateTime',
+                'array' => false,
                 'factory' => 'foobar'
             ),
             array(
                 'name' => '$x',
                 'class' => '',
+                'array' => true,
                 'factory' => 'xfactory'
             )
         )
@@ -47,8 +42,12 @@ $template = 'class Dependencies {
             throw new DependencyExpection("DI-container method \'{{factory}}\' must return a {{class}} instance.");
         }
         {{/class}}
+        {{#array}}
+        if (!is_array({{name}})) {
+            throw new DependencyExpection("DI-container method \'{{factory}}\' must return an array.");
+        }
+        {{/array}}
         {{/params}}
-
         return new \{{class}}({{signature}});
     }
     {{/factories}}
@@ -59,31 +58,6 @@ $mustache = new \Mustache_Engine;
 echo $mustache->render($template, array('factories' => $factories));
 
 die();
-
-// @inject leder till kod i den här stilen
-class Dependencies
-{
-    private $container;
-    public function __construct($container)
-    {
-        $this->container = $container;
-    }
-    function PlaskingView()
-    {
-        // Det här är ju inte helt Pimple. Fundera på vad jag vill kräva av världen...
-        $a = $this->container['someObjectFactory']();
-
-        // Detta test kan bli fel om projektet är i ett annat namespace
-        if (!$a instanceof SomeObject) {
-            $msg = 'DI-container method someObjectFactory must return a SomeObject instance.';
-            //throw new DependencyExpection($msg);
-            echo $msg;die();
-        }
-
-        // Detta kan också bli fel om projektet är i ett annat namespace
-        return new PlaskingView($a);
-    }
-}
 
 /*
     Generator ska skapa en fil (inroute.php) som returnerar ett object som

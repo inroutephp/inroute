@@ -28,14 +28,7 @@ class ReflectionClass extends \ReflectionClass
      *
      * @var array
      */
-    private $constructorParams;
-
-    /**
-     * Parameters required for injection to work
-     *
-     * @var array
-     */
-    private $requiredInjections;
+    private $params;
 
     /**
      * Check if the reflected class should be processed
@@ -60,48 +53,86 @@ class ReflectionClass extends \ReflectionClass
         return !!$this->getConstructor();
     }
 
+
+    /**
+     * Get array of constructor parameters of reflected class
+     *
+     * Array keys are the parameter names. Array values are arrays containing
+     * name, optional classname and flag if parameter is expected to be an
+     * array.
+     * 
+     * @return array
+     */
+    public function getConstructorParams()
+    {
+        if (!isset($this->params)) {
+            $this->params = array();
+            if ($this->hasConstructor()) {
+                foreach ($this->getConstructor()->getParameters() as $param) {
+                    $name = '$' . $param->getName();
+                    $class = $param->getClass();
+                    $classname = $class ? $class->getName() : '';
+                    $this->params[$name] = array(
+                        'name' => $name,
+                        'class' => $classname,
+                        'array' => $param->isArray()
+                    );
+                }
+            }
+        }
+
+        return $this->params;
+    }
+
+    /**
+     * Get constructor signature of reflected class
+     *
+     * Does not return a true signature. Class name is not included, nor are
+     * parameter types. Returns a string with is a list of comma separated
+     * parameter names.
+     * 
+     * @return string
+     */
+    public function getSignature()
+    {
+        return implode(', ', array_keys($this->getConstructorParams()));
+    }
+
     /**
      * Get a list of injections needed to instantiate relfected class
      *
-     * @return array
+     * Note that all constructor arguments must be injected, this includes
+     * parameters with default values (that on the language level are optional).
+     *
+     * @return array Returns an array of arrays, where the inner arrays contain
+     * name, class, array flag and factory values.
+     *
+     * @throws InjectionException If param found in @inject tag does not exist
+     * @throws InjectionException If any constructor parameter is not injected
      */
     public function getInjections()
     {
-        if (!$this->hasConstructor()) {
-
-            return array();
-        }
-
         $params = $this->getConstructorParams();
-        $required = $this->getRequiredInjections();
-        $injections = array();
+
         $docblock = new DocBlock($this->getConstructor());
-
         foreach ($docblock->getTagsByName('inject') as $tag) {
-            list($key, $factory) = array_filter(explode(" ", $tag->getDescription()));
-
-            if (!isset($params[$key])) {
-                $msg = "Trying to inject unknown paramater $key into {$this->getName()}";
+            list($name, $factory) = array_filter(explode(" ", $tag->getDescription()));
+            if (!isset($params[$name])) {
+                $msg = "Trying to inject unknown paramater $name into {$this->getName()}";
                 throw new InjectionException($msg);
             }
-
-            $injections[$params[$key][0]] = array(      // Keep the original order
-                'name' => $key,
-                'class' => $params[$key][1],
-                'factory' => $factory
-            );
-
-            unset($required[$key]);                     // Requirement satisfied
-        }
-        ksort($injections);
-
-        if (!empty($required)) {                        // Is required parameter missing
-            $param = key($required);
-            $msg = "Parameter $param must be injected into {$this->getName()}";
-            throw new InjectionException($msg);
+            $params[$name]['factory'] = $factory;
         }
 
-        return $injections;
+        // Is required parameter missing?
+        foreach ($params as $param) {
+            if (!isset($param['factory'])) {
+                $msg = "Parameter {$param['name']} must be injected into {$this->getName()}";
+                throw new InjectionException($msg);
+            }
+        }
+
+        return array_values($params);
     }
 
     /**
@@ -127,61 +158,5 @@ class ReflectionClass extends \ReflectionClass
         }
 
         return $routes;
-    }
-
-    /**
-     * Get parameters required for injection to work
-     *
-     * @return array
-     */
-    public function getRequiredInjections()
-    {
-        if (!is_array($this->requiredInjections)) {
-            $this->parseConstructorParams();
-        }
-
-        return $this->requiredInjections;
-    }
-
-    /**
-     * Get array describing constructor parameters
-     *
-     * @return array
-     */
-    public function getConstructorParams()
-    {
-        if (!is_array($this->constructorParams)) {
-            $this->parseConstructorParams();
-        }
-
-        return $this->constructorParams;
-    }
-
-    /**
-     * Parse constructor parameters and fill private fields
-     *
-     * @return void
-     */
-    private function parseConstructorParams()
-    {
-        $this->requiredInjections = array();
-        $this->constructorParams = array();
-
-        if ($this->hasConstructor()) {
-            foreach ($this->getConstructor()->getParameters() as $count => $param) {
-                $key = '$' . $param->getName();
-                $class = $param->getClass();
-
-                if ($class) {
-                    $this->constructorParams[$key] = array($count, $class->getName());
-                } else {
-                    $this->constructorParams[$key] = array($count, '');
-                }
-
-                if (!$param->isOptional()) {
-                    $this->requiredInjections[$key] = true;
-                }
-            }
-        }
     }
 }

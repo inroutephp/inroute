@@ -40,15 +40,10 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $refl->getInjections();
     }
 
-    public function testGetRequiredInjections()
+    public function testGetSignature()
     {
         $refl = new ReflectionClass('itbz\test\Working');
-        $refl = new ReflectionClass('itbz\test\Working');
-        $expected = array(
-            '$bar' => true,
-            '$x' => true,
-        );
-        $this->assertEquals($expected, $refl->getRequiredInjections());
+        $this->assertEquals('$bar, $x, $y', $refl->getSignature());
     }
 
     public function testGetInjections()
@@ -57,13 +52,21 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             array(
                 'name' => '$bar',
-                'class' => 'DateTime',
+                'class' => 'itbz\test\Working',
+                'array' => false,
                 'factory' => 'foobar'
             ),
             array(
                 'name' => '$x',
                 'class' => '',
+                'array' => true,
                 'factory' => 'xfactory'
+            ),
+            array(
+                'name' => '$y',
+                'class' => '',
+                'array' => false,
+                'factory' => 'xx'
             )
         );
         $this->assertEquals($expected, $refl->getInjections());

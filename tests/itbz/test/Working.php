@@ -9,8 +9,9 @@ class Working
     /**
      * @inject $x xfactory
      * @inject $bar foobar
+     * @inject $y xx
      */
-    public function __construct(\DateTime $bar, $x, $y = 'optional')
+    public function __construct(Working $bar, array $x, $y = 'optional')
     {
     }
 
