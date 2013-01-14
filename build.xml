@@ -52,7 +52,7 @@
             <fileset refid="filesetTests"/>
             <formatter type="full" outfile="${BUILD_DIR}/phpcs/sniff.txt"/>
             <formatter type="summary" outfile="${BUILD_DIR}/phpcs/sniff-summary.txt"/>
-            <formatter type="summary" usefile="false"/>
+            <formatter type="full" usefile="false"/>
         </phpcodesniffer>
     </target>
 
