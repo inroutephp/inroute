@@ -28,10 +28,12 @@ class DefaultCaller implements CallerInterface
      * @param mixed $controller Anything acceptable by call_user_func
      * @param Route $route
      *
-     * @return void
+     * @return mixed Whatewer the controller returns
+     *
+     * @todo Should take a special Inroute route object..
      */
     public function call($controller, \Aura\Router\Route $route)
     {
-        call_user_func($controller, $route);
+        return call_user_func($controller, $route);
     }
 }

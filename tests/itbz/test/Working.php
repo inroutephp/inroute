@@ -18,9 +18,9 @@ class Working
     /**
      * @route GET /domain/{:name}
      */
-    public function foo($route)
+    public function foo()
     {
-        var_dump($route);
+        return 'Working::foo';
     }
 
     /**
