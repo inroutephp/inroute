@@ -12,10 +12,10 @@ $mustache = new Mustache_Engine(array(
    'loader' => new Mustache_Loader_FilesystemLoader('src/itbz/inroute/Templates')
 ));
 
-$builder = new InrouteBuilder($mustache);
-$code = $builder->addFile('tests/itbz/test/Working.php')
+$generator = new RouterGenerator($mustache);
+$code = $generator->addFile('tests/itbz/test/Working.php')
     ->setRoot('/hej')
-    ->build();
+    ->generate();
 
 $inroute = eval($code);
 

@@ -18,7 +18,7 @@ use Mustache_Engine;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Inroute builder
+ * The Inrout router generator
  *
  * Takes user input and generates php code that returns a custom Inroute object.
  * User input includes files or directories to scan for classes, an optional
@@ -27,7 +27,7 @@ use Symfony\Component\Finder\Finder;
  * 
  * @package itbz\inroute
  */
-class InrouteBuilder
+class RouterGenerator
 {
     /**
      * Mustache instance
@@ -58,7 +58,7 @@ class InrouteBuilder
     private $caller = 'DefaultCaller';
 
     /**
-     * Inroute builder
+     * The Inrout router generator
      *
      * @param Mustache_Engine $mustache
      */
@@ -72,7 +72,7 @@ class InrouteBuilder
      *
      * @param string $dirname
      *
-     * @return InrouteBuilder instance for chaining
+     * @return RouterGenerator instance for chaining
      */
     public function addDir($dirname)
     {
@@ -90,7 +90,7 @@ class InrouteBuilder
      *
      * @param string $filename
      *
-     * @return InrouteBuilder instance for chaining
+     * @return RouterGenerator instance for chaining
      *
      * @throws RuntimeException If $filename is not readable
      */
@@ -116,7 +116,7 @@ class InrouteBuilder
      *
      * @param string $classname
      *
-     * @return InrouteBuilder instance for chaining
+     * @return RouterGenerator instance for chaining
      */
     public function addClass($classname)
     {
@@ -133,7 +133,7 @@ class InrouteBuilder
      *
      * @param string $root
      *
-     * @return InrouteBuilder instance for chaining
+     * @return RouterGenerator instance for chaining
      */
     public function setRoot($root)
     {
@@ -158,7 +158,7 @@ class InrouteBuilder
      *
      * @param string $caller
      *
-     * @return InrouteBuilder instance for chaining
+     * @return RouterGenerator instance for chaining
      */
     public function setCaller($caller)
     {
@@ -247,11 +247,11 @@ class InrouteBuilder
     }
 
     /**
-     * Build inroute code
+     * Generate code
      *
      * @return string The generated code
      */
-    public function build()
+    public function generate()
     {
         return $this->getDependencyContainerCode()
             . $this->getRouteCode()
