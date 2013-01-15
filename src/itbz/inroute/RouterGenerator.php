@@ -61,54 +61,14 @@ class RouterGenerator
      * The Inrout router generator
      *
      * @param Mustache_Engine $mustache
+     * @param ClassScanner $scan
      */
-    public function __construct(Mustache_Engine $mustache)
+    public function __construct(Mustache_Engine $mustache, ClassScanner $scan)
     {
         $this->mustache = $mustache;
-    }
-
-    /**
-     * Scan dir and process found classes
-     *
-     * @param string $dirname
-     *
-     * @return RouterGenerator instance for chaining
-     */
-    public function addDir($dirname)
-    {
-        $finder = new Finder();
-        $finder->in($dirname)->files()->name('*.php');
-        foreach ($finder as $file) {
-            $this->addFile($file->getRealpath());
-        }
-
-        return $this;
-    }
-
-    /**
-     * Scan file and process found classes
-     *
-     * @param string $filename
-     *
-     * @return RouterGenerator instance for chaining
-     *
-     * @throws RuntimeException If $filename is not readable
-     */
-    public function addFile($filename)
-    {
-        if (!file($filename) or !is_readable($filename)) {
-            $msg = "'$filename' is not a readable file";
-            throw new RuntimeExpection($msg);
-        }
-
-        $currentClasses = get_declared_classes();
-        include $filename;
-        $includedClasses = array_diff(get_declared_classes(), $currentClasses);
-        foreach ($includedClasses as $classname) {
+        foreach ($scan->getClasses() as $classname) {
             $this->addClass($classname);
         }
-
-        return $this;
     }
 
     /**
