@@ -109,7 +109,7 @@ class ClassScanner
      */
     public function addFile($filename)
     {
-        if (!file($filename) or !is_readable($filename)) {
+        if (!is_file($filename) or !is_readable($filename)) {
             $msg = "<$filename> is not a readable file";
             throw new RuntimeExpection($msg);
         }
