@@ -15,6 +15,7 @@ namespace itbz\inroute;
 
 use itbz\inroute\Exception\RuntimeExpection;
 use Mustache_Engine;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Inroute builder
@@ -67,28 +68,13 @@ class InrouteBuilder
      * @param string $dirname
      *
      * @return InrouteBuilder instance for chaining
-     *
-     * @throws RuntimeException If $dirname is not a directory
      */
     public function addDir($dirname)
     {
-        if (!is_dir($dirname) or !is_readable($dirname)) {
-            $msg = "'$dirname' is not a readable directory";
-            throw new RuntimeExpection($msg);
-        }
-
-        $directory = new \RecursiveDirectoryIterator($dirname);
-        $regexp = new \RegexIterator(
-            new \RecursiveIteratorIterator($directory),
-            '/^.+\.php$/i',
-            \RecursiveRegexIterator::GET_MATCH
-        );
-
-        foreach ($regexp as $object) {
-            $filename = current($object);
-            if (is_readable($filename)) {
-                $this->addFile($filename);
-            }
+        $finder = new Finder();
+        $finder->in($dirname)->files()->name('*.php');
+        foreach ($finder as $file) {
+            $this->addFile($file->getRealpath());
         }
 
         return $this;

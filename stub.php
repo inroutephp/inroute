@@ -23,7 +23,7 @@ echo $inroute->dispatch('/hej/', $_SERVER);
 
 // Builder ska ta dessa världen som argument, även som ett json-object...
 //      varför inte ett loader subpaket
-//      en FilesystemLoader
+//      en FilesystemLoader (injecta ett Finder object!)
 //      och en JsonLoader
 // json ska bara läsas av min phar wrapper...
 $inroute_json = array(

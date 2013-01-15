@@ -22,7 +22,8 @@
         "phpdocumentor/reflection-docblock": "dev-master",
         "mustache/mustache": "2.*",
         "Aura/Router": "dev-master",
-        "pimple/pimple": "dev-master"
+        "pimple/pimple": "dev-master",
+        "symfony/finder": "dev-master"
     },
     "repositories": [
         {
