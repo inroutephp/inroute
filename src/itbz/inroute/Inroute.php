@@ -48,7 +48,7 @@ class Inroute
      *
      * @return mixed Whatever the caller returns
      *
-     * @throws RuntimeException If no route is found
+     * @throws RuntimeExpection If no route is found
      */
     public function dispatch($path, array $server)
     {
@@ -57,7 +57,7 @@ class Inroute
 
         if (!$route) {
             $msg = "No route found for <$path>";
-            throw new RuntimeException($msg);
+            throw new RuntimeExpection($msg);
         }
 
         // TODO make special route object
