@@ -22,6 +22,12 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetFactoryName()
+    {
+        $refl = new ReflectionClass('itbz\test\NoConstructor');
+        $this->assertEquals('itbz_test_NoConstructor', $refl->getFactoryName());
+    }
+
     /**
      * @expectedException itbz\inroute\Exception\InjectionException
      */

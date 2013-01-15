@@ -1,0 +1,14 @@
+function append_routes(\Aura\Router\Map $map, Dependencies $deps, CallerInterface $caller) {
+    {{#routes}}
+    $map->add("{{name}}", "{{root}}{{path}}", array(
+        "values" => array(
+            "method" => "{{method}}",
+            "controller" => function ($route) use ($map, $deps, $caller) {
+                $cntrl = $deps->{{cntrlfactory}}();
+                return $caller->call(array($cntrl, "{{cntrlmethod}}"), $route);
+            }
+        )
+    ));
+    {{/routes}}
+    return $map;
+}

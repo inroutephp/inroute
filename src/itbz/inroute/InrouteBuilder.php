@@ -17,85 +17,45 @@ use itbz\inroute\Exception\RuntimeExpection;
 use Mustache_Engine;
 
 /**
- * @todo Templates borde läsas från någon extern fil, det här blir så rörigt.
- * Men hur ska det gå till??
+ * Inroute builder
+ *
+ * @package itbz\inroute
  */
 class InrouteBuilder
 {
-    private $dependeciesTemplate = <<<'END'
-namespace itbz\inroute;
-class Dependencies {
-    private $container;
-    public function __construct($container) {
-        $this->container = $container;
-    }
-    {{#factories}}
-    public function {{name}}(){
-        {{#params}}
-        {{name}} = $this->container["{{factory}}"];
-        {{#class}}
-        if (!{{name}} instanceof \{{class}}) {
-            throw new DependencyExpection("DI-container method '{{factory}}' must return a {{class}} instance.");
-        }
-        {{/class}}
-        {{#array}}
-        if (!is_array({{name}})) {
-            throw new DependencyExpection("DI-container method '{{factory}}' must return an array.");
-        }
-        {{/array}}
-        {{/params}}
-        return new \{{class}}({{signature}});
-    }
-    {{/factories}}
-}
-
-END;
-
-    private $routeTemplate = <<<'END'
-function append_routes(\Aura\Router\Map $map, Dependencies $deps, CallerInterface $caller) {
-    {{#routes}}
-    $map->add("{{name}}", "{{root}}{{path}}", array(
-        "values" => array(
-            "method" => "{{method}}",
-            "controller" => function ($route) use ($map, $deps, $caller) {
-                $cntrl = $deps->{{cntrlfactory}}();
-                return $caller->call(array($cntrl, "{{cntrlmethod}}"), $route);
-            }
-        )
-    ));
-    {{/routes}}
-    return $map;
-}
-
-END;
-
-    private $staticTemplate = <<<'END'
-$pimple = new \Pimple();
-$pimple['foobar'] = function ($c) {
-    return new \DateTime;
-};
-$pimple['xfactory'] = function ($c) {
-    return array();
-};
-$pimple['xx'] = function ($c) {
-    return 'xx';
-};
-$deps = new Dependencies($pimple);
-$caller = new {{caller}}();
-$map = new \Aura\Router\Map(new \Aura\Router\RouteFactory);
-$map = append_routes($map, $deps, $caller);
-return new Inroute($map);
-
-END;
-
+    /**
+     * Mustache instance
+     *
+     * @var Mustache_Engine
+     */
     private $mustache;
 
+    /**
+     * List of classes to process
+     *
+     * @var array
+     */
     private $reflectionClasses = array();
 
+    /**
+     * Root path
+     *
+     * @var string
+     */
     private $root = '';
 
+    /**
+     * Caller classname
+     *
+     * @var string
+     */
     private $caller = 'DefaultCaller';
 
+    /**
+     * Inroute builder
+     *
+     * @param Mustache_Engine $mustache
+     */
     public function __construct(Mustache_Engine $mustache)
     {
         $this->mustache = $mustache;
@@ -124,7 +84,8 @@ END;
             \RecursiveRegexIterator::GET_MATCH
         );
 
-        foreach ($regexp as $filename => $object) {
+        foreach ($regexp as $object) {
+            $filename = current($object);
             if (is_readable($filename)) {
                 $this->addFile($filename);
             }
@@ -176,6 +137,13 @@ END;
         return $this;
     }
 
+    /**
+     * Set root path
+     *
+     * @param string $root
+     *
+     * @return InrouteBuilder instance for chaining
+     */
     public function setRoot($root)
     {
         assert('is_string($root)');
@@ -184,11 +152,23 @@ END;
         return $this;
     }
 
+    /**
+     * Get root path
+     *
+     * @return string
+     */
     public function getRoot()
     {
         return $this->root;
     }
 
+    /**
+     * Set caller classname
+     *
+     * @param string $caller
+     *
+     * @return InrouteBuilder instance for chaining
+     */
     public function setCaller($caller)
     {
         assert('is_string($caller)');
@@ -197,37 +177,53 @@ END;
         return $this;
     }
 
+    /**
+     * Get caller classname
+     *
+     * @return string
+     */
     public function getCaller()
     {
         return $this->caller;
     }
 
+    /**
+     * Get loaded reflection classes
+     *
+     * @return array
+     */
     public function getReflectionClasses()
     {
         return $this->reflectionClasses;
     }
 
+    /**
+     * Get code for the generated DIC
+     *
+     * @return string
+     */
     public function getDependencyContainerCode()
     {
         $factories = array();
         foreach ($this->getReflectionClasses() as $refl) {
             $factories[] = array(
-                'name' => str_replace('\\', '_', $refl->getName()),
+                'name' => $refl->getFactoryName(),
                 'class' => $refl->getName(),
                 'signature' => $refl->getSignature(),
                 'params' => $refl->getInjections()
             );
         }
 
-        return $this->mustache->render(
-            $this->dependeciesTemplate,
-            array('factories' => $factories)
-        );
+        return $this->mustache->loadTemplate('Dependecies')
+            ->render(array('factories' => $factories));
     }
 
     /**
+     * Get code for the generated route map
+     *
+     * @return string
+     *
      * @todo ReflectionClass->getRoutes måste returnera enligt rätt form
-     * @todo str_replace görs på samma sätt på två ställen. Skriv som en funktion till ReflectionClass
      */
     public function getRouteCode()
     {
@@ -238,24 +234,25 @@ END;
                     'name' => $route['desc'],
                     'path' => '/',
                     'method' => 'GET',
-                    'cntrlfactory' => str_replace('\\', '_', $refl->getName()),
+                    'cntrlfactory' => $refl->getFactoryName(),
                     'cntrlmethod' => $route['name']
                 );
             }
         }
 
-        return $this->mustache->render(
-            $this->routeTemplate,
-            array('routes' => $routes, 'root' => $this->getRoot())
-        );
+        return $this->mustache->loadTemplate('routes')
+            ->render(array('routes' => $routes, 'root' => $this->getRoot()));
     }
 
+    /**
+     * Get static bootstrap code
+     *
+     * @return string
+     */
     public function getStaticCode()
     {
-        return $this->mustache->render(
-            $this->staticTemplate,
-            array('caller' => $this->getCaller())
-        );
+        return $this->mustache->loadTemplate('static')
+            ->render(array('caller' => $this->getCaller()));
     }
 
     /**

@@ -1,0 +1,25 @@
+namespace itbz\inroute;
+class Dependencies {
+    private $container;
+    public function __construct($container) {
+        $this->container = $container;
+    }
+    {{#factories}}
+    public function {{name}}(){
+        {{#params}}
+        {{name}} = $this->container["{{factory}}"];
+        {{#class}}
+        if (!{{name}} instanceof \{{class}}) {
+            throw new DependencyExpection("DI-container method '{{factory}}' must return a {{class}} instance.");
+        }
+        {{/class}}
+        {{#array}}
+        if (!is_array({{name}})) {
+            throw new DependencyExpection("DI-container method '{{factory}}' must return an array.");
+        }
+        {{/array}}
+        {{/params}}
+        return new \{{class}}({{signature}});
+    }
+    {{/factories}}
+}

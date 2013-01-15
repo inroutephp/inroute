@@ -53,6 +53,15 @@ class ReflectionClass extends \ReflectionClass
         return !!$this->getConstructor();
     }
 
+    /**
+     * Get name usable for naming methods
+     *
+     * @return string
+     */
+    public function getFactoryName()
+    {
+        return str_replace('\\', '_', $this->getName());
+    }
 
     /**
      * Get array of constructor parameters of reflected class
