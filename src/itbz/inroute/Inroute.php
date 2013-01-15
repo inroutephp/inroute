@@ -19,6 +19,9 @@ use itbz\inroute\Exception\RuntimeExpection;
 /**
  * Inroute base class
  *
+ * This class should not be instantiated directly. Instead use RouterGenerator
+ * to generate code that returns a customized Inroute object.
+ * 
  * @package itbz\inroute
  */
 class Inroute
