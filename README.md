@@ -11,9 +11,7 @@ DI container and router wrapper for powerful and easy REST development with PHP
         "dirs": "src"
     }
 
-## Inline invokction
-
-    <?php
+## Inline invocation using the composer autoloader
 
     include "vendor/autoload.php";
 
@@ -24,7 +22,6 @@ DI container and router wrapper for powerful and easy REST development with PHP
 
 ## Controller
 
-    <?php
     namespace itbz\test;
     use itbz\inroute\Route;
 
@@ -61,7 +58,6 @@ DI container and router wrapper for powerful and easy REST development with PHP
 
 ## DI-container
 
-    <?php
     namespace itbz\test;
 
     class Container extends \Pimple
