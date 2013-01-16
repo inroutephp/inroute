@@ -1,0 +1,14 @@
+{
+    "root": "",
+    "caller": "DefaultCaller",
+    "container": "\\itbz\\test\\Container",
+    "prefixes": [
+        "php"
+    ],
+    "dirs": [
+    ],
+    "files": [
+        "tests/itbz/test/Working.php"
+    ],
+    "templatedir": "src/itbz/inroute/Templates"
+}

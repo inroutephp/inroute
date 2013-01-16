@@ -76,12 +76,12 @@ class InrouteFacade
     /**
      * User access class for the inroute package
      *
-     * @param array $settings
+     * @param string $filename Name of json settings file
      */
-    public function __construct(array $settings = null)
+    public function __construct($filename)
     {
-        if ($settings) {
-            $this->loadSettings($settings);
+        if ($filename) {
+            $this->loadSettings((array)json_decode(file_get_contents($filename)));
         }
     }
 
