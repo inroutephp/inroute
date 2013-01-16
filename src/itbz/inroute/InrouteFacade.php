@@ -80,6 +80,7 @@ class InrouteFacade
      */
     public function __construct($filename)
     {
+        $this->templatedir = __DIR__ . DIRECTORY_SEPARATOR . 'Templates';
         if ($filename) {
             $this->loadSettings((array)json_decode(file_get_contents($filename)));
         }

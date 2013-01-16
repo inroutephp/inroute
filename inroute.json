@@ -9,6 +9,5 @@
     ],
     "files": [
         "tests/itbz/test/Working.php"
-    ],
-    "templatedir": "src/itbz/inroute/Templates"
+    ]
 }
