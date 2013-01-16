@@ -147,6 +147,11 @@ class ReflectionClass extends \ReflectionClass
     /**
      * Get a list of routes defined in relfected class
      *
+     * The @route tag is definied as $route [method] [path]. [method] can be
+     * a comma separeted list of http methods. Note that the list must NOT
+     * contain any spaces. [path] is a path template and may contain regular
+     * expressions matching subpaths.
+     * 
      * @return array
      */
     public function getRoutes()
@@ -159,9 +164,13 @@ class ReflectionClass extends \ReflectionClass
             $docblock = new DocBlock($method);
             if ($docblock->hasTag('route')) {
                 $tags = $docblock->getTagsByName('route');
+                list($httpmethod, $path) = array_filter(
+                    explode(" ", $tags[0]->getDescription())
+                );
                 $routes[] = array(
                     'name' => $method->getName(),
-                    'desc' => $tags[0]->getDescription()
+                    'httpmethod' => explode(',', $httpmethod),
+                    'path' => $path
                 );
             }
         }

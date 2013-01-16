@@ -67,4 +67,4 @@ $code = $generator->setRoot($settings['wwwroot'])
 
 $inroute = eval($code);
 
-echo $inroute->dispatch('/', $_SERVER);
+echo $inroute->dispatch('/domain/yeah', $_SERVER);

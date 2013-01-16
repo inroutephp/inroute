@@ -174,8 +174,6 @@ class RouterGenerator
      * Get code for the generated route map
      *
      * @return string
-     *
-     * @todo ReflectionClass->getRoutes måste returnera enligt rätt form
      */
     public function getRouteCode()
     {
@@ -183,9 +181,9 @@ class RouterGenerator
         foreach ($this->getReflectionClasses() as $refl) {
             foreach ($refl->getRoutes() as $route) {
                 $routes[] = array(
-                    'name' => $route['desc'],
-                    'path' => '/',
-                    'method' => 'GET',
+                    'name' => $route['name'],
+                    'path' => $route['path'],
+                    'method' => $route['httpmethod'],
                     'cntrlfactory' => $refl->getFactoryName(),
                     'cntrlmethod' => $route['name']
                 );
@@ -204,10 +202,12 @@ class RouterGenerator
     public function getStaticCode()
     {
         return $this->mustache->loadTemplate('static')
-            ->render(array(
-                'caller' => $this->caller,
-                'container' => $this->container
-            ));
+            ->render(
+                array(
+                    'caller' => $this->caller,
+                    'container' => $this->container
+                )
+            );
     }
 
     /**
