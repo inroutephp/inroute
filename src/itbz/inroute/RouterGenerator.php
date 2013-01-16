@@ -140,16 +140,6 @@ class RouterGenerator
     }
 
     /**
-     * Get loaded reflection classes
-     *
-     * @return array
-     */
-    public function getReflectionClasses()
-    {
-        return $this->reflectionClasses;
-    }
-
-    /**
      * Get code for the generated DIC
      *
      * @return string
@@ -157,7 +147,7 @@ class RouterGenerator
     public function getDependencyContainerCode()
     {
         $factories = array();
-        foreach ($this->getReflectionClasses() as $refl) {
+        foreach ($this->reflectionClasses as $refl) {
             $factories[] = array(
                 'name' => $refl->getFactoryName(),
                 'class' => $refl->getName(),
@@ -166,7 +156,7 @@ class RouterGenerator
             );
         }
 
-        return $this->mustache->loadTemplate('Dependecies')
+        return $this->mustache->loadTemplate('Dependencies')
             ->render(array('factories' => $factories));
     }
 
@@ -178,7 +168,7 @@ class RouterGenerator
     public function getRouteCode()
     {
         $routes = array();
-        foreach ($this->getReflectionClasses() as $refl) {
+        foreach ($this->reflectionClasses as $refl) {
             foreach ($refl->getRoutes() as $route) {
                 $routes[] = array(
                     'name' => $route['name'],
