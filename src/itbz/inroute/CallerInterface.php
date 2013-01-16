@@ -30,5 +30,5 @@ interface CallerInterface
      *
      * @return void
      */
-    public function call($controller, \Aura\Router\Route $route);
+    public function call($controller, Route $route);
 }

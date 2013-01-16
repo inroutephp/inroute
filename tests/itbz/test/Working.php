@@ -1,6 +1,8 @@
 <?php
 namespace itbz\test;
 
+use itbz\inroute\Route;
+
 /**
  * @inroute
  */
@@ -16,17 +18,17 @@ class Working
     }
 
     /**
-     * @route GET /domain/{:name}
+     * @route GET /foo/{:name}
      */
-    public function foo()
+    public function foo(Route $route)
     {
         return 'Working::foo';
     }
 
     /**
-     * @route POST /domain/{:name}
+     * @route POST /bar/{:name}
      */
-    public function bar($route)
+    public function bar(Route $route)
     {
         var_dump($route);
     }

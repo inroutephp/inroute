@@ -56,15 +56,15 @@ class Inroute
     public function dispatch($path, array $server)
     {
         assert('is_string($path)');
-        $route = $this->map->match($path, $server);
+        $auraroute = $this->map->match($path, $server);
 
-        if (!$route) {
+        if (!$auraroute) {
             $msg = "No route found for <$path>";
             throw new RuntimeExpection($msg);
         }
 
-        // TODO make special route object
+        $route = new Route($auraroute, $this->map);
 
-        return $route->values['controller']($route);
+        return $auraroute->values['controller']($route);
     }
 }

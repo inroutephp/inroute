@@ -9,6 +9,19 @@ use Symfony\Component\Finder\Finder;
 include "vendor/autoload.php";
 header('Content-Type: text/plain');
 
+/*
+hur ska mitt speciella route object se ut??
+
+hur använde jag min route i mreg? kanske kan jag se där vad som krävs...
+
+    $route->generate('foo', array('values'));
+
+    generate utan något argument ska till aura\route->generate
+
+    $route->getMethods(); // array of methods..
+
+*/
+
 class Cont extends \Pimple
 {
     public function __construct()
@@ -67,4 +80,4 @@ $code = $generator->setRoot($settings['wwwroot'])
 
 $inroute = eval($code);
 
-echo $inroute->dispatch('/domain/yeah', $_SERVER);
+echo $inroute->dispatch('/foo/yeah', $_SERVER);

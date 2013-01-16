@@ -29,10 +29,8 @@ class DefaultCaller implements CallerInterface
      * @param Route $route
      *
      * @return mixed Whatewer the controller returns
-     *
-     * @todo Should take a special Inroute route object..
      */
-    public function call($controller, \Aura\Router\Route $route)
+    public function call($controller, Route $route)
     {
         return call_user_func($controller, $route);
     }
