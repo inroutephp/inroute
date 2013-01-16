@@ -36,7 +36,7 @@ class InrouteFacade
      *
      * @var array|string
      */
-    private $prefixes;
+    private $prefixes = array('php');
 
     /**
      * Directories to scan for classes
@@ -57,7 +57,7 @@ class InrouteFacade
      *
      * @var string
      */
-    private $root;
+    private $root = '';
 
     /**
      * Caller classname
@@ -80,7 +80,7 @@ class InrouteFacade
      */
     public function __construct($filename)
     {
-        $this->templatedir = __DIR__ . DIRECTORY_SEPARATOR . 'Templates';
+        $this->setTemplatedir(__DIR__ . DIRECTORY_SEPARATOR . 'Templates');
         if ($filename) {
             $this->loadSettings((array)json_decode(file_get_contents($filename)));
         }
@@ -95,6 +95,7 @@ class InrouteFacade
      */
     public function setTemplateDir($templatedir)
     {
+        assert('is_string($templatedir)');
         $this->templatedir = $templatedir;
 
         return $this;
@@ -109,6 +110,7 @@ class InrouteFacade
      */
     public function setPrefixes($prefixes)
     {
+        assert('is_string($prefixes) || is_array($prefixes)');
         $this->prefixes = $prefixes;
 
         return $this;
@@ -123,6 +125,7 @@ class InrouteFacade
      */
     public function setDirs($dirs)
     {
+        assert('is_string($dirs) || is_array($dirs)');
         $this->dirs = $dirs;
 
         return $this;
@@ -137,6 +140,7 @@ class InrouteFacade
      */
     public function setFiles($files)
     {
+        assert('is_string($files) || is_array($files)');
         $this->files = $files;
 
         return $this;
@@ -151,6 +155,7 @@ class InrouteFacade
      */
     public function setRoot($root)
     {
+        assert('is_string($root)');
         $this->root = $root;
 
         return $this;
@@ -165,6 +170,7 @@ class InrouteFacade
      */
     public function setCaller($caller)
     {
+        assert('is_string($caller)');
         $this->caller = $caller;
 
         return $this;
@@ -179,6 +185,7 @@ class InrouteFacade
      */
     public function setContainer($container)
     {
+        assert('is_string($container)');
         $this->container = $container;
 
         return $this;
