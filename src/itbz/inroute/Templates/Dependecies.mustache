@@ -1,7 +1,7 @@
 namespace itbz\inroute;
 class Dependencies {
     private $container;
-    public function __construct($container) {
+    public function __construct(\Pimple $container) {
         $this->container = $container;
     }
     {{#factories}}

@@ -1,14 +1,4 @@
-$pimple = new \Pimple();
-$pimple['foobar'] = function ($c) {
-    return new \DateTime;
-};
-$pimple['xfactory'] = function ($c) {
-    return array();
-};
-$pimple['xx'] = function ($c) {
-    return 'xx';
-};
-$deps = new Dependencies($pimple);
+$deps = new Dependencies({{container}});
 $caller = new {{caller}}();
 $map = new \Aura\Router\Map(new \Aura\Router\RouteFactory);
 $map = append_routes($map, $deps, $caller);

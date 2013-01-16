@@ -15,7 +15,6 @@ namespace itbz\inroute;
 
 use itbz\inroute\Exception\RuntimeExpection;
 use Mustache_Engine;
-use Symfony\Component\Finder\Finder;
 
 /**
  * The Inrout router generator
@@ -48,7 +47,7 @@ class RouterGenerator
      *
      * @var string
      */
-    private $root = '';
+    private $root;
 
     /**
      * Caller classname
@@ -56,6 +55,13 @@ class RouterGenerator
      * @var string
      */
     private $caller = 'DefaultCaller';
+
+    /**
+     * Container classname
+     *
+     * @var string
+     */
+    private $container;
 
     /**
      * The Inrout router generator
@@ -104,16 +110,6 @@ class RouterGenerator
     }
 
     /**
-     * Get root path
-     *
-     * @return string
-     */
-    public function getRoot()
-    {
-        return $this->root;
-    }
-
-    /**
      * Set caller classname
      *
      * @param string $caller
@@ -129,13 +125,18 @@ class RouterGenerator
     }
 
     /**
-     * Get caller classname
+     * Set container classname
      *
-     * @return string
+     * @param string $container
+     *
+     * @return RouterGenerator instance for chaining
      */
-    public function getCaller()
+    public function setContainer($container)
     {
-        return $this->caller;
+        assert('is_string($container)');
+        $this->container = 'new ' . $container;
+
+        return $this;
     }
 
     /**
@@ -192,7 +193,7 @@ class RouterGenerator
         }
 
         return $this->mustache->loadTemplate('routes')
-            ->render(array('routes' => $routes, 'root' => $this->getRoot()));
+            ->render(array('routes' => $routes, 'root' => $this->root));
     }
 
     /**
@@ -203,7 +204,10 @@ class RouterGenerator
     public function getStaticCode()
     {
         return $this->mustache->loadTemplate('static')
-            ->render(array('caller' => $this->getCaller()));
+            ->render(array(
+                'caller' => $this->caller,
+                'container' => $this->container
+            ));
     }
 
     /**

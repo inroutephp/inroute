@@ -9,31 +9,62 @@ use Symfony\Component\Finder\Finder;
 include "vendor/autoload.php";
 header('Content-Type: text/plain');
 
+class Cont extends \Pimple
+{
+    public function __construct()
+    {
+        $this['foobar'] = function ($c) {
+            return new \DateTime;
+        };
+        $this['xfactory'] = function ($c) {
+            return array();
+        };
+        $this['xx'] = function ($c) {
+            return 'xx';
+        };
+    }
+}
+
+$settings = array(
+    'wwwroot' => '',
+    'caller' => 'DefaultCaller',
+    'container' => 'Cont',
+    // Tre stycken som kan vara både array eller sträng...
+    'prefixes' => array(
+        'php'
+    ),
+    'dirs' => array(
+    ),
+    'files' => 'tests/itbz/test/Working.php',
+    'templatesdir' => 'src/itbz/inroute/Templates'
+);
+
 $mustache = new Mustache_Engine(array(
-   'loader' => new Mustache_Loader_FilesystemLoader('src/itbz/inroute/Templates')
+   'loader' => new Mustache_Loader_FilesystemLoader($settings['templatesdir'])
 ));
 
 $scanner = new ClassScanner(new Finder);
-$scanner->addPrefix('php')
-    ->addFile('tests/itbz/test/Working.php');
+
+foreach ((array) $settings['prefixes'] as $prefix) {
+    $scanner->addPrefix($prefix);
+}
+
+foreach ((array) $settings['dirs'] as $dirname) {
+    $scanner->addDir($dirname);
+}
+
+foreach ((array) $settings['files'] as $filename) {
+    $scanner->addFile($filename);
+}
 
 $generator = new RouterGenerator($mustache, $scanner);
-$code = $generator->setRoot('/hej')
+$code = $generator->setRoot($settings['wwwroot'])
+    ->setCaller($settings['caller'])
+    ->setContainer($settings['container'])
     ->generate();
+
+
 
 $inroute = eval($code);
 
-echo $inroute->dispatch('/hej/', $_SERVER);
-
-
-// Builder ska ta dessa världen som argument, även som ett json-object...
-//      varför inte ett loader subpaket
-//      en FilesystemLoader (injecta ett Finder object!)
-//      och en JsonLoader
-// json ska bara läsas av min phar wrapper...
-$inroute_json = array(
-    "root" => "github/inroute/",
-    "caller" => "itbz\\inroute\\DefaultCaller",
-    "DIC" => "project\\Container",
-    "source" => "project\\Controllers"
-);
+echo $inroute->dispatch('/', $_SERVER);
