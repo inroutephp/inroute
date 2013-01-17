@@ -5,6 +5,7 @@ include "vendor/autoload.php";
 header('Content-Type: text/plain');
 
 /*
+    - composer-beroenden ska ha ordentliga versionsnummer. inget dev-master
     - skapa Phar som undermodul. Innehåller bland annat Compiler som bygger phar
     - Inroute.phar ska versionshanteras
     - "target"-inställning till json (att användas av phar)
