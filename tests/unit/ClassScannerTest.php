@@ -6,7 +6,7 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException itbz\inroute\Exception\RuntimeExpection
      */
-    public function testAddFileException()
+    public function testAddUnreadableFileException()
     {
         $finder = $this->getMock(
             'Symfony\Component\Finder\Finder',
@@ -17,6 +17,23 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
         );
         $scanner = new ClassScanner($finder);
         $scanner->addFile('foobar');
+    }
+
+    /**
+     * @expectedException itbz\inroute\Exception\RuntimeExpection
+     */
+    public function testAddIncludedFileException()
+    {
+        $finder = $this->getMock(
+            'Symfony\Component\Finder\Finder',
+            array(),
+            array(),
+            '',
+            false
+        );
+        $scanner = new ClassScanner($finder);
+        // Include this file with is already included...
+        $scanner->addFile(__DIR__ . '/ClassScannerTest.php');
     }
 
     public function testAddFile()

@@ -106,6 +106,7 @@ class ClassScanner
      * @return ClassScanner instance for chaining
      *
      * @throws RuntimeException If $filename is not readable
+     * @throws RuntimeException If $filename is already included
      */
     public function addFile($filename)
     {
@@ -114,8 +115,13 @@ class ClassScanner
             throw new RuntimeExpection($msg);
         }
 
+        if (in_array(realpath($filename), get_included_files())) {
+            $msg = "<$filename> can not be scanned: already included.";
+            throw new RuntimeExpection($msg);
+        }
+
         $currentClasses = get_declared_classes();
-        include $filename;
+        include_once $filename;
 
         $this->classes = array_merge(
             $this->classes,
