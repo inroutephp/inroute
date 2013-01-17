@@ -9,7 +9,7 @@ header('Content-Type: text/plain');
     - Inroute.phar ska versionshanteras
 */
 
-$facade = new \itbz\inroute\InrouteFacade();
+$facade = new \itbz\inroute\InrouteFactory();
 $facade->loadSettings((array)json_decode(file_get_contents('inroute.json')));
 $inroute = eval($facade->generate());
 

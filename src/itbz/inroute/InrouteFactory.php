@@ -22,7 +22,7 @@ use Symfony\Component\Finder\Finder;
  *
  * @package itbz\inroute
  */
-class InrouteFacade
+class InrouteFactory
 {
     /**
      * Inroute settings
@@ -56,7 +56,7 @@ class InrouteFacade
     /**
      * User access class for the inroute package
      *
-     * InrouteFacade works both in an injectionist and a standalone way. You
+     * InrouteFactory works both in an injectionist and a standalone way. You
      * may inject a mustache enginge and a ClassScanner, if not facade will try
      * to create it for you.
      *
@@ -117,7 +117,7 @@ class InrouteFacade
      *
      * @param string|array $prefixes
      *
-     * @return InrouteFacade instance for chaining
+     * @return InrouteFactory instance for chaining
      */
     public function setPrefixes($prefixes)
     {
@@ -132,7 +132,7 @@ class InrouteFacade
      *
      * @param string|array $dirs
      *
-     * @return InrouteFacade instance for chaining
+     * @return InrouteFactory instance for chaining
      */
     public function setDirs($dirs)
     {
@@ -147,7 +147,7 @@ class InrouteFacade
      *
      * @param string|array $files
      *
-     * @return InrouteFacade instance for chaining
+     * @return InrouteFactory instance for chaining
      */
     public function setFiles($files)
     {
@@ -162,7 +162,7 @@ class InrouteFacade
      *
      * @param string|array $classes
      *
-     * @return InrouteFacade instance for chaining
+     * @return InrouteFactory instance for chaining
      */
     public function setClasses($classes)
     {
@@ -177,7 +177,7 @@ class InrouteFacade
      *
      * @param string $root
      *
-     * @return InrouteFacade instance for chaining
+     * @return InrouteFactory instance for chaining
      */
     public function setRoot($root)
     {
@@ -192,7 +192,7 @@ class InrouteFacade
      *
      * @param string $caller
      *
-     * @return InrouteFacade instance for chaining
+     * @return InrouteFactory instance for chaining
      */
     public function setCaller($caller)
     {
@@ -207,7 +207,7 @@ class InrouteFacade
      *
      * @param string $container
      *
-     * @return InrouteFacade instance for chaining
+     * @return InrouteFactory instance for chaining
      */
     public function setContainer($container)
     {
@@ -222,7 +222,7 @@ class InrouteFacade
      *
      * @param array $settings
      *
-     * @return InrouteFacade instance for chaining
+     * @return InrouteFactory instance for chaining
      */
     public function loadSettings(array $settings)
     {

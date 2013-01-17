@@ -1,7 +1,7 @@
 <?php
 namespace itbz\inroute;
 
-class InrouteFacadeTest extends \PHPUnit_Framework_TestCase
+class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
 {
     private $settings = array(
         "root" => "a",
@@ -15,14 +15,14 @@ class InrouteFacadeTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadSettings()
     {
-        $facade = new InrouteFacade();
+        $facade = new InrouteFactory();
         $facade->loadSettings($this->settings);
         $this->assertEquals($this->settings, $facade->getSettings());
     }
 
     public function testSetSettings()
     {
-        $facade = new InrouteFacade();
+        $facade = new InrouteFactory();
         $facade->setRoot($this->settings['root']);
         $facade->setCaller($this->settings['caller']);
         $facade->setContainer($this->settings['container']);
@@ -51,7 +51,7 @@ class InrouteFacadeTest extends \PHPUnit_Framework_TestCase
             false
         );
 
-        $facade = new InrouteFacade($generator, $scanner);
+        $facade = new InrouteFactory($generator, $scanner);
 
         $facade->loadSettings(
             array(
