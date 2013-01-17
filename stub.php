@@ -1,9 +1,9 @@
 <?php
 
 include "vendor/autoload.php";
+header('Content-Type: text/plain');
 
 /*
-    - "classes"-inställning till json
     - "target"-inställning till json (att användas av phar)
     - skapa Phar som undermodul. Innehåller bland annat Compiler som bygger phar
     - Inroute.phar ska versionshanteras

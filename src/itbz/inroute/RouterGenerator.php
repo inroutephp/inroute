@@ -73,6 +73,18 @@ class RouterGenerator
     }
 
     /**
+     * Bulk add array of classnames
+     *
+     * @param array $classes
+     */
+    public function addClasses(array $classes)
+    {
+        foreach ($classes as $classname) {
+            $this->addClass($classname);
+        }
+    }
+
+    /**
      * Add class for processing
      *
      * @param string $classname
@@ -81,9 +93,11 @@ class RouterGenerator
      */
     public function addClass($classname)
     {
-        $reflClass = new ReflectionClass($classname);
-        if ($reflClass->isInroute()) {
-            $this->reflectionClasses[] = $reflClass;
+        if (!isset($this->reflectionClasses[$classname])) {
+            $reflClass = new ReflectionClass($classname);
+            if ($reflClass->isInroute()) {
+                $this->reflectionClasses[$classname] = $reflClass;
+            }
         }
 
         return $this;

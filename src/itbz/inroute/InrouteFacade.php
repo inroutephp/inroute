@@ -34,8 +34,9 @@ class InrouteFacade
         "caller" => "DefaultCaller",
         "container" => "",
         "prefixes" => array("php"),
-        "dirs" => "",
-        "files" => ""
+        "dirs" => array(),
+        "files" => array(),
+        "classes" => array()
     );
 
     /**
@@ -102,9 +103,8 @@ class InrouteFacade
             $this->scanner->addFile($filename);
         }
 
-        foreach ($this->scanner->getClasses() as $classname) {
-            $this->generator->addClass($classname);
-        }
+        $this->generator->addClasses($this->scanner->getClasses());
+        $this->generator->addClasses((array) $this->settings['classes']);
 
         return $this->generator->setRoot($this->settings['root'])
             ->setCaller($this->settings['caller'])
@@ -115,7 +115,7 @@ class InrouteFacade
     /**
      * Set prefixes to search for
      *
-     * @param string $prefixes
+     * @param string|array $prefixes
      *
      * @return InrouteFacade instance for chaining
      */
@@ -130,7 +130,7 @@ class InrouteFacade
     /**
      * Set directories to scan for classes
      *
-     * @param string $dirs
+     * @param string|array $dirs
      *
      * @return InrouteFacade instance for chaining
      */
@@ -145,7 +145,7 @@ class InrouteFacade
     /**
      * Set files to scan for classes
      *
-     * @param string $files
+     * @param string|array $files
      *
      * @return InrouteFacade instance for chaining
      */
@@ -153,6 +153,21 @@ class InrouteFacade
     {
         assert('is_string($files) || is_array($files)');
         $this->settings['files'] = $files;
+
+        return $this;
+    }
+
+    /**
+     * Set classes to include
+     *
+     * @param string|array $classes
+     *
+     * @return InrouteFacade instance for chaining
+     */
+    public function setClasses($classes)
+    {
+        assert('is_string($classes) || is_array($classes)');
+        $this->settings['classes'] = $classes;
 
         return $this;
     }

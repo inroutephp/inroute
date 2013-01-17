@@ -9,5 +9,8 @@
     ],
     "files": [
         "tests/itbz/test/Working.php"
+    ],
+    "classes": [
+        "itbz\\test\\Working"
     ]
 }

@@ -9,7 +9,8 @@ class InrouteFacadeTest extends \PHPUnit_Framework_TestCase
         "container" => "c",
         "prefixes" => "d",
         "dirs" => "e",
-        "files" => "f"
+        "files" => "f",
+        "classes" => "g"
     );
 
     public function testLoadSettings()
@@ -28,14 +29,15 @@ class InrouteFacadeTest extends \PHPUnit_Framework_TestCase
         $facade->setPrefixes($this->settings['prefixes']);
         $facade->setDirs($this->settings['dirs']);
         $facade->setFiles($this->settings['files']);
+        $facade->setClasses($this->settings['classes']);
         $this->assertEquals($this->settings, $facade->getSettings());
     }
 
-    public function testFullStack()
+    public function testGenerate()
     {
         $generator = $this->getMock(
             '\itbz\inroute\RouterGenerator',
-            array('addClass', 'generate'),
+            array('addClasses', 'generate'),
             array(),
             '',
             false
@@ -75,9 +77,8 @@ class InrouteFacadeTest extends \PHPUnit_Framework_TestCase
             ->method('getClasses')
             ->will($this->returnValue(array('filename')));
 
-        $generator->expects($this->once())
-            ->method('addClass')
-            ->with('filename');
+        $generator->expects($this->at(2))
+            ->method('addClasses');
 
         $generator->expects($this->once())
             ->method('generate')
