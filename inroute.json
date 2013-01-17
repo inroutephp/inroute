@@ -12,5 +12,6 @@
     ],
     "classes": [
         "itbz\\test\\Working"
-    ]
+    ],
+    "target": "inroute.php"
 }

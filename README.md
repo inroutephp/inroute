@@ -15,8 +15,9 @@ DI container and router wrapper for powerful and easy REST development with PHP
 
     include "vendor/autoload.php";
 
-    $facade = new \itbz\inroute\InrouteFactory('inroute.json');
-    $inroute = eval($facade->generate());
+    $factory = new \itbz\inroute\InrouteFactory();
+    $factory->loadJson('inroute.json');
+    $inroute = eval($factory->generate());
 
     echo $inroute->dispatch('/foo/yeah', $_SERVER);
 
