@@ -8,7 +8,7 @@
     "dirs": [
     ],
     "files": [
-        "tests/itbz/test/Working.php"
+        "tests/unit/data/itbz/test/Working.php"
     ],
     "classes": [
         "itbz\\test\\Working"

@@ -14,7 +14,7 @@
     "autoload": {
         "psr-0": {
             "itbz\\inroute": "src/",
-            "itbz\\test": "tests/"
+            "itbz\\test": "tests/unit/data"
         }
     },
     "require": {

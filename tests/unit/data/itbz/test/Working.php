@@ -15,12 +15,15 @@ class Working
      */
     public function __construct(\DateTime $bar, array $x, $y = 'optional')
     {
+        var_dump($bar);
+        var_dump($x);
+        var_dump($y);
     }
 
     /**
      * @route GET /foo/{:name}
      */
-    public function foo(Route $route)
+    public function foo()
     {
         return 'Working::foo';
     }
