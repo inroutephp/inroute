@@ -59,8 +59,8 @@ class InrouteFacade
      * may inject a mustache enginge and a ClassScanner, if not facade will try
      * to create it for you.
      *
-     * @param ClassScanner $scanner
      * @param RouterGenerator $generator
+     * @param ClassScanner $scanner
      */
     public function __construct(
         RouterGenerator $generator = null,
