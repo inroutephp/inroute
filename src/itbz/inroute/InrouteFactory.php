@@ -232,6 +232,20 @@ class InrouteFactory
     }
 
     /**
+     * Load settings form json encoded file
+     *
+     * @param string $filename
+     *
+     * @return InrouteFactory instance for chaining
+     *
+     * @codeCoverageIgnore
+     */
+    public function loadJson($filename)
+    {
+        return $this->loadSettings((array)json_decode(file_get_contents($filename)));
+    }
+
+    /**
      * Get current settings
      *
      * For testing
