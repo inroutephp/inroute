@@ -7,8 +7,6 @@ include "vendor/autoload.php";
 
     lägg till classes som inställning till json
         det borde lösa problemet!!
-
-    ska template dir verkligen vara en isntällning i json??
 */
 
 $facade = new \itbz\inroute\InrouteFacade('inroute.json');

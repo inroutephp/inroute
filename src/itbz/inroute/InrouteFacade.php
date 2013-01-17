@@ -25,53 +25,18 @@ use Symfony\Component\Finder\Finder;
 class InrouteFacade
 {
     /**
-     * Name of template directory
+     * Inroute settings
      *
-     * @var string
+     * @var array
      */
-    private $templatedir;
-
-    /**
-     * File prefixes to scan for
-     *
-     * @var array|string
-     */
-    private $prefixes = array('php');
-
-    /**
-     * Directories to scan for classes
-     *
-     * @var array|string
-     */
-    private $dirs;
-
-    /**
-     * Files to scan for classes
-     *
-     * @var array|string
-     */
-    private $files;
-
-    /**
-     * Project www root
-     *
-     * @var string
-     */
-    private $root = '';
-
-    /**
-     * Caller classname
-     *
-     * @var string
-     */
-    private $caller = 'DefaultCaller';
-
-    /**
-     * Container classname
-     *
-     * @var string
-     */
-    private $container;
+    private $settings = array(
+        "root" => "",
+        "caller" => "DefaultCaller",
+        "container" => "",
+        "prefixes" => array("php"),
+        "dirs" => "",
+        "files" => ""
+    );
 
     /**
      * User access class for the inroute package
@@ -80,25 +45,9 @@ class InrouteFacade
      */
     public function __construct($filename)
     {
-        $this->setTemplatedir(__DIR__ . DIRECTORY_SEPARATOR . 'Templates');
         if ($filename) {
             $this->loadSettings((array)json_decode(file_get_contents($filename)));
         }
-    }
-
-    /**
-     * Set name of template directory
-     *
-     * @param string $templatedir
-     *
-     * @return InrouteFacade instance for chaining
-     */
-    public function setTemplateDir($templatedir)
-    {
-        assert('is_string($templatedir)');
-        $this->templatedir = $templatedir;
-
-        return $this;
     }
 
     /**
@@ -111,7 +60,7 @@ class InrouteFacade
     public function setPrefixes($prefixes)
     {
         assert('is_string($prefixes) || is_array($prefixes)');
-        $this->prefixes = $prefixes;
+        $this->settings['prefixes'] = $prefixes;
 
         return $this;
     }
@@ -126,7 +75,7 @@ class InrouteFacade
     public function setDirs($dirs)
     {
         assert('is_string($dirs) || is_array($dirs)');
-        $this->dirs = $dirs;
+        $this->settings['dirs'] = $dirs;
 
         return $this;
     }
@@ -141,7 +90,7 @@ class InrouteFacade
     public function setFiles($files)
     {
         assert('is_string($files) || is_array($files)');
-        $this->files = $files;
+        $this->settings['files'] = $files;
 
         return $this;
     }
@@ -156,7 +105,7 @@ class InrouteFacade
     public function setRoot($root)
     {
         assert('is_string($root)');
-        $this->root = $root;
+        $this->settings['root'] = $root;
 
         return $this;
     }
@@ -171,7 +120,7 @@ class InrouteFacade
     public function setCaller($caller)
     {
         assert('is_string($caller)');
-        $this->caller = $caller;
+        $this->settings['caller'] = $caller;
 
         return $this;
     }
@@ -186,7 +135,7 @@ class InrouteFacade
     public function setContainer($container)
     {
         assert('is_string($container)');
-        $this->container = $container;
+        $this->settings['container'] = $container;
 
         return $this;
     }
@@ -200,27 +149,7 @@ class InrouteFacade
      */
     public function loadSettings(array $settings)
     {
-        if (isset($settings['root'])) {
-            $this->setRoot($settings['root']);
-        }
-        if (isset($settings['caller'])) {
-            $this->setCaller($settings['caller']);
-        }
-        if (isset($settings['container'])) {
-            $this->setContainer($settings['container']);
-        }
-        if (isset($settings['prefixes'])) {
-            $this->setPrefixes($settings['prefixes']);
-        }
-        if (isset($settings['dirs'])) {
-            $this->setDirs($settings['dirs']);
-        }
-        if (isset($settings['files'])) {
-            $this->setFiles($settings['files']);
-        }
-        if (isset($settings['templatedir'])) {
-            $this->setTemplatedir($settings['templatedir']);
-        }
+        $this->settings = array_merge($this->settings, $settings);
 
         return $this;
     }
@@ -232,31 +161,32 @@ class InrouteFacade
      */
     public function generate()
     {
+        $templatedir = __DIR__ . DIRECTORY_SEPARATOR . 'Templates';
         $mustache = new Mustache_Engine(
             array(
-                'loader' => new Mustache_Loader_FilesystemLoader($this->templatedir)
+                'loader' => new Mustache_Loader_FilesystemLoader($templatedir)
             )
         );
 
         $scanner = new ClassScanner(new Finder);
 
-        foreach ((array) $this->prefixes as $prefix) {
+        foreach ((array) $this->settings['prefixes'] as $prefix) {
             $scanner->addPrefix($prefix);
         }
 
-        foreach ((array) $this->dirs as $dirname) {
+        foreach ((array) $this->settings['dirs'] as $dirname) {
             $scanner->addDir($dirname);
         }
 
-        foreach ((array) $this->files as $filename) {
+        foreach ((array) $this->settings['files'] as $filename) {
             $scanner->addFile($filename);
         }
 
         $generator = new RouterGenerator($mustache, $scanner);
 
-        return $generator->setRoot($this->root)
-            ->setCaller($this->caller)
-            ->setContainer($this->container)
+        return $generator->setRoot($this->settings['root'])
+            ->setCaller($this->settings['caller'])
+            ->setContainer($this->settings['container'])
             ->generate();
     }
 }
