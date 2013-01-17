@@ -47,9 +47,9 @@ class InrouteFacade
     private $scanner;
 
     /**
-     * Router generator
+     * Code generator
      *
-     * @var RouterGenerator
+     * @var CodeGenerator
      */
     private $generator;
 
@@ -60,11 +60,11 @@ class InrouteFacade
      * may inject a mustache enginge and a ClassScanner, if not facade will try
      * to create it for you.
      *
-     * @param RouterGenerator $generator
+     * @param CodeGenerator $generator
      * @param ClassScanner $scanner
      */
     public function __construct(
-        RouterGenerator $generator = null,
+        CodeGenerator $generator = null,
         ClassScanner $scanner = null
     ) {
         if (!$generator) {
@@ -74,7 +74,7 @@ class InrouteFacade
                     'loader' => new Mustache_Loader_FilesystemLoader($templatedir)
                 )
             );
-            $generator = new RouterGenerator($mustache);
+            $generator = new CodeGenerator($mustache);
         }
         $this->generator = $generator;
 

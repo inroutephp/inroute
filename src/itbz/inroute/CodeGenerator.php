@@ -25,7 +25,7 @@ use Mustache_Engine;
  * 
  * @package itbz\inroute
  */
-class RouterGenerator
+class CodeGenerator
 {
     /**
      * Mustache instance
@@ -89,7 +89,7 @@ class RouterGenerator
      *
      * @param string $classname
      *
-     * @return RouterGenerator instance for chaining
+     * @return CodeGenerator instance for chaining
      */
     public function addClass($classname)
     {
@@ -108,7 +108,7 @@ class RouterGenerator
      *
      * @param string $root
      *
-     * @return RouterGenerator instance for chaining
+     * @return CodeGenerator instance for chaining
      */
     public function setRoot($root)
     {
@@ -123,7 +123,7 @@ class RouterGenerator
      *
      * @param string $caller
      *
-     * @return RouterGenerator instance for chaining
+     * @return CodeGenerator instance for chaining
      */
     public function setCaller($caller)
     {
@@ -138,7 +138,7 @@ class RouterGenerator
      *
      * @param string $container
      *
-     * @return RouterGenerator instance for chaining
+     * @return CodeGenerator instance for chaining
      */
     public function setContainer($container)
     {

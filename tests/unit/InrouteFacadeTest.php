@@ -36,7 +36,7 @@ class InrouteFacadeTest extends \PHPUnit_Framework_TestCase
     public function testGenerate()
     {
         $generator = $this->getMock(
-            '\itbz\inroute\RouterGenerator',
+            '\itbz\inroute\CodeGenerator',
             array('addClasses', 'generate'),
             array(),
             '',
