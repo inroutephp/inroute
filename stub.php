@@ -3,10 +3,10 @@
 include "vendor/autoload.php";
 
 /*
-    inroute facade test misslyckas eftersom jag inte kan ladda in samma fil flera gånger
-
-    lägg till classes som inställning till json
-        det borde lösa problemet!!
+    - "classes"-inställning till json
+    - "target"-inställning till json (att användas av phar)
+    - skapa Phar som undermodul. Innehåller bland annat Compiler som bygger phar
+    - Inroute.phar ska versionshanteras
 */
 
 $facade = new \itbz\inroute\InrouteFacade();
