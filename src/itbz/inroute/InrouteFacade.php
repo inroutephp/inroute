@@ -39,15 +39,77 @@ class InrouteFacade
     );
 
     /**
+     * Class scanner object
+     *
+     * @var ClassScanner
+     */
+    private $scanner;
+
+    /**
+     * Router generator
+     *
+     * @var RouterGenerator
+     */
+    private $generator;
+
+    /**
      * User access class for the inroute package
      *
-     * @param string $filename Name of json settings file
+     * InrouteFacade works both in an injectionist and a standalone way. You
+     * may inject a mustache enginge and a ClassScanner, if not facade will try
+     * to create it for you.
+     *
+     * @param ClassScanner $scanner
+     * @param RouterGenerator $generator
      */
-    public function __construct($filename)
-    {
-        if ($filename) {
-            $this->loadSettings((array)json_decode(file_get_contents($filename)));
+    public function __construct(
+        RouterGenerator $generator = null,
+        ClassScanner $scanner = null
+    ) {
+        if (!$generator) {
+            $templatedir = __DIR__ . DIRECTORY_SEPARATOR . 'Templates';
+            $mustache = new Mustache_Engine(
+                array(
+                    'loader' => new Mustache_Loader_FilesystemLoader($templatedir)
+                )
+            );
+            $generator = new RouterGenerator($mustache);
         }
+        $this->generator = $generator;
+
+        if (!$scanner) {
+            $scanner = new ClassScanner(new Finder);
+        }
+        $this->scanner = $scanner;
+    }
+
+    /**
+     * Generate code that returns on inroute instance
+     *
+     * @return string
+     */
+    public function generate()
+    {
+        foreach ((array) $this->settings['prefixes'] as $prefix) {
+            $this->scanner->addPrefix($prefix);
+        }
+
+        foreach ((array) $this->settings['dirs'] as $dirname) {
+            $this->scanner->addDir($dirname);
+        }
+
+        foreach ((array) $this->settings['files'] as $filename) {
+            $this->scanner->addFile($filename);
+        }
+
+        foreach ($this->scanner->getClasses() as $classname) {
+            $this->generator->addClass($classname);
+        }
+
+        return $this->generator->setRoot($this->settings['root'])
+            ->setCaller($this->settings['caller'])
+            ->setContainer($this->settings['container'])
+            ->generate();
     }
 
     /**
@@ -155,38 +217,14 @@ class InrouteFacade
     }
 
     /**
-     * Generate code that returns on inroute instance
+     * Get current settings
      *
-     * @return string
+     * For testing
+     * 
+     * @return array
      */
-    public function generate()
+    public function getSettings()
     {
-        $templatedir = __DIR__ . DIRECTORY_SEPARATOR . 'Templates';
-        $mustache = new Mustache_Engine(
-            array(
-                'loader' => new Mustache_Loader_FilesystemLoader($templatedir)
-            )
-        );
-
-        $scanner = new ClassScanner(new Finder);
-
-        foreach ((array) $this->settings['prefixes'] as $prefix) {
-            $scanner->addPrefix($prefix);
-        }
-
-        foreach ((array) $this->settings['dirs'] as $dirname) {
-            $scanner->addDir($dirname);
-        }
-
-        foreach ((array) $this->settings['files'] as $filename) {
-            $scanner->addFile($filename);
-        }
-
-        $generator = new RouterGenerator($mustache, $scanner);
-
-        return $generator->setRoot($this->settings['root'])
-            ->setCaller($this->settings['caller'])
-            ->setContainer($this->settings['container'])
-            ->generate();
+        return $this->settings;
     }
 }

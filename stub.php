@@ -9,7 +9,8 @@ include "vendor/autoload.php";
         det borde lösa problemet!!
 */
 
-$facade = new \itbz\inroute\InrouteFacade('inroute.json');
+$facade = new \itbz\inroute\InrouteFacade();
+$facade->loadSettings((array)json_decode(file_get_contents('inroute.json')));
 $inroute = eval($facade->generate());
 
 echo $inroute->dispatch('/foo/yeah', $_SERVER);
