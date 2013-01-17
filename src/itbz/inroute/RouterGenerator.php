@@ -19,10 +19,9 @@ use Mustache_Engine;
 /**
  * The Inrout router generator
  *
- * Takes user input and generates php code that returns a custom Inroute object.
- * User input includes files or directories to scan for classes, an optional
- * www-root, a caller classname (if the default caller is not used) and a
- * Pimple DI-container.
+ * Generates php code that returns a custom Inroute object. Input includes
+ * classnames, an optional www-root, a caller classname (if the default caller
+ * is not used) and a Pimple DI-container.
  * 
  * @package itbz\inroute
  */
@@ -67,14 +66,10 @@ class RouterGenerator
      * The Inrout router generator
      *
      * @param Mustache_Engine $mustache
-     * @param ClassScanner $scan
      */
-    public function __construct(Mustache_Engine $mustache, ClassScanner $scan)
+    public function __construct(Mustache_Engine $mustache)
     {
         $this->mustache = $mustache;
-        foreach ($scan->getClasses() as $classname) {
-            $this->addClass($classname);
-        }
     }
 
     /**

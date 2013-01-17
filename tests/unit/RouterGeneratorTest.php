@@ -3,7 +3,7 @@ namespace itbz\inroute;
 
 class RouterGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAddClasses()
+    /*public function testAddClasses()
     {
         $mustache = $this->getMock('\Mustache_Engine');
         $scanner = $this->getMock(
@@ -17,21 +17,10 @@ class RouterGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getClasses')
             ->will($this->returnValue(array('itbz\test\Working')));
         $generator = new RouterGenerator($mustache, $scanner);
-    }
+    }*/
 
     public function testGetDependencyContainerCode()
     {
-        $scanner = $this->getMock(
-            'itbz\inroute\ClassScanner',
-            array(),
-            array(),
-            '',
-            false
-        );
-        $scanner->expects($this->once())
-            ->method('getClasses')
-            ->will($this->returnValue(array('itbz\test\Working')));
-
         $mustache = $this->getMock('\Mustache_Engine');
         $template = $this->getMock(
             '\Mustache_Template',
@@ -49,24 +38,14 @@ class RouterGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('render')
             ->will($this->returnValue('foobar'));
 
-        $generator = new RouterGenerator($mustache, $scanner);
+        $generator = new RouterGenerator($mustache);
+        $generator->addClass('itbz\test\Working');
 
         $this->assertEquals('foobar', $generator->getDependencyContainerCode());
     }
 
     public function testGetRouteCode()
     {
-        $scanner = $this->getMock(
-            'itbz\inroute\ClassScanner',
-            array(),
-            array(),
-            '',
-            false
-        );
-        $scanner->expects($this->once())
-            ->method('getClasses')
-            ->will($this->returnValue(array('itbz\test\Working')));
-
         $mustache = $this->getMock('\Mustache_Engine');
         $template = $this->getMock(
             '\Mustache_Template',
@@ -84,25 +63,15 @@ class RouterGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('render')
             ->will($this->returnValue('foobar'));
 
-        $generator = new RouterGenerator($mustache, $scanner);
+        $generator = new RouterGenerator($mustache);
         $generator->setRoot('root');
+        $generator->addClass('itbz\test\Working');
 
         $this->assertEquals('foobar', $generator->getRouteCode());
     }
 
     public function testGetStaticCode()
     {
-        $scanner = $this->getMock(
-            'itbz\inroute\ClassScanner',
-            array(),
-            array(),
-            '',
-            false
-        );
-        $scanner->expects($this->once())
-            ->method('getClasses')
-            ->will($this->returnValue(array('itbz\test\Working')));
-
         $mustache = $this->getMock('\Mustache_Engine');
         $template = $this->getMock(
             '\Mustache_Template',
@@ -120,7 +89,7 @@ class RouterGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('render')
             ->will($this->returnValue('foobar'));
 
-        $generator = new RouterGenerator($mustache, $scanner);
+        $generator = new RouterGenerator($mustache);
         $generator->setCaller('caller');
         $generator->setContainer('container');
 
