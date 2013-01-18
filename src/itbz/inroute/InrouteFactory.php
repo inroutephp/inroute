@@ -14,7 +14,7 @@
 namespace itbz\inroute;
 
 use Mustache_Engine;
-use Mustache_Loader_FilesystemLoader;
+use Mustache_Loader_ArrayLoader;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -68,12 +68,13 @@ class InrouteFactory
         ClassScanner $scanner = null
     ) {
         if (!$generator) {
-            $templatedir = __DIR__ . DIRECTORY_SEPARATOR . 'Templates';
-            $mustache = new Mustache_Engine(
-                array(
-                    'loader' => new Mustache_Loader_FilesystemLoader($templatedir)
-                )
-            );
+            $templatedir = __DIR__ . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR;
+            $loader = new Mustache_Loader_ArrayLoader(array(
+                'Dependencies' => file_get_contents($templatedir  . 'Dependencies.mustache'),
+                'routes' => file_get_contents($templatedir  . 'routes.mustache'),
+                'static' => file_get_contents($templatedir  . 'static.mustache')
+            ));
+            $mustache = new Mustache_Engine(array('loader' => $loader));
             $generator = new CodeGenerator($mustache);
         }
         $this->generator = $generator;
