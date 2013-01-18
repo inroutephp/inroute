@@ -19,11 +19,11 @@
     },
     "require": {
         "php": ">=5.3.0",
-        "phpdocumentor/reflection-docblock": "dev-master",
+        "phpdocumentor/reflection-docblock": "1.*",
         "mustache/mustache": "2.*",
-        "Aura/Router": "dev-master",
-        "pimple/pimple": "dev-master",
-        "symfony/finder": "dev-master"
+        "pimple/pimple": "1.*",
+        "symfony/finder": "2.*",
+        "Aura/Router": "dev-master"
     },
     "repositories": [
         {
