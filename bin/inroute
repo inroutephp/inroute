@@ -3,7 +3,8 @@
 
 namespace itbz\inroute {
 
-require 'phar://Inroute.phar/vendor/autoload.php';
+require __DIR__ . '/../src/bootstrap.php';
+
 }
 namespace itbz\test {
     class Container extends \Pimple
@@ -25,15 +26,7 @@ namespace itbz\test {
 
 namespace itbz\inroute {
 
-$loader = new \Mustache_Loader_ArrayLoader(array(
-    'Dependencies' => file_get_contents('phar://Inroute.phar/src/itbz/inroute/Templates/Dependencies.mustache'),
-    'routes' => file_get_contents('phar://Inroute.phar/src/itbz/inroute/Templates/routes.mustache'),
-    'static' => file_get_contents('phar://Inroute.phar/src/itbz/inroute/Templates/static.mustache')
-));
-$mustache = new \Mustache_Engine(array('loader' => $loader));
-$generator = new CodeGenerator($mustache);
-
-$factory = new InrouteFactory($generator);
+$factory = new InrouteFactory();
 
 $factory->loadJson('../inroute.json');
 $inroute = eval($factory->generate());
