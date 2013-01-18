@@ -1,12 +1,79 @@
 #!/usr/bin/env php
 <?php
+/*
+ * This file is part of the inroute package
+ *
+ * Copyright (c) 2013 Hannes Forsgård
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+use Symfony\Component\Finder\Finder;
 
 require __DIR__ . '/../src/bootstrap.php';
-
-use itbz\inroute\Phar\Compiler;
 
 error_reporting(-1);
 ini_set('display_errors', 1);
 
-$compiler = new Compiler();
-$compiler->compile();
+function addFile(Phar $phar, SplFileInfo $file)
+{
+    $path = str_replace(dirname(__DIR__).DIRECTORY_SEPARATOR, '', $file->getRealPath());
+    $content = file_get_contents($file);
+    $phar->addFromString($path, $content);
+}
+
+$target = 'inroute.phar';
+
+$stub = <<<'EOF'
+#!/usr/bin/env php
+<?php
+/*
+ * This file is part of the inroute package
+ *
+ * Copyright (c) 2013 Hannes Forsgård
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+Phar::mapPhar('inroute.phar');
+
+require 'phar://inroute.phar/bin/inroute';
+
+__HALT_COMPILER();
+EOF;
+
+
+if (file_exists($target)) {
+    unlink($target);
+}
+
+$phar = new Phar($target, 0, 'inroute.phar');
+$phar->setSignatureAlgorithm(Phar::SHA1);
+$phar->startBuffering();
+
+$finder = new Finder();
+$finder->files()
+    ->ignoreVCS(true)
+    ->name('*.php')
+    ->name('*.mustache')
+    ->name('LICENSE')
+    ->exclude('Tests')
+    ->exclude('tests')
+    ->exclude('test')
+    ->in(__DIR__ . '/..');
+
+foreach ($finder as $file) {
+    addFile($phar, $file);
+}
+
+$bin = file_get_contents(__DIR__ . '/inroute');
+$bin = preg_replace('{^#!/usr/bin/env php\s*}', '', $bin);
+$phar->addFromString('bin/inroute', $bin);
+
+$phar->setStub($stub);
+
+$phar->stopBuffering();
+
+unset($phar);
