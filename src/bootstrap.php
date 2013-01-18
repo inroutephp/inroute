@@ -16,7 +16,7 @@ $loader = __DIR__ . '/../vendor/autoload.php';
 if (file_exists($loader)) {
     return include $loader;
 } else {
-    echo 'Inroute executables requires dependencies to be set up. ' . PHP_EOL
+    echo 'You must set up Inroute dependencies to continue.' . PHP_EOL
         . 'Run the following commands from the project root:' . PHP_EOL
         . 'curl -s http://getcomposer.org/installer | php' . PHP_EOL
         . 'php composer.phar install' . PHP_EOL;
