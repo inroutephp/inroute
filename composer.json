@@ -1,6 +1,6 @@
 {
     "name": "itbz/inroute",
-    "description": "DI container and router wrapper for powerful and easy REST development with PHP",
+    "description": "Generate web router and controller dispatcher from docblock annotations",
     "keywords": ["Dependency Injection", "Router", "REST"],
     "homepage": "https://github.com/itbz/inroute",
     "type": "library",

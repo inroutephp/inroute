@@ -1,15 +1,7 @@
 inroute
 =======
 
-DI container and router wrapper for powerful and easy REST development with PHP
-
-
-## Simple inroute.json
-
-    {
-        "container": "\\project\\DIContainer",
-        "dirs": "src"
-    }
+Generate web router and controller dispatcher from docblock annotations
 
 ## Inline invocation using the composer autoloader
 

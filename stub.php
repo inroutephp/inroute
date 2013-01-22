@@ -10,6 +10,15 @@ header('Content-Type: text/plain');
         - inte bara klass-namn...
     - sökvägar i inroute.json ska vara beroende av var json finns i filsystemet
         ej var scriptet som läser json är...
+    ELLER??
+    - ska jag inte istället använda docTags
+        - @inrouteContainer
+        - @inrouteCaller
+    - dirs kan ha .  som default, vilket borde göra att hela trädet söks igenom
+    - root kan vara ett argument..
+    - kanske kan jag strunta i json helt och hållet!!
+        det vore det enkla sättet att skriva koden på!!
+
 
     - det ska vara möjligt att använda .phar för att endast includera koden..
         istället för att installera med composer..
