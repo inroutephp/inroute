@@ -24,14 +24,29 @@ use itbz\inroute\Exception\InjectionException;
 class ReflectionClass extends \ReflectionClass
 {
     /**
-     * All constructor parameters
-     *
-     * @var array
+     * @var array All constructor parameters
      */
     private $params;
 
     /**
-     * Check if the reflected class should be processed
+     * @var DockBlock Class docblock object
+     */
+    private $classDocBlock;
+
+    /**
+     * ReflectionClass extension with docbloc parsing capabilities
+     *
+     * @param mixed $arg Either a string containing the name of the class to
+     * reflect, or an object.
+     */
+    public function __construct($arg)
+    {
+        parent::__construct($arg);
+        $this->classDocBlock = new DocBlock($this);
+    }
+
+    /**
+     * Check if the reflected class is an inroute controller
      *
      * Classes to be processed must be tagged with the @inroute tag
      *
@@ -39,8 +54,31 @@ class ReflectionClass extends \ReflectionClass
      */
     public function isInroute()
     {
-        $docblock = new DocBlock($this);
-        return $docblock->hasTag('inroute');
+        return $this->classDocBlock->hasTag('inroute');
+    }
+
+    /**
+     * Check if the reflected class is an DI-container
+     *
+     * Classes to be processed must be tagged with the @inrouteContainer tag
+     *
+     * @return boolean
+     */
+    public function isContainer()
+    {
+        return $this->classDocBlock->hasTag('inrouteContainer');
+    }
+
+    /**
+     * Check if the reflected class is a caller
+     *
+     * Classes to be processed must be tagged with the @inrouteCaller tag
+     *
+     * @return boolean
+     */
+    public function isCaller()
+    {
+        return $this->classDocBlock->hasTag('inrouteCaller');
     }
 
     /**

@@ -10,8 +10,9 @@ header('Content-Type: text/plain');
         - @inrouteContainer
         - @inrouteCaller
         
-        lägg till detta till ClassScanner
-        så kan Factory fråga $scanner->getContainer() samt $scanner->getCaller()
+        Har lagt till metoder för detta i ReflectionClass...
+
+        lägg till detta till CodeGenerator...
             ska anväda DefaultCaller om ingen hittas
             ska kasta undantag om ingen container hittas...
 

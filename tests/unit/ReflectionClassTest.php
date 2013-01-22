@@ -12,6 +12,18 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($yes->isInroute());
     }
 
+    public function testIsCaller()
+    {
+        $no = new ReflectionClass('itbz\test\NoInroute');
+        $this->assertFalse($no->isCaller());
+    }
+
+    public function testIsContainer()
+    {
+        $no = new ReflectionClass('itbz\test\NoInroute');
+        $this->assertFalse($no->isContainer());
+    }
+
     public function testNoConstructor()
     {
         $refl = new ReflectionClass('itbz\test\NoConstructor');
