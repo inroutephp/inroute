@@ -37,7 +37,7 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $generator = $this->getMock(
             '\itbz\inroute\CodeGenerator',
-            array('addClasses', 'generate'),
+            array('addClass', 'generate'),
             array(),
             '',
             false
@@ -77,8 +77,8 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getClasses')
             ->will($this->returnValue(array('filename')));
 
-        $generator->expects($this->at(2))
-            ->method('addClasses');
+        $generator->expects($this->atLeastOnce())
+            ->method('addClass');
 
         $generator->expects($this->once())
             ->method('generate')

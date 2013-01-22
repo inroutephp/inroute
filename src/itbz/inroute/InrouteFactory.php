@@ -95,19 +95,17 @@ class InrouteFactory
         foreach ((array) $this->settings['prefixes'] as $prefix) {
             $this->scanner->addPrefix($prefix);
         }
-
         foreach ((array) $this->settings['dirs'] as $dirname) {
             $this->scanner->addDir($dirname);
         }
-
         foreach ((array) $this->settings['files'] as $filename) {
             $this->scanner->addFile($filename);
         }
 
-        $this->generator->addClasses($this->scanner->getClasses());
-        $this->generator->addClasses((array) $this->settings['classes']);
-
-        return $this->generator->setRoot($this->settings['root'])
+        return $this->generator
+            ->addClasses($this->scanner->getClasses())
+            ->addClasses((array)$this->settings['classes'])
+            ->setRoot($this->settings['root'])
             ->setCaller($this->settings['caller'])
             ->setContainer($this->settings['container'])
             ->generate();

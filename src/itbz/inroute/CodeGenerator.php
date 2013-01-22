@@ -76,12 +76,16 @@ class CodeGenerator
      * Bulk add array of classnames
      *
      * @param array $classes
+     *
+     * @return CodeGenerator instance for chaining
      */
     public function addClasses(array $classes)
     {
         foreach ($classes as $classname) {
             $this->addClass($classname);
         }
+
+        return $this;
     }
 
     /**

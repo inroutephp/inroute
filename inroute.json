@@ -6,12 +6,11 @@
         "php"
     ],
     "dirs": [
+        "tests/behat/data"
     ],
     "files": [
-        "tests/unit/data/Working.php"
     ],
     "classes": [
-        "itbz\\test\\Working"
     ],
     "target": "inroute.php"
 }
