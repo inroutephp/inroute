@@ -34,7 +34,7 @@ class InrouteFactory
         "caller" => "DefaultCaller",
         "container" => "",
         "prefixes" => array("php"),
-        "dirs" => array(),
+        "dirs" => array('.'),
         "files" => array(),
         "classes" => array()
     );
