@@ -33,7 +33,7 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
         );
         $scanner = new ClassScanner($finder);
         // Include this file witch is already included...
-        $scanner->addFile(__DIR__ . '/ClassScannerTest.php');
+        $scanner->addFile(__FILE__);
     }
 
     public function testAddFile()
@@ -51,7 +51,7 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException(new \LogicException));
 
         $scanner = new ClassScanner($finder);
-        $classes = $scanner->addFile(__DIR__ . '/data/itbz/test/Working.php')
+        $classes = $scanner->addFile(__DIR__ . '/data/Working.php')
             ->getClasses();
 
         $this->assertEquals(array('itbz\test\Working'), $classes);
@@ -77,7 +77,7 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
 
         $file->expects($this->once())
             ->method('getRealpath')
-            ->will($this->returnValue(__DIR__ . '/data/itbz/test/NoConstructor.php'));
+            ->will($this->returnValue(__DIR__ . '/data/NoConstructor.php'));
 
         $iterator = new \ArrayIterator(array($file));
 
@@ -87,7 +87,7 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
 
         $scanner = new ClassScanner($finder);
         $classes = $scanner->addPrefix('php')
-            ->addDir(__DIR__ . '/data/itbz/test/')
+            ->addDir(__DIR__ . '/data/')
             ->getClasses();
 
         $this->assertEquals(array('itbz\test\NoConstructor'), $classes);
