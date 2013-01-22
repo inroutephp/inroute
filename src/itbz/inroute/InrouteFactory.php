@@ -69,11 +69,13 @@ class InrouteFactory
     ) {
         if (!$generator) {
             $templatedir = __DIR__ . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR;
-            $loader = new Mustache_Loader_ArrayLoader(array(
-                'Dependencies' => file_get_contents($templatedir  . 'Dependencies.mustache'),
-                'routes' => file_get_contents($templatedir  . 'routes.mustache'),
-                'static' => file_get_contents($templatedir  . 'static.mustache')
-            ));
+            $loader = new Mustache_Loader_ArrayLoader(
+                array(
+                    'Dependencies' => file_get_contents($templatedir  . 'Dependencies.mustache'),
+                    'routes' => file_get_contents($templatedir  . 'routes.mustache'),
+                    'static' => file_get_contents($templatedir  . 'static.mustache')
+                )
+            );
             $mustache = new Mustache_Engine(array('loader' => $loader));
             $generator = new CodeGenerator($mustache);
         }
