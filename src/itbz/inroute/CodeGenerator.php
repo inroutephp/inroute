@@ -21,7 +21,7 @@ use Mustache_Engine;
  *
  * Generates php code that returns a custom Inroute object. Input includes
  * classnames, an optional www-root, a caller classname (if the default caller
- * is not used) and a Pimple DI-container.
+ * is none is specified) and a DI-container.
  * 
  * @package itbz\inroute
  */
@@ -102,6 +102,12 @@ class CodeGenerator
             if ($reflClass->isInroute()) {
                 $this->reflectionClasses[$classname] = $reflClass;
             }
+            if ($reflClass->isContainer()) {
+                $this->setContainerClassName('\\'.$reflClass->getName());
+            }
+            if ($reflClass->isCaller()) {
+                $this->setCallerClassName('\\'.$reflClass->getName());
+            }
         }
 
         return $this;
@@ -123,33 +129,60 @@ class CodeGenerator
     }
 
     /**
-     * Set caller classname
+     * Set caller class name
      *
-     * @param string $caller
+     * @param string $classname
      *
      * @return CodeGenerator instance for chaining
      */
-    public function setCaller($caller)
+    public function setCallerClassName($classname)
     {
-        assert('is_string($caller)');
-        $this->caller = $caller;
+        assert('is_string($classname)');
+        $this->caller = $classname;
 
         return $this;
     }
 
     /**
-     * Set container classname
+     * Get name of caller class
      *
-     * @param string $container
+     * @return string Name of supplied caller class
+     */
+    public function getCallerClassName()
+    {
+        return $this->caller;
+    }
+
+    /**
+     * Set DI-container class name
+     *
+     * @param string $classname
      *
      * @return CodeGenerator instance for chaining
      */
-    public function setContainer($container)
+    public function setContainerClassName($classname)
     {
-        assert('is_string($container)');
-        $this->container = 'new ' . $container;
+        assert('is_string($classname)');
+        $this->container = $classname;
 
         return $this;
+    }
+
+    /**
+     * Get name of DI-container class
+     *
+     * @return string Name of supplied DI-container
+     *
+     * @throws RuntimeException If no container is found
+     */
+    public function getContainerClassName()
+    {
+        if (!isset($this->container)) {
+            $msg = "No DI-container specified. Include container in project directory.";
+            throw new RuntimeExpection($msg);
+        }
+
+        return $this->container;
     }
 
     /**
@@ -207,8 +240,8 @@ class CodeGenerator
         return $this->mustache->loadTemplate('static')
             ->render(
                 array(
-                    'caller' => $this->caller,
-                    'container' => $this->container
+                    'caller' => $this->getCallerClassName(),
+                    'container' => $this->getContainerClassName()
                 )
             );
     }

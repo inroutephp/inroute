@@ -5,8 +5,6 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
 {
     private $settings = array(
         "root" => "a",
-        "caller" => "b",
-        "container" => "c",
         "prefixes" => "d",
         "dirs" => "e",
         "files" => "f",
@@ -24,8 +22,6 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $facade = new InrouteFactory();
         $facade->setRoot($this->settings['root']);
-        $facade->setCaller($this->settings['caller']);
-        $facade->setContainer($this->settings['container']);
         $facade->setPrefixes($this->settings['prefixes']);
         $facade->setDirs($this->settings['dirs']);
         $facade->setFiles($this->settings['files']);

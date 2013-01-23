@@ -9,34 +9,18 @@ use itbz\inroute\Route;
 class Controller
 {
     /**
-     * @inject $x xfactory
-     * @inject $bar foobar
-     * @inject $y xx
+     * @inject $arg xx
      */
-    public function __construct(\DateTime $bar, array $x, $y = 'optional')
+    public function __construct($arg = 'optional')
     {
-        var_dump($bar);
-        var_dump($x);
-        var_dump($y);
+        $this->arg = $arg;
     }
 
     /**
      * @route GET /foo/{:name}
      */
-    public function foo()
+    public function view()
     {
-        return 'Working::foo';
-    }
-
-    /**
-     * @route POST /bar/{:name}
-     */
-    public function bar(Route $route)
-    {
-        var_dump($route);
-    }
-
-    public function noRoute()
-    {
+        return 'Working::foo ' . $this->arg;
     }
 }

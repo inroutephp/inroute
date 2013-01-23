@@ -31,8 +31,6 @@ class InrouteFactory
      */
     private $settings = array(
         "root" => "",
-        "caller" => "DefaultCaller",
-        "container" => "",
         "prefixes" => array("php"),
         "dirs" => array('.'),
         "files" => array(),
@@ -108,8 +106,6 @@ class InrouteFactory
             ->addClasses($this->scanner->getClasses())
             ->addClasses((array)$this->settings['classes'])
             ->setRoot($this->settings['root'])
-            ->setCaller($this->settings['caller'])
-            ->setContainer($this->settings['container'])
             ->generate();
     }
 
@@ -184,36 +180,6 @@ class InrouteFactory
     {
         assert('is_string($root)');
         $this->settings['root'] = $root;
-
-        return $this;
-    }
-
-    /**
-     * Set caller classname
-     *
-     * @param string $caller
-     *
-     * @return InrouteFactory instance for chaining
-     */
-    public function setCaller($caller)
-    {
-        assert('is_string($caller)');
-        $this->settings['caller'] = $caller;
-
-        return $this;
-    }
-
-    /**
-     * Set container classname
-     *
-     * @param string $container
-     *
-     * @return InrouteFactory instance for chaining
-     */
-    public function setContainer($container)
-    {
-        assert('is_string($container)');
-        $this->settings['container'] = $container;
 
         return $this;
     }

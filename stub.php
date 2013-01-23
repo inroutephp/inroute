@@ -6,16 +6,6 @@ include "vendor/autoload.php";
 header('Content-Type: text/plain');
 
 /*
-    - ska jag inte istället använda docTags
-        - @inrouteContainer
-        - @inrouteCaller
-        
-        Har lagt till metoder för detta i ReflectionClass...
-
-        lägg till detta till CodeGenerator...
-            ska anväda DefaultCaller om ingen hittas
-            ska kasta undantag om ingen container hittas...
-
     - root kan vara ett argument till phar
 
     - ta bort stödet för json helt och hållet

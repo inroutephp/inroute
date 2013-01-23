@@ -19,6 +19,7 @@ namespace itbz\inroute;
  * Sends the raw Route object to the controller
  *
  * @package itbz\inroute
+ * @inrouteCaller
  */
 class DefaultCaller implements CallerInterface
 {

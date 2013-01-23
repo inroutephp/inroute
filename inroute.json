@@ -1,7 +1,5 @@
 {
     "root": "",
-    "caller": "DefaultCaller",
-    "container": "\\itbz\\test\\Container",
     "prefixes": [
         "php"
     ],
@@ -11,6 +9,5 @@
     "files": [
     ],
     "classes": [
-    ],
-    "target": "inroute.php"
+    ]
 }
