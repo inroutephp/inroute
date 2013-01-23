@@ -23,7 +23,7 @@ function addFile(Phar $phar, SplFileInfo $file)
     $phar->addFromString($path, $content);
 }
 
-$target = 'inroute.phar';
+$target = __DIR__ . '/../build/inroute.phar';
 
 $stub = <<<'EOF'
 #!/usr/bin/env php

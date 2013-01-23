@@ -11,10 +11,10 @@
 
 namespace itbz\inroute;
 
+use Symfony\Component\Console\Application;
+
 require __DIR__ . '/../src/bootstrap.php';
 
-$factory = new InrouteFactory();
-$factory->setDirs(array('../tests/behat/data'));
-$inroute = eval($factory->generate());
-
-echo $inroute->dispatch('/foo/yeah', $_SERVER);
+$app = new Application('inroute', '1.0-beta');
+$app->add(new Console\BuildCommand);
+$app->run();
