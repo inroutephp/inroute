@@ -6,9 +6,7 @@ include "vendor/autoload.php";
 header('Content-Type: text/plain');
 
 /*
-    - root kan vara ett argument till phar
-
-    - ta bort stödet för json helt och hållet
+    - root ska vara ett argument till phar
 
     - inroute.phar ska versionshanteras
         så att jag kan distribuera den på detta sätt...
@@ -21,7 +19,7 @@ header('Content-Type: text/plain');
 */
 
 $factory = new InrouteFactory();
-$factory->loadJson('inroute.json');
+$factory->setDirs(array('tests/behat/data'));
 $inroute = eval($factory->generate());
 
 echo $inroute->dispatch('/foo/yeah', $_SERVER);

@@ -9,36 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace itbz\inroute {
+namespace itbz\inroute;
 
 require __DIR__ . '/../src/bootstrap.php';
 
-}
-namespace itbz\test {
-    class Container extends \Pimple
-    {
-        public function __construct()
-        {
-            $this['foobar'] = function ($c) {
-                return new \DateTime;
-            };
-            $this['xfactory'] = function ($c) {
-                return array();
-            };
-            $this['xx'] = function ($c) {
-                return 'xx';
-            };
-        }
-    }
-}
-
-namespace itbz\inroute {
-
 $factory = new InrouteFactory();
-
-$factory->loadJson('../inroute.json');
+$factory->setDirs(array('../tests/behat/data'));
 $inroute = eval($factory->generate());
 
 echo $inroute->dispatch('/foo/yeah', $_SERVER);
-
-}

@@ -8,7 +8,7 @@ Generate web router and controller dispatcher from docblock annotations
     include "vendor/autoload.php";
 
     $factory = new \itbz\inroute\InrouteFactory();
-    $factory->loadJson('inroute.json');
+    $factory->setDirs(array('dir/to/project'));
     $inroute = eval($factory->generate());
 
     echo $inroute->dispatch('/foo/yeah', $_SERVER);

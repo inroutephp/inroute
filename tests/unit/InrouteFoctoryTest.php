@@ -11,13 +11,6 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
         "classes" => "g"
     );
 
-    public function testLoadSettings()
-    {
-        $facade = new InrouteFactory();
-        $facade->loadSettings($this->settings);
-        $this->assertEquals($this->settings, $facade->getSettings());
-    }
-
     public function testSetSettings()
     {
         $facade = new InrouteFactory();
@@ -47,15 +40,9 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
             false
         );
 
-        $facade = new InrouteFactory($generator, $scanner);
-
-        $facade->loadSettings(
-            array(
-                'prefixes' => 'php',
-                'dirs' => 'dirname',
-                'files' => 'filename'
-            )
-        );
+        $factory = new InrouteFactory($generator, $scanner);
+        $factory->setDirs(array('dirname'));
+        $factory->setFiles(array('filename'));
 
         $scanner->expects($this->once())
             ->method('addPrefix')
@@ -80,6 +67,6 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('generate')
             ->will($this->returnValue('output'));
 
-        $this->assertEquals('output', $facade->generate());
+        $this->assertEquals('output', $factory->generate());
     }
 }
