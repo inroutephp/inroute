@@ -18,6 +18,8 @@
     <target name="help">
         <echo msg="${APP_NAME} automated build file"/>
         <echo msg="======================================="/>
+        <echo msg="build        build phar from source"/>
+        <echo msg="release      inrement version number build phar and tag git"/>
         <echo msg="test         run unittests"/>
         <echo msg="sniff        run php code sniffer"/>
         <echo msg="phpcpd       run php copy detector"/>
@@ -26,7 +28,34 @@
         <echo msg="document     generate api documentation"/>
     </target>
 
-    <target name="buildAll" depends="test,sniff,phpcpd,phpmd,pdepend,document">
+    <target name="release">
+        <input propertyname="release_option" defaultValue="Minor" validargs="Major,Minor,BugFix" promptChar=":">
+            Please choose a build type
+        </input>
+        <version releasetype="${release_option}" file="version.txt" property="version.number"/>
+        <echo message="Using version: ${version.number}"/>
+        <phingcall target="build"/>
+        <echo message="Creating git tag"/>
+        <exec
+            command="git tag -a ${version.number} -m 'Version ${version.number}'"
+            dir="${APP_ROOT}"
+            checkreturn="true"
+            passthru="true"
+            />
+    </target>
+
+    <target name="build">
+        <echo msg="Generation PHAR"/>
+        <exec
+            command="bin/compile"
+            dir="${APP_ROOT}"
+            checkreturn="true"
+            passthru="true"
+            />
+        <echo msg="Done"/>
+    </target>
+
+    <target name="buildAll" depends="test,sniff,phpcpd,phpmd,pdepend,document,build">
     </target>
 
     <target name="test" depends="install,createBuildDir">
