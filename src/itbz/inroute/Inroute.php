@@ -57,7 +57,7 @@ class Inroute
         $auraroute = $this->map->match($path, $server);
 
         if (!$auraroute) {
-            $msg = "No route found for <$path>";
+            $msg = "No route found for $path";
             throw new RuntimeExpection($msg);
         }
 

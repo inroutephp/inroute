@@ -21,9 +21,6 @@ die();
     - version sätts i bin/inroute
         måste göras automatiskt när jag bygger nya versioner
 
-    - kan inte använda <> i felmeddelanden
-        -- försvinner när output är html...
-
     - behat katalogen ska bort!!, skapa istället katalog example
     - skapa en testApp under build .. så kan folk se hur example blir en app...
 
