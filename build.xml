@@ -35,9 +35,9 @@
         <version releasetype="${release_option}" file="version.txt" property="version.number"/>
         <echo message="Using version: ${version.number}"/>
         <phingcall target="build"/>
-        <echo message="Commit version number"/>
+        <echo message="Commit inroute.phar and version number"/>
         <exec
-            command="git commit version.txt -m 'Version ${version.number}'"
+            command="git add inroute.phar; git add version.txt; git commit -m 'Version ${version.number}'"
             dir="${APP_ROOT}"
             checkreturn="true"
             passthru="true"
@@ -45,6 +45,13 @@
         <echo message="Creating git tag"/>
         <exec
             command="git tag -a ${version.number} -m 'Version ${version.number}'"
+            dir="${APP_ROOT}"
+            checkreturn="true"
+            passthru="true"
+            />
+        <echo message="Push to github"/>
+        <exec
+            command="git push; git push --tags"
             dir="${APP_ROOT}"
             checkreturn="true"
             passthru="true"
