@@ -224,7 +224,7 @@ this problem occurs try to uninstall xcache.
 Running unit tests
 ------------------
 
-Run test be typing
+Run test by typing
 
     > phpunit
 
