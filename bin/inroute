@@ -14,9 +14,9 @@ namespace itbz\inroute;
 use Symfony\Component\Console\Application;
 
 require __DIR__ . '/../src/bootstrap.php';
-$version = file_get_contents(__DIR__ . '/../version.txt');
 
 if (php_sapi_name() == 'cli') {
+    $version = file_get_contents(__DIR__ . '/../version.txt');
     $app = new Application('inroute', $version);
     $app->add(new Console\BuildCommand);
     $app->run();
