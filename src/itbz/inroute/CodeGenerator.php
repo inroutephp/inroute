@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package itbz\inroute
  */
 
 namespace itbz\inroute;
@@ -23,7 +20,8 @@ use Mustache_Engine;
  * classnames, an optional www-root, a caller classname (if the default caller
  * is none is specified) and a DI-container.
  * 
- * @package itbz\inroute
+ * @package inroute
+ * @author Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class CodeGenerator
 {

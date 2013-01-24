@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package itbz\inroute
  */
 
 namespace itbz\inroute;
@@ -19,7 +16,8 @@ use itbz\inroute\Exception\InjectionException;
 /**
  * ReflectionClass extension with docbloc parsing capabilities
  *
- * @package itbz\inroute
+ * @package inroute
+ * @author Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class ReflectionClass extends \ReflectionClass
 {

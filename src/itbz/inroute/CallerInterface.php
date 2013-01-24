@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package itbz\inroute
  */
 
 namespace itbz\inroute;
@@ -18,7 +15,8 @@ namespace itbz\inroute;
  *
  * Custom callers must implement this interface
  *
- * @package itbz\inroute
+ * @package inroute
+ * @author Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 interface CallerInterface
 {

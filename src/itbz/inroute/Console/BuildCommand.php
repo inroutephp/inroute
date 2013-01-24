@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package itbz\inroute
  */
 
 namespace itbz\inroute\Console;
@@ -22,13 +19,14 @@ use itbz\inroute\InrouteFactory;
 
 /**
  * Build inroute project command
- *
- * @package itbz\inroute
+ * 
+ * @package inroute
+ * @author Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class BuildCommand extends Command
 {
     /**
-     * Configure command. Called by console Application.
+     * Configure this command. Called by console Application.
      *
      * @return void
      */
@@ -57,7 +55,7 @@ class BuildCommand extends Command
     }
 
     /**
-     * Excecute command
+     * Excecute this command
      *
      * @param InputInterface $input
      * @param OutputInterface $output

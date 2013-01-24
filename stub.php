@@ -21,8 +21,6 @@ die();
     - version sätts i bin/inroute
         måste göras automatiskt när jag bygger nya versioner
 
-    - fel package för massa filer i documentor
-
     - kan inte använda <> i felmeddelanden
         -- försvinner när output är html...
 

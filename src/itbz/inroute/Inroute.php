@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package itbz\inroute
  */
 
 namespace itbz\inroute;
@@ -22,7 +19,8 @@ use itbz\inroute\Exception\RuntimeExpection;
  * This class should not be instantiated directly. Instead use CodeGenerator
  * to generate code that returns a customized Inroute object.
  * 
- * @package itbz\inroute
+ * @package inroute
+ * @author Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class Inroute
 {

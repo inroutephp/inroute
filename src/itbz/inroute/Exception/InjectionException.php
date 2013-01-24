@@ -6,9 +6,6 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- *
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- * @package itbz\inroute
  */
 
 namespace itbz\inroute\Exception;
@@ -18,7 +15,8 @@ use itbz\inroute\Exception;
 /**
  * Exception thrown when injection failes
  *
- * @package itbz\inroute\Exception
+ * @package inroute
+ * @author Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class InjectionException extends Exception
 {
