@@ -14,11 +14,7 @@
     "autoload": {
         "psr-0": {
             "itbz\\inroute": "src/"
-        },
-        "classmap": [
-            "tests/unit/data/",
-            "example/"
-        ]
+        }
     },
     "require": {
         "php": ">=5.3.0",

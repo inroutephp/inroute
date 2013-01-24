@@ -54,7 +54,7 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
         $classes = $scanner->addFile(__DIR__ . '/data/Working.php')
             ->getClasses();
 
-        $this->assertEquals(array('itbz\test\Working'), $classes);
+        $this->assertEquals(array('unit\data\Working'), $classes);
     }
 
     public function testScan()
@@ -90,6 +90,6 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
             ->addDir(__DIR__ . '/data/')
             ->getClasses();
 
-        $this->assertEquals(array('itbz\test\NoConstructor'), $classes);
+        $this->assertEquals(array('unit\data\NoConstructor'), $classes);
     }
 }

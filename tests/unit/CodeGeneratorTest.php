@@ -23,7 +23,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('foobar'));
 
         $generator = new CodeGenerator($mustache);
-        $generator->addClass('itbz\test\Working');
+        $generator->addClass('unit\data\Working');
 
         $this->assertEquals('foobar', $generator->getDependencyContainerCode());
     }
@@ -49,7 +49,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $generator = new CodeGenerator($mustache);
         $generator->setRoot('root');
-        $generator->addClass('itbz\test\Working');
+        $generator->addClass('unit\data\Working');
 
         $this->assertEquals('foobar', $generator->getRouteCode());
     }
@@ -135,9 +135,9 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $mustache = $this->getMock('\Mustache_Engine');
         $generator = new CodeGenerator($mustache);
-        $generator->addClass('\itbz\test\Container');
+        $generator->addClass('\unit\data\Container');
         $this->assertEquals(
-            '\itbz\test\Container',
+            '\unit\data\Container',
             $generator->getContainerClassName()
         );
     }

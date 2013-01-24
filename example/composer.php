@@ -10,7 +10,8 @@ if (!file_exists(__DIR__ . '/app.php')) {
 
 use itbz\inroute\InrouteFactory;
 
-include __DIR__ . "/../vendor/autoload.php";
+$loader = include __DIR__ . "/../vendor/autoload.php";
+$loader->add('', __DIR__.'/Application');
 
 $app = include "app.php";
 

@@ -1,5 +1,5 @@
 <?php
-namespace itbz\test;
+namespace unit\data;
 
 class NoInroute
 {

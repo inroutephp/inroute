@@ -5,28 +5,28 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
     public function testIsinroute()
     {
-        $no = new ReflectionClass('itbz\test\NoInroute');
+        $no = new ReflectionClass('unit\data\NoInroute');
         $this->assertFalse($no->isInroute());
 
-        $yes = new ReflectionClass('itbz\test\NoConstructor');
+        $yes = new ReflectionClass('unit\data\NoConstructor');
         $this->assertTrue($yes->isInroute());
     }
 
     public function testIsCaller()
     {
-        $no = new ReflectionClass('itbz\test\NoInroute');
+        $no = new ReflectionClass('unit\data\NoInroute');
         $this->assertFalse($no->isCaller());
     }
 
     public function testIsContainer()
     {
-        $no = new ReflectionClass('itbz\test\NoInroute');
+        $no = new ReflectionClass('unit\data\NoInroute');
         $this->assertFalse($no->isContainer());
     }
 
     public function testNoConstructor()
     {
-        $refl = new ReflectionClass('itbz\test\NoConstructor');
+        $refl = new ReflectionClass('unit\data\NoConstructor');
         $this->assertEquals(
             array(),
             $refl->getInjections(),
@@ -36,8 +36,8 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFactoryName()
     {
-        $refl = new ReflectionClass('itbz\test\NoConstructor');
-        $this->assertEquals('itbz_test_NoConstructor', $refl->getFactoryName());
+        $refl = new ReflectionClass('unit\data\NoConstructor');
+        $this->assertEquals('unit_data_NoConstructor', $refl->getFactoryName());
     }
 
     /**
@@ -45,7 +45,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      */
     public function testInjectionMissing()
     {
-        $refl = new ReflectionClass('itbz\test\InjectionMissing');
+        $refl = new ReflectionClass('unit\data\InjectionMissing');
         $refl->getInjections();
     }
 
@@ -54,19 +54,19 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      */
     public function testParamMissing()
     {
-        $refl = new ReflectionClass('itbz\test\InjectedParameterMissing');
+        $refl = new ReflectionClass('unit\data\InjectedParameterMissing');
         $refl->getInjections();
     }
 
     public function testGetSignature()
     {
-        $refl = new ReflectionClass('itbz\test\Working');
+        $refl = new ReflectionClass('unit\data\Working');
         $this->assertEquals('$bar, $x, $y', $refl->getSignature());
     }
 
     public function testGetInjections()
     {
-        $refl = new ReflectionClass('itbz\test\Working');
+        $refl = new ReflectionClass('unit\data\Working');
         $expected = array(
             array(
                 'name' => '$bar',
@@ -92,7 +92,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRoutes()
     {
-        $refl = new ReflectionClass('itbz\test\Working');
+        $refl = new ReflectionClass('unit\data\Working');
         $routes = $refl->getRoutes();
         $this->assertTrue(is_array($routes));
         $this->assertEquals(2, count($routes));
