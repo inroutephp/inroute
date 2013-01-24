@@ -23,7 +23,7 @@ class Controller
     /**
      * The $route annotation tells inroute when to route requests to this method
      *
-     * @route GET /foo/{:name}
+     * @route GET /application/{:name}
      */
     public function cntrl(Route $route, $customRequest)
     {

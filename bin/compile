@@ -23,10 +23,9 @@ function addFile(Phar $phar, SplFileInfo $file)
     $phar->addFromString($path, $content);
 }
 
-$target = __DIR__ . '/../build/inroute.phar';
+$target = __DIR__ . '/../inroute.phar';
 
 $stub = <<<'EOF'
-#!/usr/bin/env php
 <?php
 /*
  * This file is part of the inroute package
@@ -62,6 +61,7 @@ $finder->files()
     ->exclude('Tests')
     ->exclude('tests')
     ->exclude('test')
+    ->exclude('example')
     ->in(__DIR__ . '/..');
 
 foreach ($finder as $file) {

@@ -3,6 +3,12 @@ inroute
 
 Generate web router and controller dispatcher from docblock annotations
 
+
+Running inroute from phar when xcache is installed has been known to trigger
+a PharException with message '__HALT_COMPILER(); must be declared in a phar'. If
+this problem occurs try to uninstall xcache.
+
+
 ## Inline invocation using the composer autoloader
 
     include "vendor/autoload.php";
