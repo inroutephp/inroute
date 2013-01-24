@@ -1,10 +1,6 @@
 <?php
 
-namespace itbz\inroute;
-
 include "vendor/autoload.php";
-
-header('Content-Type: text/plain');
 
 //*
 $app = include "app.php";
@@ -20,6 +16,7 @@ die();
 
     - version sätts i bin/inroute
         måste göras automatiskt när jag bygger nya versioner
+        bygg med phing
 
     - behat katalogen ska bort!!, skapa istället katalog example
     - skapa en testApp under build .. så kan folk se hur example blir en app...
@@ -32,7 +29,9 @@ die();
         php inroute.phar -v
 */
 
-$factory = new InrouteFactory();
+header('Content-Type: text/plain');
+
+$factory = new \itbz\inroute\InrouteFactory();
 $factory->setDirs(array('tests/behat/data'));
 $inroute = eval($factory->generate());
 

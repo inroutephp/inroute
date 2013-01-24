@@ -4,27 +4,27 @@ class Dependencies {
     public function __construct(\Pimple $container) {
         $this->container = $container;
     }
-    public function itbz_test_Controller(){
-        $arg = $this->container["xx"];
-        return new \itbz\test\Controller($arg);
+    public function Controller(){
+        $dependency = $this->container["getDependency"];
+        return new \Controller($dependency);
     }
 }
 function append_routes(\Aura\Router\Map $map, Dependencies $deps, CallerInterface $caller) {
-    $map->add("view", "/foo/{:name}", array(
+    $map->add("cntrl", "/foo/{:name}", array(
         "values" => array(
             "method" => array(
                 "GET",
             ),
             "controller" => function ($route) use ($map, $deps, $caller) {
-                $cntrl = $deps->itbz_test_Controller();
-                return $caller->call(array($cntrl, "view"), $route);
+                $cntrl = $deps->Controller();
+                return $caller->call(array($cntrl, "cntrl"), $route);
             }
         )
     ));
     return $map;
 }
-$deps = new Dependencies(new \itbz\test\Container);
-$caller = new DefaultCaller();
+$deps = new Dependencies(new \Container);
+$caller = new \Caller();
 $map = new \Aura\Router\Map(new \Aura\Router\RouteFactory);
 $map = append_routes($map, $deps, $caller);
 return new Inroute($map);
