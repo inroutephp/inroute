@@ -30,11 +30,18 @@
 
     <target name="release">
         <input propertyname="release_option" defaultValue="Minor" validargs="Major,Minor,BugFix" promptChar=":">
-            Please choose a build type
+            Choose a build type (WARNING: are all changes commited)
         </input>
         <version releasetype="${release_option}" file="version.txt" property="version.number"/>
         <echo message="Using version: ${version.number}"/>
         <phingcall target="build"/>
+        <echo message="Commit version number"/>
+        <exec
+            command="git commit version.txt -m 'Version ${version.number}'"
+            dir="${APP_ROOT}"
+            checkreturn="true"
+            passthru="true"
+            />
         <echo message="Creating git tag"/>
         <exec
             command="git tag -a ${version.number} -m 'Version ${version.number}'"
