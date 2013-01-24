@@ -1,11 +1,11 @@
-inroute
+INROUTE
 =======
 
 Generate web router and controller dispatcher from docblock annotations
 
 When building web-apps a constantly see myself repeating the same pattern.
 I define some controller classes that have various dependencies. I write a
-DI-container the facilitate instantiating my controllers. I use some router
+DI-container to facilitate instantiating my controllers. I use some router
 package and write a file defining all my routes and point them to my controllers.
 And lastly I write some kind of dispatch logic where I perform routing, get my
 controller objects from the container and execute the controller. All of this is
@@ -17,7 +17,7 @@ in the controller classes using annotations (actually docblock style tags).
 Inroute is a code generator. It scans your source tree for classes marked with
 tha @inroute tag. It handles fetching dependencies from your DI-container using
 the @inject tag. And it sets up all routes based on @route tags. From this it
-generates a router and a dispatcher. When done all you to do is to bootstrap
+generates a router and a dispatcher. When done all you have to do is to bootstrap
 your application auto-loading and dispatch.
 
     $app = include 'generated_application.php';
@@ -31,7 +31,7 @@ Annotations
 ### @inroute
 
 All controller classes that should be processed must use the @inroute tag. Se
-example controller below. Or the example app in the source tree.
+example controller below, or the example app in the source tree.
 
 ### @inject
 
@@ -55,25 +55,26 @@ like this
 
     @route GET /path/{:name}
 
-And acces the parameter from the generated ŕoute object
+And acces the parameter from the generated route object
 
     $name = $route->getValue('name');
 
-Inroute uses the Aura Router package for routing. Se the aura documenatation for
-syntax used when creating paths and path parameters.
+Inroute uses the [Aura Router](https://github.com/auraphp/Aura.Router) package
+for routing. Se the aura documenatation for additional syntax used when creating
+paths and path parameters.
 
 ### @inrouteContainer
 
 Your DI-container must be marked with the @inrouteContainer tag for inroute to
-find it. Se the example application in the source tree for an example.
+find it. Se the example below or the example application in the source tree.
 
-Containers must currently subclass Pimple. This is neither a clean or flexible
-solution. Please fork and hack away!
+Containers must currently subclass [Pimple](https://github.com/fabpot/Pimple).
+This is neither a clean or flexible solution. Please fork and hack away!
 
 ### @inrouteCaller
 
 By default controller methods are called with a Route object as single parameter.
-If you want to create more parameters at dispatch (for example some $request
+If you want to create more parameters at dispatch (for example some request
 object) you can write your own caller. The syntax is straight forward, se
 te example application in the source tree for an example.
 
@@ -97,8 +98,12 @@ Or to generate urls from the current or other definied routes.
 
 
 
-An example controller
----------------------
+A short example
+---------------
+
+### A controller
+
+Using getDependency to inject $dep and defining two routes.
 
     use itbz\inroute\Route;
 
@@ -133,8 +138,9 @@ An example controller
 
 
 
-An example DI-container
--------------------------
+###A DI-container
+
+Defining the getDependency method
 
     class Container extends \Pimple
     {
@@ -152,13 +158,17 @@ Installing
 ----------
 
 Inroute can either be installed using composer and the packagist repository. Add
-'intz/inroute' as a dependency to your 'composer.json'.
+intz/inroute as a dependency to your composer.json.
 
-Non-composer projects can can download 'inroute.phar' and use it as described
+Non-composer projects can can download inroute.phar and use it as described
 below.
 
 If you are using php with the suhosin patch and want to use the phar archive you
-might need to set 'suhosin.executor.include.whitelist=phar' in your php.ini.
+might need to set
+
+    suhosin.executor.include.whitelist="phar"
+
+in your php.ini.
 
 
 
@@ -194,11 +204,11 @@ for some explanatory comments.
 
 The example directory contains three different dispatchers:
 
-* 'development.php' builds the application on every page reload. Use this style
+* development.php builds the application on every page reload. Use this style
   of dispatch during development.
-* 'composer.php' dispatches the application using the composer autoloader. This
+* composer.php dispatches the application using the composer autoloader. This
   style of usage requires inroute to be installed as a composer dependancy.
-* 'phar.php' dispatches using the phar archive. Only requires the phar file.
+* phar.php dispatches using the phar archive. This only requires the phar file.
   Slightly slower than using composer, but sutable for non-composer projects.
 
 Point your browser to either one of these files to view the output.
@@ -227,7 +237,7 @@ To install phing
     > sudo pear install --alldeps phing/phing
     > sudo pear config-set preferred_state stable
 
-The from the root project directory type
+Then from the root project directory type
 
     > phing
 
@@ -247,4 +257,8 @@ Or with phing
 
     > phing build
 
-Building the phar requires 'phar.readonly=0' in your php.ini.
+Building the phar requires
+
+    phar.readonly=0
+
+in your php.ini.
