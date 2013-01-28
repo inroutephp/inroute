@@ -157,11 +157,12 @@ Defining the getDependency method
 Installing
 ----------
 
-Inroute can either be installed using composer and the packagist repository. Add
-intz/inroute as a dependency to your composer.json.
+Inroute can be installed using composer and the packagist repository. Add
+intz/inroute as a dependency to your composer.json. When installed through
+composer the phar binary is accessed via vendor/bin/inroute.phar.
 
-Non-composer projects can can download inroute.phar and use it as described
-below.
+Non-composer projects can can download inroute.phar directly and use it as
+described below.
 
 If you are using php with the suhosin patch and want to use the phar archive you
 might need to set
