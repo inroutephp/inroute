@@ -8,7 +8,12 @@ use itbz\inroute\InrouteFactory;
 include __DIR__ . "/../vendor/autoload.php";
 
 $factory = new InrouteFactory();
-$factory->setDirs(array('Application'));
+$factory->setDirs(array(__DIR__ . '/Application'));
 $app = eval($factory->generate());
 
-echo $app->dispatch('/application/pagename', $_SERVER);
+// uri injected? (used when testing)
+if (!isset($uri)) {
+    $uri = '/application/pagename';
+}
+
+echo $app->dispatch($uri, $_SERVER);

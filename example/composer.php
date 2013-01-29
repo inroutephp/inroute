@@ -1,7 +1,7 @@
 <?php
 
 if (!file_exists(__DIR__ . '/app.php')) {
-    echo "run example/build to generate inroute application";
+    echo 'run example/build to generate inroute application';
     die();
 }
 
@@ -10,9 +10,14 @@ if (!file_exists(__DIR__ . '/app.php')) {
 
 use itbz\inroute\InrouteFactory;
 
-$loader = include __DIR__ . "/../vendor/autoload.php";
-$loader->add('', __DIR__.'/Application');
+$loader = include __DIR__ . '/../vendor/autoload.php';
+$loader->add('', __DIR__ . '/Application');
 
-$app = include "app.php";
+$app = include __DIR__ . '/app.php';
 
-echo $app->dispatch('/application/pagename', $_SERVER);
+// uri injected? (used when testing)
+if (!isset($uri)) {
+    $uri = '/application/pagename';
+}
+
+echo $app->dispatch($uri, $_SERVER);

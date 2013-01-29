@@ -33,4 +33,24 @@ class Controller
 
         return $view;
     }
+
+    /**
+     * Hello world controller. Used when testing.
+     *
+     * @route POST /hello-world
+     */
+    public function postHelloWorld()
+    {
+        return 'POST hello world';
+    }
+
+    /**
+     * Hello world controller. Used when testing.
+     *
+     * @route GET /hello-world
+     */
+    public function helloWorld()
+    {
+        return 'Hello world!';
+    }
 }

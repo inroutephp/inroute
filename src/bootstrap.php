@@ -8,14 +8,22 @@
  * file that was distributed with this source code.
  */
 
-$loader = __DIR__ . '/../vendor/autoload.php';
+return call_user_func(
+    function () {
+        global $loader;
+        $loaderPath = __DIR__ . '/../vendor/autoload.php';
+        if (!isset($loader)) {
+            if (file_exists($loaderPath)) {
+                $loader = include $loaderPath;
+            } else {
+                echo 'You must set up Inroute dependencies to continue.' . PHP_EOL
+                    . 'Run the following commands from the project root:' . PHP_EOL
+                    . 'curl -s http://getcomposer.org/installer | php' . PHP_EOL
+                    . 'php composer.phar install' . PHP_EOL;
+                exit(1);
+            }
+        }
 
-if (file_exists($loader)) {
-    return include $loader;
-} else {
-    echo 'You must set up Inroute dependencies to continue.' . PHP_EOL
-        . 'Run the following commands from the project root:' . PHP_EOL
-        . 'curl -s http://getcomposer.org/installer | php' . PHP_EOL
-        . 'php composer.phar install' . PHP_EOL;
-    exit(1);
-}
+        return $loader;
+    }
+);
