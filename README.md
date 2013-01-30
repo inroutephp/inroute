@@ -63,9 +63,20 @@ And acces the parameter from the generated route object
 
     $name = $route->getValue('name');
 
-Inroute uses the [Aura Router](https://github.com/auraphp/Aura.Router) package
-for routing. Se the aura documenatation for additional syntax used when creating
-paths and path parameters.
+#### Using regular expressions when defining params
+
+You may use regular expression subpatterns when defining parameters.
+
+    @route GET /path/{:name:(pattern)}
+
+Where name is the name of the parameter and pattern is the matching subpattern.
+
+For example you can definie a path that takes a numeric id parameter:
+
+    @route GET /object/{:id:(\d+)}
+
+(Inroute uses the [Aura Router](https://github.com/auraphp/Aura.Router) package
+for routing. For more information see the aura documenatation.)
 
 ### @inrouteContainer
 
