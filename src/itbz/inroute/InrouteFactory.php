@@ -18,14 +18,12 @@ use Symfony\Component\Finder\Finder;
  * User access class for the inroute package
  *
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class InrouteFactory
 {
     /**
-     * Inroute settings
-     *
-     * @var array
+     * @var array Inroute settings
      */
     private $settings = array(
         "root" => "",
@@ -36,28 +34,24 @@ class InrouteFactory
     );
 
     /**
-     * Class scanner object
-     *
-     * @var ClassScanner
+     * @var ClassScanner Class scanner object
      */
     private $scanner;
 
     /**
-     * Code generator
-     *
-     * @var CodeGenerator
+     * @var CodeGenerator Code generator
      */
     private $generator;
 
     /**
-     * User access class for the inroute package
+     * Constructor
      *
      * InrouteFactory works both in an injectionist and a standalone way. You
-     * may inject a mustache enginge and a ClassScanner, if not facade will try
-     * to create it for you.
+     * may inject a mustache enginge and a ClassScanner, if not they will be
+     * created for you.
      *
      * @param CodeGenerator $generator
-     * @param ClassScanner $scanner
+     * @param ClassScanner  $scanner
      */
     public function __construct(
         CodeGenerator $generator = null,
@@ -110,9 +104,8 @@ class InrouteFactory
     /**
      * Set prefixes to search for
      *
-     * @param string|array $prefixes
-     *
-     * @return InrouteFactory instance for chaining
+     * @param  string|array   $prefixes
+     * @return InrouteFactory Instance for chaining
      */
     public function setPrefixes($prefixes)
     {
@@ -125,9 +118,8 @@ class InrouteFactory
     /**
      * Set directories to scan for classes
      *
-     * @param string|array $dirs
-     *
-     * @return InrouteFactory instance for chaining
+     * @param  string|array   $dirs
+     * @return InrouteFactory Instance for chaining
      */
     public function setDirs($dirs)
     {
@@ -140,9 +132,8 @@ class InrouteFactory
     /**
      * Set files to scan for classes
      *
-     * @param string|array $files
-     *
-     * @return InrouteFactory instance for chaining
+     * @param  string|array   $files
+     * @return InrouteFactory Instance for chaining
      */
     public function setFiles($files)
     {
@@ -155,9 +146,8 @@ class InrouteFactory
     /**
      * Set classes to include
      *
-     * @param string|array $classes
-     *
-     * @return InrouteFactory instance for chaining
+     * @param  string|array   $classes
+     * @return InrouteFactory Instance for chaining
      */
     public function setClasses($classes)
     {
@@ -170,9 +160,8 @@ class InrouteFactory
     /**
      * Set project www root
      *
-     * @param string $root
-     *
-     * @return InrouteFactory instance for chaining
+     * @param  string         $root
+     * @return InrouteFactory Instance for chaining
      */
     public function setRoot($root)
     {
@@ -183,9 +172,7 @@ class InrouteFactory
     }
 
     /**
-     * Get current settings
-     *
-     * For testing
+     * Get current settings. For testing.
      * 
      * @return array
      */

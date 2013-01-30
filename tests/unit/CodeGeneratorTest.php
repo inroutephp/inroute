@@ -121,17 +121,6 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
         $stub->addClasses(array('classname'));
     }
 
-    /**
-     * @ expectedException itbz\inroute\Exception\RuntimeExpection
-     * /
-    public function testNoContainerException()
-    {
-        $mustache = $this->getMock('\Mustache_Engine');
-        $generator = new CodeGenerator($mustache);
-        $generator->getContainerClassName();
-    }
-    */
-
     public function testAddContainerClass()
     {
         $mustache = $this->getMock('\Mustache_Engine');

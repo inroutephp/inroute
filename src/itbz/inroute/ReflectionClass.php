@@ -17,7 +17,7 @@ use itbz\inroute\Exception\InjectionException;
  * ReflectionClass extension with docbloc parsing capabilities
  *
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class ReflectionClass extends \ReflectionClass
 {
@@ -32,7 +32,7 @@ class ReflectionClass extends \ReflectionClass
     private $classDocBlock;
 
     /**
-     * ReflectionClass extension with docbloc parsing capabilities
+     * Constructor
      *
      * @param mixed $arg Either a string containing the name of the class to
      * reflect, or an object.

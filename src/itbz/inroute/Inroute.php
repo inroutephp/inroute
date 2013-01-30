@@ -20,19 +20,17 @@ use itbz\inroute\Exception\RuntimeExpection;
  * to generate code that returns a customized Inroute object.
  * 
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class Inroute
 {
     /**
-     * Aura map object
-     *
-     * @var Map
+     * @var Map Aura map object
      */
     private $map;
 
     /**
-     * Inroute base class
+     * Constructor
      *
      * @param Map $map
      */
@@ -44,11 +42,9 @@ class Inroute
     /**
      * Dispatch request
      *
-     * @param string $path
-     * @param array $server Usually $_SERVER
-     *
-     * @return mixed Whatever the caller returns
-     *
+     * @param  string           $path   The path to dispatch
+     * @param  array            $server Usually $_SERVER
+     * @return mixed            Whatever the caller returns
      * @throws RuntimeExpection If no route is found
      */
     public function dispatch($path, array $server)

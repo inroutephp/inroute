@@ -21,47 +21,37 @@ use Mustache_Engine;
  * is none is specified) and a DI-container.
  * 
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class CodeGenerator
 {
     /**
-     * Mustache instance
-     *
-     * @var Mustache_Engine
+     * @var Mustache_Engine Mustache instance
      */
     private $mustache;
 
     /**
-     * List of classes to process
-     *
-     * @var array
+     * @var array List of classes to process
      */
     private $reflectionClasses = array();
 
     /**
-     * Root path
-     *
-     * @var string
+     * @var string Root path
      */
     private $root;
 
     /**
-     * Caller classname
-     *
-     * @var string
+     * @var string Caller classname
      */
     private $caller = 'DefaultCaller';
 
     /**
-     * Container classname
-     *
-     * @var string
+     * @var string Container classname
      */
     private $container = 'DefaultContainer';
 
     /**
-     * The Inrout router generator
+     * Constructor
      *
      * @param Mustache_Engine $mustache
      */
@@ -73,9 +63,8 @@ class CodeGenerator
     /**
      * Bulk add array of classnames
      *
-     * @param array $classes
-     *
-     * @return CodeGenerator instance for chaining
+     * @param  array         $classes
+     * @return CodeGenerator Instance for chaining
      */
     public function addClasses(array $classes)
     {
@@ -89,9 +78,8 @@ class CodeGenerator
     /**
      * Add class for processing
      *
-     * @param string $classname
-     *
-     * @return CodeGenerator instance for chaining
+     * @param  string        $classname
+     * @return CodeGenerator Instance for chaining
      */
     public function addClass($classname)
     {
@@ -114,9 +102,8 @@ class CodeGenerator
     /**
      * Set root path
      *
-     * @param string $root
-     *
-     * @return CodeGenerator instance for chaining
+     * @param  string        $root
+     * @return CodeGenerator Instance for chaining
      */
     public function setRoot($root)
     {
@@ -129,9 +116,8 @@ class CodeGenerator
     /**
      * Set caller class name
      *
-     * @param string $classname
-     *
-     * @return CodeGenerator instance for chaining
+     * @param  string        $classname
+     * @return CodeGenerator Instance for chaining
      */
     public function setCallerClassName($classname)
     {
@@ -154,9 +140,8 @@ class CodeGenerator
     /**
      * Set DI-container class name
      *
-     * @param string $classname
-     *
-     * @return CodeGenerator instance for chaining
+     * @param  string        $classname
+     * @return CodeGenerator Instance for chaining
      */
     public function setContainerClassName($classname)
     {
@@ -177,7 +162,7 @@ class CodeGenerator
     }
 
     /**
-     * Get code for the generated DIC
+     * Get DIC code
      *
      * @return string
      */
@@ -198,7 +183,7 @@ class CodeGenerator
     }
 
     /**
-     * Get code for the generated route map
+     * Get route map code
      *
      * @return string
      */

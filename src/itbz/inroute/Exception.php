@@ -14,7 +14,7 @@ namespace itbz\inroute;
  * Base exception
  *
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class Exception extends \Exception
 {

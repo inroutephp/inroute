@@ -21,7 +21,7 @@ use itbz\inroute\InrouteFactory;
  * Build inroute project command
  * 
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class BuildCommand extends Command
 {
@@ -57,9 +57,8 @@ class BuildCommand extends Command
     /**
      * Excecute this command
      *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)

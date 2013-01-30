@@ -16,17 +16,16 @@ namespace itbz\inroute;
  * Custom callers must implement this interface
  *
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 interface CallerInterface
 {
     /**
      * Call a system controller
      *
-     * @param mixed $controller Anything acceptable by call_user_func
-     * @param Route $route
-     *
-     * @return void
+     * @param  mixed $controller Anything acceptable by call_user_func
+     * @param  Route $route
+     * @return mixed Whatewer the controller returns
      */
     public function call($controller, Route $route);
 }

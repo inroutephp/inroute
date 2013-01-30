@@ -18,26 +18,22 @@ use LogicException;
  * Scan filesystem for classes
  * 
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class ClassScanner
 {
     /**
-     * Finder object
-     *
-     * @var Finder
+     * @var Finder Finder object
      */
     private $finder;
 
     /**
-     * List of found classes
-     *
-     * @var array
+     * @var array List of found classes
      */
     private $classes = array();
 
     /**
-     * Scan filesystem for classes
+     * Constructor
      *
      * @param Finder $finder
      */
@@ -52,28 +48,24 @@ class ClassScanner
      *
      * Prefixes are only used togheter with directories
      * 
-     * @param string $prefix
-     *
-     * @return ClassScanner instance for chaining
+     * @param  string       $prefix
+     * @return ClassScanner Instance for chaining
      */
     public function addPrefix($prefix)
     {
         $this->finder->name("*.$prefix");
-
         return $this;
     }
 
     /**
-     * Add file directory to scan for
+     * Add directory to scan
      * 
-     * @param string $dirname
-     *
-     * @return ClassScanner instance for chaining
+     * @param  string       $dirname
+     * @return ClassScanner Instance for chaining
      */
     public function addDir($dirname)
     {
         $this->finder->in($dirname);
-
         return $this;
     }
 
@@ -99,10 +91,8 @@ class ClassScanner
     /**
      * Scan file and process found classes
      *
-     * @param string $filename
-     *
-     * @return ClassScanner instance for chaining
-     *
+     * @param  string           $filename
+     * @return ClassScanner     Instance for chaining
      * @throws RuntimeException If $filename is not readable
      * @throws RuntimeException If $filename is already included
      */

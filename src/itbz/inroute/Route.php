@@ -17,29 +17,25 @@ use Aura\Router\Map;
  * The Inrout route object
  * 
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class Route
 {
     /**
-     * Aura route object
-     *
-     * @var AuraRoute
+     * @var AuraRoute Aura route object
      */
     private $route;
 
     /**
-     * Aura map object
-     *
-     * @var Map
+     * @var Map Aura map object
      */
     private $map;
 
     /**
-     * The Inroute route object
+     * Construct
      *
      * @param AuraRoute $route
-     * @param Map $map
+     * @param Map       $map
      */
     public function __construct(AuraRoute $route, Map $map)
     {
@@ -50,18 +46,15 @@ class Route
     /**
      * Generate url based an route name and values
      *
-     * @param string $name Name of route to generate. If omitted current route is used
-     * @param array $data data used in route path
-     *
+     * @param  string $name Name of route to generate. If omitted current route is used
+     * @param  array  $data data used in route path
      * @return string
      */
     public function generate($name = null, array $data = null)
     {
         if ($name) {
-
             return $this->map->generate($name, $data);
         } else {
-
             return $this->route->generate();
         }
     }

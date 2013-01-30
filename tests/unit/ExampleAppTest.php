@@ -36,7 +36,11 @@ class ExampleAppTest extends \PHPUnit_Framework_TestCase
         $uri = '/hello-world';
         $_SERVER['REQUEST_METHOD'] = 'GET';
         include INROUTE_EXAMPLE_DIR . '/development.php';
-        $this->assertEquals('Hello world!', ob_get_contents());
+        $this->assertEquals(
+            'Hello world!',
+            ob_get_contents(),
+            "Uri $uri should route to helloWorld()"
+        );
     }
 
     public function testComposerStyle()
@@ -44,7 +48,11 @@ class ExampleAppTest extends \PHPUnit_Framework_TestCase
         $uri = '/hello-world';
         $_SERVER['REQUEST_METHOD'] = 'GET';
         include INROUTE_EXAMPLE_DIR . '/composer.php';
-        $this->assertEquals('Hello world!', ob_get_contents());
+        $this->assertEquals(
+            'Hello world!',
+            ob_get_contents(),
+            "Uri $uri should route to helloWorld()"
+        );
     }
 
     public function testPharStyle()
@@ -53,6 +61,10 @@ class ExampleAppTest extends \PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         define('INROUTE_SKIP_COMMAND', true);
         include INROUTE_EXAMPLE_DIR . '/phar.php';
-        $this->assertEquals('Hello world!', ob_get_contents());
+        $this->assertEquals(
+            'Hello world!',
+            ob_get_contents(),
+            "Uri $uri should route to helloWorld()"
+        );
     }
 }

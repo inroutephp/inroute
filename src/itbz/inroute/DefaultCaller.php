@@ -16,8 +16,7 @@ namespace itbz\inroute;
  * Sends the raw Route object to the controller
  *
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
- *
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  * @inrouteCaller
  */
 class DefaultCaller implements CallerInterface
@@ -25,9 +24,8 @@ class DefaultCaller implements CallerInterface
     /**
      * {@inheritdoc}
      *
-     * @param mixed $controller Anything acceptable by call_user_func
-     * @param Route $route
-     *
+     * @param  mixed $controller Anything acceptable by call_user_func
+     * @param  Route $route
      * @return mixed Whatewer the controller returns
      */
     public function call($controller, Route $route)

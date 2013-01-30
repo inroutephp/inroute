@@ -16,7 +16,7 @@ use itbz\inroute\Exception;
  * Exception thrown when injection failes
  *
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class InjectionException extends Exception
 {

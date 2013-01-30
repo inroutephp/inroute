@@ -16,7 +16,7 @@ use itbz\inroute\Exception;
  * Inroute runtime exception
  *
  * @package inroute
- * @author Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
 class RuntimeExpection extends Exception
 {
