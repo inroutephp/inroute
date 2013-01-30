@@ -53,4 +53,14 @@ class Controller
     {
         return 'Hello world!';
     }
+
+    /**
+     * Controller using multiple methods. Used when testing.
+     *
+     * @route GET,POST /postAndGet
+     */
+    public function postAndGet()
+    {
+        return 'postAndGet';
+    }
 }

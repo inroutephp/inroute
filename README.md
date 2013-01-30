@@ -49,11 +49,15 @@ Controller methods that should be routable use the @route tag. The syntax is
 
     @route METHOD /path
 
-Where METHOD is the desired http method (currently each route can only use
-one http method) and path is the route path. You can add route parameters
-like this
+Where METHOD is the desired HTTP-method and path is the route path. You can add
+route parameters like this
 
     @route GET /path/{:name}
+
+Route multiple HTTP-methods to the same controller by listing methods separated
+by commas (but without spaces!).
+
+    @route POST,PUT /path/{:name}
 
 And acces the parameter from the generated route object
 

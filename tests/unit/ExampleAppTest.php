@@ -67,4 +67,16 @@ class ExampleAppTest extends \PHPUnit_Framework_TestCase
             "Uri $uri should route to helloWorld()"
         );
     }
+
+    public function testMultipleRoutes()
+    {
+        $uri = '/postAndGet';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        include INROUTE_EXAMPLE_DIR . '/composer.php';
+        $this->assertEquals(
+            'postAndGet',
+            ob_get_contents(),
+            "Uri $uri should route to postAndGet()"
+        );
+    }
 }
