@@ -58,7 +58,7 @@ class CodeGenerator
      *
      * @var string
      */
-    private $container;
+    private $container = 'DefaultContainer';
 
     /**
      * The Inrout router generator
@@ -170,16 +170,9 @@ class CodeGenerator
      * Get name of DI-container class
      *
      * @return string Name of supplied DI-container
-     *
-     * @throws RuntimeException If no container is found
      */
     public function getContainerClassName()
     {
-        if (!isset($this->container)) {
-            $msg = "No DI-container specified. Include container in project directory.";
-            throw new RuntimeExpection($msg);
-        }
-
         return $this->container;
     }
 
