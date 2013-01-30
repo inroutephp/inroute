@@ -1,7 +1,7 @@
 {
     "name": "itbz/inroute",
     "description": "Generate web router and controller dispatcher from docblock annotations",
-    "keywords": ["Dockblock annotations", "Router", "Code generator"],
+    "keywords": ["Annotations", "Router", "Code generator"],
     "homepage": "https://github.com/itbz/inroute",
     "type": "library",
     "license": "MIT",
