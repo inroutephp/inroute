@@ -1,7 +1,7 @@
 <?php
 namespace unit\data;
 
-use itbz\inroute\Route;
+use iio\inroute\Route;
 
 /**
  * @inroute

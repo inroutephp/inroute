@@ -1,5 +1,5 @@
 <?php
-namespace itbz\inroute;
+namespace iio\inroute;
 
 class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,7 +25,7 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGenerate()
     {
         $generator = $this->getMock(
-            '\itbz\inroute\CodeGenerator',
+            '\iio\inroute\CodeGenerator',
             array('addClass', 'generate'),
             array(),
             '',
@@ -33,7 +33,7 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $scanner = $this->getMock(
-            '\itbz\inroute\ClassScanner',
+            '\iio\inroute\ClassScanner',
             array(),
             array(),
             '',

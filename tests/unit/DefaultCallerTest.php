@@ -1,12 +1,12 @@
 <?php
-namespace itbz\inroute;
+namespace iio\inroute;
 
 class DefaultCallerTest extends \PHPUnit_Framework_TestCase
 {
     public function testCall()
     {
         $route = $this->getMock(
-            'itbz\inroute\Route',
+            'iio\inroute\Route',
             array(),
             array(),
             '',

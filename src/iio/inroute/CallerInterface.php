@@ -8,28 +8,24 @@
  * file that was distributed with this source code.
  */
 
-namespace itbz\inroute;
+namespace iio\inroute;
 
 /**
- * Default class for calling a system controller
+ * Interface for calling a system controller
  *
- * Sends the raw Route object to the controller
+ * Custom callers must implement this interface
  *
  * @package inroute
  * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
- * @inrouteCaller
  */
-class DefaultCaller implements CallerInterface
+interface CallerInterface
 {
     /**
-     * {@inheritdoc}
+     * Call a system controller
      *
      * @param  mixed $controller Anything acceptable by call_user_func
      * @param  Route $route
      * @return mixed Whatewer the controller returns
      */
-    public function call($controller, Route $route)
-    {
-        return call_user_func($controller, $route);
-    }
+    public function call($controller, Route $route);
 }

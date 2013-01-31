@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace itbz\inroute;
+namespace iio\inroute;
 
 use phpDocumentor\Reflection\DocBlock;
-use itbz\inroute\Exception\InjectionException;
+use iio\inroute\Exception\InjectionException;
 
 /**
  * ReflectionClass extension with docbloc parsing capabilities

@@ -8,14 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace itbz\inroute;
+namespace iio\inroute;
 
 /**
- * Base exception
+ * Default (empty) DI-container
  *
  * @package inroute
  * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @inrouteContainer
  */
-class Exception extends \Exception
+class DefaultContainer extends \Pimple
 {
 }

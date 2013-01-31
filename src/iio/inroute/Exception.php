@@ -8,16 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace itbz\inroute\Exception;
-
-use itbz\inroute\Exception;
+namespace iio\inroute;
 
 /**
- * Exception thrown when dependency generation fails
+ * Base exception
  *
  * @package inroute
  * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
  */
-class DependencyExpection extends Exception
+class Exception extends \Exception
 {
 }

@@ -120,7 +120,7 @@ A short example
 
 Using getDependency to inject $dep and defining two routes.
 
-    use itbz\inroute\Route;
+    use iio\inroute\Route;
 
     /**
      * @inroute

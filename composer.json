@@ -1,8 +1,8 @@
 {
-    "name": "itbz/inroute",
+    "name": "iio/inroute",
     "description": "Generate web router and controller dispatcher from docblock annotations",
     "keywords": ["Annotations", "Router", "Code generator"],
-    "homepage": "https://github.com/itbz/inroute",
+    "homepage": "https://github.com/iio/inroute",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -13,7 +13,7 @@
     ],
     "autoload": {
         "psr-0": {
-            "itbz\\inroute": "src/"
+            "iio\\inroute": "src/"
         }
     },
     "require": {

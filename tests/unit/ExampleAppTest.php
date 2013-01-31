@@ -1,5 +1,5 @@
 <?php
-namespace itbz\inroute;
+namespace iio\inroute;
 
 if (!defined('INROUTE_EXAMPLE_DIR')) {
     define('INROUTE_EXAMPLE_DIR', __DIR__ . '/../../example');

@@ -8,15 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace itbz\inroute;
+namespace iio\inroute\Exception;
+
+use iio\inroute\Exception;
 
 /**
- * Default (empty) DI-container
+ * Exception thrown when dependency generation fails
  *
  * @package inroute
  * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
- * @inrouteContainer
  */
-class DefaultContainer extends \Pimple
+class DependencyExpection extends Exception
 {
 }

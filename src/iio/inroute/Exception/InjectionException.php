@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace itbz\inroute\Exception;
+namespace iio\inroute\Exception;
 
-use itbz\inroute\Exception;
+use iio\inroute\Exception;
 
 /**
  * Exception thrown when injection failes

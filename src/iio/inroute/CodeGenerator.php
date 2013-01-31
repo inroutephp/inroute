@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace itbz\inroute;
+namespace iio\inroute;
 
-use itbz\inroute\Exception\RuntimeExpection;
+use iio\inroute\Exception\RuntimeExpection;
 use Mustache_Engine;
 
 /**

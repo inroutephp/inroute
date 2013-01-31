@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace itbz\inroute;
+namespace iio\inroute;
 
 use Aura\Router\Map;
-use itbz\inroute\Exception\RuntimeExpection;
+use iio\inroute\Exception\RuntimeExpection;
 
 /**
  * Inroute base class

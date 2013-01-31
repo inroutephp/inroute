@@ -1,6 +1,6 @@
 <?php
 
-use itbz\inroute\Route;
+use iio\inroute\Route;
 
 /**
  * The @inroute annotation tells inroute that this class should be scanned

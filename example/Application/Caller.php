@@ -1,13 +1,13 @@
 <?php
 
-use itbz\inroute\Route;
+use iio\inroute\Route;
 
 /**
  * The @inrouteCaller annotation tells inroute that this caller should be used
  *
  * @inrouteCaller
  */
-class Caller implements itbz\inroute\CallerInterface
+class Caller implements iio\inroute\CallerInterface
 {
     public function call($controller, Route $route)
     {

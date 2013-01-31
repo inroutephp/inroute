@@ -3,7 +3,7 @@
 // Optional usage during development
 // Rebuilds application on every page reload
 
-use itbz\inroute\InrouteFactory;
+use iio\inroute\InrouteFactory;
 
 include __DIR__ . "/../vendor/autoload.php";
 

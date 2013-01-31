@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace itbz\inroute\Console;
+namespace iio\inroute\Console;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use itbz\inroute\InrouteFactory;
+use iio\inroute\InrouteFactory;
 
 /**
  * Build inroute project command

@@ -6,7 +6,7 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">./../src/itbz</directory>
+            <directory suffix=".php">./../src/iio</directory>
         </whitelist>
     </filter>
 </phpunit>
