@@ -1,5 +1,5 @@
 $deps = new Dependencies(new {{container}});
 $caller = new {{caller}}();
-$map = new \Aura\Router\Map(new \Aura\Router\RouteFactory);
+$map = new \Aura\Router\Map(new \Aura\Router\DefinitionFactory, new \Aura\Router\RouteFactory);
 $map = append_routes($map, $deps, $caller);
 return new Inroute($map);
