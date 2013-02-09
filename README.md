@@ -239,28 +239,23 @@ this problem occurs try to uninstall xcache.
 
 
 
-Running unit tests
-------------------
+Testing
+-------
 
-Run test by typing
+Run unittests by typing
 
     > phpunit
 
-from the tests directory.
-
 Optionally you can use Phing to run tests together with additional checks.
-To install phing
 
-    > sudo pear config-set preferred_state alpha
-    > sudo pear install --alldeps phing/phing
-    > sudo pear config-set preferred_state stable
+[Installation instructions.](http://www.phing.info/trac/wiki/Users/Installation)
 
 Then from the root project directory type
 
     > phing
 
 The build directory will be filled with the test results. Point your browser to
-build/index.html to investigate.
+*build/index.html* to investigate.
 
 
 

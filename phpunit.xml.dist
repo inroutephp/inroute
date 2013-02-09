@@ -1,12 +1,12 @@
-<phpunit bootstrap="./bootstrap.php">
+<phpunit bootstrap="./tests/bootstrap.php">
     <testsuites>
         <testsuite>
-            <directory>./unit</directory>
+            <directory>./tests/unit</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">./../src/iio</directory>
+            <directory suffix=".php">./src/iio</directory>
         </whitelist>
     </filter>
 </phpunit>
