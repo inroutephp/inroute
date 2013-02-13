@@ -72,7 +72,7 @@
     <target name="buildAll" depends="test,sniff,phpcpd,phpmd,pdepend,document">
     </target>
 
-    <target name="test" depends="install,createBuildDir,buildAll">
+    <target name="test" depends="install,createBuildDir">
         <exec
             command="phpunit --coverage-html ${BUILD_DIR}/test-coverage --coverage-text=${BUILD_DIR}/test-coverage.txt"
             dir="${APP_ROOT}"
