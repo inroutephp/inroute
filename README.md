@@ -1,6 +1,8 @@
 INROUTE
 =======
 
+[![Build Status](https://travis-ci.org/iio/inroute.png?branch=master)](https://travis-ci.org/iio/inroute)
+
 Generate web router and controller dispatcher from docblock annotations
 
 When building web-apps a constantly see myself repeating the same pattern.
