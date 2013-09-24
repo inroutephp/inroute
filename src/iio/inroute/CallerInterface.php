@@ -15,8 +15,7 @@ namespace iio\inroute;
  *
  * Custom callers must implement this interface
  *
- * @package inroute
- * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 interface CallerInterface
 {

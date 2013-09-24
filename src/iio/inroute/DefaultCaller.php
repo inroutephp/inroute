@@ -15,8 +15,7 @@ namespace iio\inroute;
  *
  * Sends the raw Route object to the controller
  *
- * @package inroute
- * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  * @inrouteCaller
  */
 class DefaultCaller implements CallerInterface

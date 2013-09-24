@@ -16,8 +16,7 @@ use iio\inroute\Exception\InjectionException;
 /**
  * ReflectionClass extension with docbloc parsing capabilities
  *
- * @package inroute
- * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class ReflectionClass extends \ReflectionClass
 {

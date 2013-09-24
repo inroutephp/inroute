@@ -13,8 +13,7 @@ namespace iio\inroute;
 /**
  * Default (empty) DI-container
  *
- * @package inroute
- * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  * @inrouteContainer
  */
 class DefaultContainer extends \Pimple

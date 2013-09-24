@@ -16,8 +16,7 @@ use Aura\Router\Map;
 /**
  * The Inrout route object
  * 
- * @package inroute
- * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class Route
 {

@@ -20,8 +20,7 @@ use Mustache_Engine;
  * classnames, an optional www-root, a caller classname (if the default caller
  * is none is specified) and a DI-container.
  * 
- * @package inroute
- * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class CodeGenerator
 {

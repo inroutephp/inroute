@@ -19,8 +19,7 @@ use iio\inroute\Exception\RuntimeExpection;
  * This class should not be instantiated directly. Instead use CodeGenerator
  * to generate code that returns a customized Inroute object.
  * 
- * @package inroute
- * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class Inroute
 {

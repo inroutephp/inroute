@@ -17,8 +17,7 @@ use Symfony\Component\Finder\Finder;
 /**
  * User access class for the inroute package
  *
- * @package inroute
- * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class InrouteFactory
 {

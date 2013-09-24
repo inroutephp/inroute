@@ -15,8 +15,7 @@ use iio\inroute\Exception;
 /**
  * Exception thrown when injection failes
  *
- * @package inroute
- * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class InjectionException extends Exception
 {

@@ -20,8 +20,7 @@ use iio\inroute\InrouteFactory;
 /**
  * Build inroute project command
  * 
- * @package inroute
- * @author  Hannes Forsgård <hannes.forsgard@gmail.com>
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class BuildCommand extends Command
 {
