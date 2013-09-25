@@ -111,7 +111,7 @@ Or to generate urls from the current or other definied routes.
     $path = $route->generate();
 
     // Generate any path using custom parameters
-    $path = $route->generate('routeName', array('name' => 'foobar');
+    $path = $route->generate('routeName', array('name' => 'foobar'));
 
 
 
@@ -175,7 +175,7 @@ Installing
 ----------
 
 Inroute can be installed using composer and the packagist repository. Add
-intz/inroute as a dependency to your composer.json. When installed through
+iio/inroute as a dependency to your composer.json. When installed through
 composer the phar binary is accessed via
 
     vendor/bin/inroute.phar
