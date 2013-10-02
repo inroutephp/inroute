@@ -10,16 +10,43 @@
 
 namespace iio\inroute;
 
+use Pimple;
+
 /**
- * Default class for calling a system controller
+ * Call system controller
  *
- * Sends the raw Route object to the controller
+ * Sends the raw Route object to the controller.
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  * @inrouteCaller
  */
 class DefaultCaller implements CallerInterface
 {
+    /**
+     * @var Pimple DI-container
+     */
+    private $container;
+
+    /**
+     * Call system controller
+     *
+     * @param Pimple $container
+     */
+    public function __construct(Pimple $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * Get DI-container
+     *
+     * @return Pimple
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
     /**
      * {@inheritdoc}
      *

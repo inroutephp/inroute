@@ -12,6 +12,13 @@ namespace iio\inroute;
 
 class DefaultCallerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetContainer()
+    {
+        $pimple = $this->getMock('\Pimple');
+        $caller = new DefaultCaller($pimple);
+        $this->assertEquals($pimple, $caller->getContainer());
+    }
+
     public function testCall()
     {
         $route = $this->getMock(
@@ -29,7 +36,9 @@ class DefaultCallerTest extends \PHPUnit_Framework_TestCase
             $that->assertSame($param, $route);
         };
 
-        $caller = new DefaultCaller();
+        $pimple = $this->getMock('\Pimple');
+
+        $caller = new DefaultCaller($pimple);
         $caller->call($callback, $route);
 
         $this->assertTrue($callbackcalled);
