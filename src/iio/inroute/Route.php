@@ -52,9 +52,9 @@ class Route
     public function generate($name = null, array $data = null)
     {
         if ($name) {
-            return $this->map->generate($name, $data);
+            return @$this->map->generate($name, $data);
         } else {
-            return $this->route->generate();
+            return @$this->route->generate();
         }
     }
 

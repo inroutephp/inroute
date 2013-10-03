@@ -192,11 +192,11 @@ class CodeGenerator
         foreach ($this->reflectionClasses as $refl) {
             foreach ($refl->getRoutes() as $route) {
                 $routes[] = array(
-                    'name' => $route['name'],
+                    'name' => $route['routename'],
                     'path' => $route['path'],
                     'method' => $route['httpmethod'],
                     'cntrlfactory' => $refl->getFactoryName(),
-                    'cntrlmethod' => $route['name']
+                    'cntrlmethod' => $route['methodname']
                 );
             }
         }

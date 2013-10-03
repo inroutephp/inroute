@@ -174,6 +174,7 @@ class ReflectionClass extends \ReflectionClass
         /** @var ParamTag $tag */
         foreach ($docblock->getTagsByName('param') as $tag) {
             $name = $tag->getVariableName();
+
             if (!isset($params[$name])) {
                 $msg = "Trying to inject unknown paramater $name into {$this->getName()}";
                 throw new InjectionException($msg);
@@ -211,6 +212,8 @@ class ReflectionClass extends \ReflectionClass
     public function getRoutes()
     {
         $routes = array();
+        
+        /** @var ReflectionMethod $method */
         foreach ($this->getMethods() as $method) {
             if ($method->isConstructor()) {
                 continue;
@@ -221,7 +224,8 @@ class ReflectionClass extends \ReflectionClass
             foreach ($docblock->getTagsByName('route') as $tag) {
                 $tag = new RouteTag($tag);
                 $routes[] = array(
-                    'name' => $method->getName(),
+                    'methodname' => $method->getName(),
+                    'routename' => $this->getShortName() . '::' . $method->getName(),
                     'httpmethod' => $tag->getMethods(),
                     'path' => $this->getRootPath() . $tag->getPath()
                 );

@@ -24,9 +24,9 @@ class Working
      * It works even though the spacing is weird 
      * @route     GET   /foo/{:name}
      */
-    public function foo()
+    public function foo(Route $route)
     {
-        return 'Working::foo';
+        return $route->generate('Working::bar');
     }
 
     /**
@@ -35,9 +35,8 @@ class Working
      * @route POST /bar/{:name}
      * @route POST /baar/{:name}
      */
-    public function bar(Route $route)
+    public function bar()
     {
-        var_dump($route);
     }
 
     public function noRoute()

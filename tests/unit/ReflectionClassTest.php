@@ -117,7 +117,12 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'foo',
-            $routes[0]['name']
+            $routes[0]['methodname']
+        );
+
+        $this->assertEquals(
+            'Working::foo',
+            $routes[0]['routename']
         );
 
         $this->assertEquals(

@@ -31,6 +31,7 @@ class Controller
     public function cntrl(Route $route, $customRequest)
     {
         $view = "Injected: <b>{$this->dependency}</b><br/>";
+        $view .= "Url used: <b>{$route->generate('Controller::cntrl')}</b><br/>";
         $view .= "Routed path name parameter: <b>{$route->getValue('name')}</b><br/>";
         $view .= "Cutsom request var created in caller: <b>$customRequest</b><br/>";
 
