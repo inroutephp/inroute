@@ -178,10 +178,9 @@ Inroute can be installed using composer and the packagist repository. Add
 iio/inroute as a dependency to your composer.json. When installed through
 composer the phar binary is accessed via
 
-    vendor/bin/inroute.phar
+    vendor/bin/inroute
 
-Non-composer projects can can download inroute.phar directly and use it as
-described below.
+Non-composer projects can can build inroute.phar and use it as described below.
 
 If you are using php with the suhosin patch and want to use the phar archive you
 might need to set
@@ -197,15 +196,15 @@ Compiling your project
 
 Compile your project using
 
-    > php inroute.phar build [sourcedir] --loader=[loader] > [target]
+    > bin/inroute build [sourcedir] --loader=[loader] > [target]
 
 Where sourcedir is the base directory of your application source tree, loader is
 your composer class loader (vendor/autoload.php) and target is the name of the
 generated file.
 
-Optionally you may compile your project using the raw library
+Optionally you may compile your project using the phar library
 
-    > bin/inroute build [sourcedir] --loader=[loader] > [target]
+    > php inroute.phar build [sourcedir] --loader=[loader] > [target]
 
 
 

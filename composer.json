@@ -26,6 +26,6 @@
         "Aura/Router": "1.0.*"
     },
     "bin": [
-        "inroute.phar"
+        "bin/inroute"
     ]
 }
