@@ -25,6 +25,22 @@ use iio\inroute\InrouteFactory;
 class BuildCommand extends Command
 {
     /**
+     * @var Loader Composer autoloader
+     */
+    private $loader;
+
+    /**
+     * Build inroute project command
+     *
+     * @param Loader $loader Composer autoloader
+     */
+    public function __construct($loader)
+    {
+        parent::__construct();
+        $this->loader = $loader;
+    }
+
+    /**
      * Configure this command. Called by console Application.
      *
      * @return void
@@ -40,22 +56,10 @@ class BuildCommand extends Command
                 'Source directory to scan'
             )
             ->addOption(
-                'dir',
-                null,
-                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'Use this option to add extra directories'
-            )
-            ->addOption(
                 'root',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Root path to service'
-            )
-            ->addOption(
-                'loader',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Path to classloader'
             );
     }
 
@@ -70,23 +74,16 @@ class BuildCommand extends Command
     {
         $factory = new InrouteFactory();
 
-        $dirs = $input->getOption('dir');
-        array_unshift($dirs, $input->getArgument('dir'));
-        $factory->setDirs($dirs);
+        $dir = $input->getArgument('dir');
+        $factory->setDirs($dir);
+        $this->loader->add('', $dir);
 
         $root = $input->getOption('root');
         if ($root) {
             $factory->setRoot($root);
         }
         
-        // Add application to autoloader
-        $loader = require $input->getOption('loader');
-        foreach ($dirs as $dir) {
-            $loader->add('', $dir);
-        }
-
         $code = $factory->generate();
-
         $output->writeln('<?php ' . $code);
     }
 }

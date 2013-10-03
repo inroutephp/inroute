@@ -13,10 +13,33 @@ namespace iio\inroute;
 
 use Symfony\Component\Console\Application;
 
-require __DIR__ . '/../src/bootstrap.php';
+$loaderPaths = array(
+    'autoload.php',
+    'vendor/autoload.php',
+    '../vendor/autoload.php',
+    '../../vendor/autoload.php',
+    '../../../vendor/autoload.php',
+);
 
-if (php_sapi_name() == 'cli' && !defined('INROUTE_SKIP_COMMAND')) {
-    $app = new Application('inroute', 'dev');
-    $app->add(new Console\BuildCommand);
-    $app->run();
+foreach ($loaderPaths as $filename) {
+    if (file_exists($filename)) {
+        $loader = include $filename;
+    }
 }
+
+if (!isset($loader)) {
+    foreach ($argv as $arg) {
+        if (preg_match('/--loader=([^\s]+)/', $arg, $match)) {
+            $loader = $match[1];
+        }
+    }
+}
+
+if (!isset($loader)) {
+    echo "Unable to find composer autoloader, use --loader=path/to/autoload.php to specify\n";
+    die();
+}
+
+$app = new Application('inroute', 'dev');
+$app->add(new Console\BuildCommand($loader));
+$app->run();

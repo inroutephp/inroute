@@ -11,7 +11,7 @@
 
 use Symfony\Component\Finder\Finder;
 
-require __DIR__ . '/../src/bootstrap.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 error_reporting(-1);
 ini_set('display_errors', 1);
@@ -38,7 +38,13 @@ $stub = <<<'EOF'
 
 Phar::mapPhar('inroute.phar');
 
-require 'phar://inroute.phar/bin/inroute';
+$loader = require __DIR__ . '/vendor/autoload.php';
+
+if (php_sapi_name() == 'cli') {
+    $app = new \Symfony\Component\Console\Application('inroute', 'dev');
+    $app->add(new \iio\inroute\Console\BuildCommand($loader));
+    $app->run();
+}
 
 __HALT_COMPILER();
 EOF;

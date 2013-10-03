@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-$loader = include __DIR__ . '/../src/bootstrap.php';
+$loader = include __DIR__ . '/../vendor/autoload.php';
 $loader->add('unit\data', __DIR__);
 
 return $loader;

@@ -166,8 +166,7 @@ class ReflectionClass extends \ReflectionClass
                 throw new InjectionException($msg);
             }
 
-            preg_match('/inject:([^\s]+)/i', $tag->getDescription(), $matches);
-            if (!array_key_exists(1, $matches)) {
+            if (!preg_match('/inject:([^\s]+)/i', $tag->getDescription(), $matches)) {
                 $msg = "Injection clause missing for parameter $name (use inject:xxx)";
                 throw new InjectionException($msg);
             }

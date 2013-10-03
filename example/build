@@ -2,4 +2,4 @@
 
 cd "$(dirname "$0")"
 
-php ../bin/inroute build Application --loader=../vendor/autoload.php > app.php 
+php ../bin/inroute build Application > app.php 
