@@ -17,7 +17,7 @@ Inroute tries to fix this by handling dependency injection and routing directly
 in the controller classes using annotations (actually docblock style tags).
 
 Inroute is a code generator. It scans your source tree for classes marked with
-tha @inroute tag. It handles fetching dependencies from your DI-container using
+tha @controller tag. It handles fetching dependencies from your DI-container using
 the @param tag. And it sets up all routes based on @route tags. From this it
 generates a router and a dispatcher. When done all you have to do is to bootstrap
 your application auto-loading and dispatch.
@@ -30,10 +30,11 @@ your application auto-loading and dispatch.
 Annotations
 -----------
 
-### @inroute
+### @controller
 
-All controller classes that should be processed must use the @inroute tag. Se
-example controller below, or the example app in the source tree.
+All controller classes that should be processed must use the @controller tag.
+Optionally you may specify a root path for all controller routes. Se the example
+controller below, or the example app in the source tree.
 
 ### @param
 
@@ -130,12 +131,12 @@ Using getDependency to inject $dep and defining two routes.
     use iio\inroute\Route;
 
     /**
-     * @inroute
+     * @controller
      */
     class Controller
     {
         /**
-         * @param mixed $dep getDependency
+         * @param mixed $dep inject:getDependency
          */
         public function __construct($dep)
         {

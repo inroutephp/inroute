@@ -84,7 +84,7 @@ class CodeGenerator
     {
         if (!isset($this->reflectionClasses[$classname])) {
             $reflClass = new ReflectionClass($classname);
-            if ($reflClass->isInroute()) {
+            if ($reflClass->isController()) {
                 $this->reflectionClasses[$classname] = $reflClass;
             }
             if ($reflClass->isContainer()) {

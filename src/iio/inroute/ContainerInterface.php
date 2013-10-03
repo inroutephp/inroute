@@ -11,7 +11,7 @@
 namespace iio\inroute;
 
 /**
- * Interface for dependence injection
+ * Interface for dependency injection
  *
  * DI-containers must implement this interface
  *

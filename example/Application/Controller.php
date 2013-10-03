@@ -3,9 +3,9 @@
 use iio\inroute\Route;
 
 /**
- * The @inroute annotation tells inroute that this class should be scanned
+ * The @controller annotation tells inroute that this class should be scanned
  *
- * @inroute
+ * @controller
  */
 class Controller
 {

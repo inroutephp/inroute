@@ -44,15 +44,31 @@ class ReflectionClass extends \ReflectionClass
     }
 
     /**
-     * Check if the reflected class is an inroute controller
+     * Check if the reflected class is a controller
      *
-     * Classes to be processed must be tagged with the @inroute tag
+     * Classes to be processed must be tagged with the @controller tag
      *
      * @return boolean
      */
-    public function isInroute()
+    public function isController()
     {
-        return $this->classDocBlock->hasTag('inroute');
+        return $this->classDocBlock->hasTag('controller');
+    }
+
+    /**
+     * Get root path for all routes in controller
+     *
+     * @return string
+     */
+    public function getRootPath()
+    {
+        $path = '';
+        if ($this->isController()) {
+            $tags = $this->classDocBlock->getTagsByName('controller');
+            $path = trim($tags[0]->getDescription());
+        }
+
+        return $path;
     }
 
     /**
@@ -147,7 +163,7 @@ class ReflectionClass extends \ReflectionClass
      *
      * @return array Returns an array of arrays, where the inner arrays contain
      * name, class, array flag and factory values.
-     * @throws InjectionException If param found in param tag does not exist
+     * @throws InjectionException If parameter found in tag does not exist
      * @throws InjectionException If any constructor parameter is not injected
      */
     public function getInjections()
@@ -207,7 +223,7 @@ class ReflectionClass extends \ReflectionClass
                 $routes[] = array(
                     'name' => $method->getName(),
                     'httpmethod' => $tag->getMethods(),
-                    'path' => $tag->getPath()
+                    'path' => $this->getRootPath() . $tag->getPath()
                 );
             }
         }

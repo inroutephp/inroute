@@ -2,7 +2,7 @@
 namespace unit\data;
 
 /**
- * @inroute
+ * @controller
  */
 class InjectedParameterMissing
 {

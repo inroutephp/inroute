@@ -4,7 +4,7 @@ namespace unit\data;
 use iio\inroute\Route;
 
 /**
- * @inroute
+ * @controller /root
  */
 class Working
 {

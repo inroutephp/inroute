@@ -12,13 +12,13 @@ namespace iio\inroute;
 
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
-    public function testIsinroute()
+    public function testIsController()
     {
         $no = new ReflectionClass('unit\data\NoInroute');
-        $this->assertFalse($no->isInroute());
+        $this->assertFalse($no->isController());
 
         $yes = new ReflectionClass('unit\data\NoConstructor');
-        $this->assertTrue($yes->isInroute());
+        $this->assertTrue($yes->isController());
     }
 
     public function testIsCaller()
@@ -112,11 +112,22 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $refl = new ReflectionClass('unit\data\Working');
         $routes = $refl->getRoutes();
-        $this->assertTrue(is_array($routes));
+
         $this->assertEquals(3, count($routes));
-        $this->assertArrayHasKey('name', $routes[0]);
-        $this->assertArrayHasKey('path', $routes[0]);
-        $this->assertArrayHasKey('httpmethod', $routes[0]);
-        $this->assertTrue(is_array($routes[0]['httpmethod']));
+
+        $this->assertEquals(
+            'foo',
+            $routes[0]['name']
+        );
+
+        $this->assertEquals(
+            array('GET'),
+            $routes[0]['httpmethod']
+        );
+
+        $this->assertEquals(
+            '/root/foo/{:name}',
+            $routes[0]['path']
+        );
     }
 }
