@@ -21,16 +21,16 @@ use iio\inroute\Exception;
 class RouteTag extends AbstractTag
 {
     /**
+     * @var string Name of this tag
+     */
+    public static $name = 'route';
+
+    /**
      * Array of valid HTTP methods
      */
     private static $validMethods = array(
         'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'PATCH'
     );
-
-    /**
-     * @var string Name of this tag
-     */
-    public static $name = 'route';
 
     /**
      * @var array Http methods specified

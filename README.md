@@ -50,17 +50,17 @@ the name of the DI-container method that should be called to create the dependen
 
 Controller methods that should be routable use the @route tag. The syntax is
 
-    @route METHOD /path
+    @route METHOD </path>
 
 Where METHOD is the desired HTTP-method and path is the route path. You can add
 route parameters like this
 
-    @route GET /path/{:name}
+    @route GET </path/{:name}>
 
 Route multiple HTTP-methods to the same controller by listing methods separated
 by commas (but without spaces!).
 
-    @route POST,PUT /path/{:name}
+    @route POST,PUT </path/{:name}>
 
 And acces the parameter from the generated route object
 
@@ -70,13 +70,13 @@ And acces the parameter from the generated route object
 
 You may use regular expression subpatterns when defining parameters.
 
-    @route GET /path/{:name:(pattern)}
+    @route GET </path/{:name:(pattern)}>
 
 Where name is the name of the parameter and pattern is the matching subpattern.
 
 For example you can definie a path that takes a numeric id parameter:
 
-    @route GET /object/{:id:(\d+)}
+    @route GET </object/{:id:(\d+)}>
 
 (Inroute uses the [Aura Router](https://github.com/auraphp/Aura.Router) package
 for routing. For more information see the aura documenatation.)
@@ -143,7 +143,7 @@ Using getDependency to inject $dep and defining two routes.
         }
 
         /**
-         * @route GET /foo/{:name}
+         * @route GET </foo/{:name}>
          */
         public function foo(Route $route)
         {
@@ -151,7 +151,7 @@ Using getDependency to inject $dep and defining two routes.
         }
 
         /**
-         * @route POST /bar/{:name}
+         * @route POST </bar/{:name}>
          */
         public function bar(Route $route)
         {
