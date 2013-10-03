@@ -58,25 +58,21 @@ class ReflectionClass extends \ReflectionClass
     /**
      * Check if the reflected class is an DI-container
      *
-     * Classes to be processed must be tagged with the @inrouteContainer tag
-     *
      * @return boolean
      */
     public function isContainer()
     {
-        return $this->classDocBlock->hasTag('inrouteContainer');
+        return $this->implementsInterface('iio\inroute\ContainerInterface');
     }
 
     /**
      * Check if the reflected class is a caller
      *
-     * Classes to be processed must be tagged with the @inrouteCaller tag
-     *
      * @return boolean
      */
     public function isCaller()
     {
-        return $this->classDocBlock->hasTag('inrouteCaller');
+        return $this->implementsInterface('iio\inroute\CallerInterface');
     }
 
     /**

@@ -3,7 +3,7 @@ INROUTE
 
 [![Build Status](https://travis-ci.org/iio/inroute.png?branch=master)](https://travis-ci.org/iio/inroute)
 
-Generate web router and controller dispatcher from docblock annotations
+Generate web router and dispatcher from docblock annotations
 
 When building web-apps a constantly see myself repeating the same pattern.
 I define some controller classes that have various dependencies. I write a
@@ -80,15 +80,20 @@ For example you can definie a path that takes a numeric id parameter:
 (Inroute uses the [Aura Router](https://github.com/auraphp/Aura.Router) package
 for routing. For more information see the aura documenatation.)
 
-### @inrouteContainer
 
-Your DI-container must be marked with the @inrouteContainer tag for inroute to
-find it. Se the example below or the example application in the source tree.
+
+Interfaces
+----------
+
+### ContainerInterface
+
+Your DI-container must implement the ContainerInterface for inroute to find it.
+Se the example below or the example application in the source tree.
 
 Containers must currently subclass [Pimple](https://github.com/fabpot/Pimple).
 This is neither a clean or flexible solution. Please fork and hack away!
 
-### @inrouteCaller
+### CallerInterface
 
 By default controller methods are called with a Route object as single parameter.
 If you want to create more parameters at dispatch (for example some request
@@ -159,7 +164,7 @@ Using getDependency to inject $dep and defining two routes.
 
 Defining the getDependency method
 
-    class Container extends \Pimple
+    class Container extends \Pimple implements iio\inroute\ContainerInterface
     {
         public function __construct()
         {

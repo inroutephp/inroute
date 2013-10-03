@@ -18,7 +18,6 @@ use Pimple;
  * Sends the raw Route object to the controller.
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
- * @inrouteCaller
  */
 class DefaultCaller implements CallerInterface
 {

@@ -3,11 +3,9 @@
 use iio\inroute\Route;
 
 /**
- * The @inrouteCaller annotation tells inroute that this caller should be used
+ * Implementing the CallerInterface tells inroute this caller should be used
  *
  * TIP: The DI-container is injected into the caller at construct for later use.
- * 
- * @inrouteCaller
  */
 class Caller implements iio\inroute\CallerInterface
 {

@@ -11,10 +11,12 @@
 namespace iio\inroute;
 
 /**
- * Default (empty) DI-container
+ * Interface for dependence injection
+ *
+ * DI-containers must implement this interface
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class DefaultContainer extends \Pimple implements ContainerInterface
+interface ContainerInterface
 {
 }

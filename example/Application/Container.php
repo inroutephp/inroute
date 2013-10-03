@@ -1,11 +1,9 @@
 <?php
 
 /**
- * The @inrouteContainer annotation tells inroute that this container should be used
- *
- * @inrouteContainer
+ * Implementing the ContainerInterface tells inroute this container should be used
  */
-class Container extends \Pimple
+class Container extends \Pimple implements iio\inroute\ContainerInterface
 {
     public function __construct()
     {
