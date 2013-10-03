@@ -50,6 +50,12 @@ class BuildCommand extends Command
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Root path to service'
+            )
+            ->addOption(
+                'loader',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Path to classloader'
             );
     }
 
@@ -70,10 +76,17 @@ class BuildCommand extends Command
 
         $root = $input->getOption('root');
         if ($root) {
-            $factory->setRoot();
+            $factory->setRoot($root);
+        }
+        
+        // Add application to autoloader
+        $loader = require $input->getOption('loader');
+        foreach ($dirs as $dir) {
+            $loader->add('', $dir);
         }
 
         $code = $factory->generate();
+
         $output->writeln('<?php ' . $code);
     }
 }

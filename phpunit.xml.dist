@@ -7,6 +7,9 @@
     <filter>
         <whitelist>
             <directory suffix=".php">./src/iio</directory>
+            <exclude>
+                <file>./src/iio/inroute/ClassMapGenerator.php</file>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

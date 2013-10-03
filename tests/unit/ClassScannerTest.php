@@ -12,93 +12,54 @@ namespace iio\inroute;
 
 class ClassScannerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException iio\inroute\Exception\RuntimeExpection
-     */
-    public function testAddUnreadableFileException()
+    public function testScanFile()
     {
-        $finder = $this->getMock(
-            'Symfony\Component\Finder\Finder',
-            array(),
-            array(),
-            '',
-            false
-        );
-        $scanner = new ClassScanner($finder);
-        $scanner->addFile('foobar');
-    }
-
-    /**
-     * @expectedException iio\inroute\Exception\RuntimeExpection
-     */
-    public function testAddIncludedFileException()
-    {
-        $finder = $this->getMock(
-            'Symfony\Component\Finder\Finder',
-            array(),
-            array(),
-            '',
-            false
-        );
-        $scanner = new ClassScanner($finder);
-        // Include this file witch is already included...
-        $scanner->addFile(__FILE__);
-    }
-
-    public function testAddFile()
-    {
-        $finder = $this->getMock(
-            'Symfony\Component\Finder\Finder',
-            array('getIterator'),
-            array(),
-            '',
-            false
-        );
-
-        $finder->expects($this->once())
-            ->method('getIterator')
-            ->will($this->throwException(new \LogicException));
-
-        $scanner = new ClassScanner($finder);
-        $classes = $scanner->addFile(__DIR__ . '/data/Working.php')
+        $scanner = new ClassScanner();
+        $classes = $scanner
+            ->addFile(__DIR__ . '/data/Working.php')
             ->getClasses();
 
-        $this->assertEquals(array('unit\data\Working'), $classes);
+        $this->assertEquals(
+            array('unit\data\Working'),
+            $classes
+        );
     }
 
-    public function testScan()
+    public function testScanDir()
     {
-        $finder = $this->getMock(
-            'Symfony\Component\Finder\Finder',
-            array('getIterator'),
-            array(),
-            '',
-            false
-        );
-
-        $file = $this->getMock(
-            'Symfony\Component\Finder\SplFileInfo',
-            array('getRealpath'),
-            array(),
-            '',
-            false
-        );
-
-        $file->expects($this->once())
-            ->method('getRealpath')
-            ->will($this->returnValue(__DIR__ . '/data/NoConstructor.php'));
-
-        $iterator = new \ArrayIterator(array($file));
-
-        $finder->expects($this->once())
-            ->method('getIterator')
-            ->will($this->returnValue($iterator));
-
-        $scanner = new ClassScanner($finder);
-        $classes = $scanner->addPrefix('php')
+        $scanner = new ClassScanner();
+        $classes = $scanner
             ->addDir(__DIR__ . '/data/')
             ->getClasses();
 
-        $this->assertEquals(array('unit\data\NoConstructor'), $classes);
+        $this->assertEquals(
+            array(
+                'unit\data\InjectionMissing',
+                'unit\data\Container',
+                'unit\data\NoConstructor',
+                'unit\data\InjectedParameterMissing',
+                'unit\data\Working',
+                'unit\data\Extended',
+                'unit\data\NoInroute'
+            ),
+            $classes
+        );
+    }
+
+    /**
+     * See Issue #15.
+     * Scanning a class that extends a class not availiable at scan time.
+     */
+    public function testScanInheritedClass()
+    {
+        $scanner = new ClassScanner();
+        $classes = $scanner
+            ->addFile(__DIR__ . '/data/Extended.php')
+            ->getClasses();
+
+        $this->assertEquals(
+            array('unit\data\Extended'),
+            $classes
+        );
     }
 }

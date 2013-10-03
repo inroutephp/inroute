@@ -12,7 +12,6 @@ namespace iio\inroute;
 
 use Mustache_Engine;
 use Mustache_Loader_ArrayLoader;
-use Symfony\Component\Finder\Finder;
 
 /**
  * User access class for the inroute package
@@ -26,7 +25,6 @@ class InrouteFactory
      */
     private $settings = array(
         "root" => "",
-        "prefixes" => array("php"),
         "dirs" => array('.'),
         "files" => array(),
         "classes" => array()
@@ -68,50 +66,34 @@ class InrouteFactory
             $mustache = new Mustache_Engine(array('loader' => $loader));
             $generator = new CodeGenerator($mustache);
         }
-        $this->generator = $generator;
 
         if (!$scanner) {
-            $scanner = new ClassScanner(new Finder);
+            $scanner = new ClassScanner();
         }
+
+        $this->generator = $generator;
         $this->scanner = $scanner;
     }
 
     /**
-     * Generate code that returns on inroute instance
+     * Generate code that returns an inroute instance
      *
      * @return string
      */
     public function generate()
     {
-        foreach ((array) $this->settings['prefixes'] as $prefix) {
-            $this->scanner->addPrefix($prefix);
-        }
         foreach ((array) $this->settings['dirs'] as $dirname) {
             $this->scanner->addDir($dirname);
         }
         foreach ((array) $this->settings['files'] as $filename) {
             $this->scanner->addFile($filename);
         }
-
+        
         return $this->generator
             ->addClasses($this->scanner->getClasses())
             ->addClasses((array)$this->settings['classes'])
             ->setRoot($this->settings['root'])
             ->generate();
-    }
-
-    /**
-     * Set prefixes to search for
-     *
-     * @param  string|array   $prefixes
-     * @return InrouteFactory Instance for chaining
-     */
-    public function setPrefixes($prefixes)
-    {
-        assert('is_string($prefixes) || is_array($prefixes)');
-        $this->settings['prefixes'] = $prefixes;
-
-        return $this;
     }
 
     /**

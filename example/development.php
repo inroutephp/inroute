@@ -5,7 +5,8 @@
 
 use iio\inroute\InrouteFactory;
 
-include __DIR__ . "/../vendor/autoload.php";
+$loader = include __DIR__ . "/../vendor/autoload.php";
+$loader->add('', __DIR__.'/Application');
 
 $factory = new InrouteFactory();
 $factory->setDirs(array(__DIR__ . '/Application'));

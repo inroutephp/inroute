@@ -14,7 +14,6 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
 {
     private $settings = array(
         "root" => "a",
-        "prefixes" => "d",
         "dirs" => "e",
         "files" => "f",
         "classes" => "g"
@@ -24,7 +23,6 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $facade = new InrouteFactory();
         $facade->setRoot($this->settings['root']);
-        $facade->setPrefixes($this->settings['prefixes']);
         $facade->setDirs($this->settings['dirs']);
         $facade->setFiles($this->settings['files']);
         $facade->setClasses($this->settings['classes']);
@@ -52,10 +50,6 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new InrouteFactory($generator, $scanner);
         $factory->setDirs(array('dirname'));
         $factory->setFiles(array('filename'));
-
-        $scanner->expects($this->once())
-            ->method('addPrefix')
-            ->with('php');
 
         $scanner->expects($this->once())
             ->method('addDir')
