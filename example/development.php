@@ -12,9 +12,6 @@ $factory = new InrouteFactory();
 $factory->setDirs(array(__DIR__ . '/Application'));
 $app = eval($factory->generate());
 
-// uri injected? (used when testing)
-if (!isset($uri)) {
-    $uri = '/application/pagename';
-}
+$uri = '/base/app/pagename';
 
 echo $app->dispatch($uri, $_SERVER);

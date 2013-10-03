@@ -18,24 +18,24 @@ use iio\inroute\Exception;
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class RouteTag
+class RouteTag extends AbstractTag
 {
     /**
      * Array of valid HTTP methods
      */
-    static private $validMethods = array(
+    private static $validMethods = array(
         'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'PATCH'
     );
+
+    /**
+     * @var string Name of this tag
+     */
+    public static $name = 'route';
 
     /**
      * @var array Http methods specified
      */
     private $methods;
-
-    /**
-     * @var string Route path
-     */
-    private $path;
 
     /**
      * Route annotation class
@@ -44,14 +44,9 @@ class RouteTag
      */
     public function __construct(Tag $tag)
     {
-        $parts = array_filter(preg_split('/\s+/', $tag->getDescription()));
+        parent::__construct($tag);
 
-        if (count($parts) < 2) {
-            $msg = "Unable to create route from tag @route {$tag->getDescription()}";
-            throw new Exception($msg);
-        }
-        
-        $this->methods = explode(',', $parts[0]);
+        $this->methods = explode(',', $this->parts[0]);
 
         foreach ($this->methods as $method) {
             if (!in_array($method, self::$validMethods)) {
@@ -59,8 +54,6 @@ class RouteTag
                 throw new Exception($msg);
             }
         }
-
-        $this->path = $parts[1];
     }
 
     /**
@@ -71,15 +64,5 @@ class RouteTag
     public function getMethods()
     {
         return $this->methods;
-    }
-
-    /**
-     * Get route path
-     *
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
     }
 }

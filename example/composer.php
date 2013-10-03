@@ -15,9 +15,6 @@ $loader->add('', __DIR__ . '/Application');
 
 $app = include __DIR__ . '/app.php';
 
-// uri injected? (used when testing)
-if (!isset($uri)) {
-    $uri = '/application/pagename';
-}
+$uri = '/base/app/pagename';
 
 echo $app->dispatch($uri, $_SERVER);

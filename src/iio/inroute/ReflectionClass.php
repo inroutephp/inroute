@@ -12,6 +12,7 @@ namespace iio\inroute;
 
 use phpDocumentor\Reflection\DocBlock;
 use iio\inroute\Exception\InjectionException;
+use iio\inroute\Tag\ControllerTag;
 use iio\inroute\Tag\RouteTag;
 
 /**
@@ -27,20 +28,24 @@ class ReflectionClass extends \ReflectionClass
     private $params;
 
     /**
-     * @var DockBlock Class docblock object
+     * @var ControllerTag Class controller tag
      */
-    private $classDocBlock;
+    private $controllerTag;
 
     /**
-     * Constructor
+     * Get class controller tag
      *
-     * @param mixed $arg Either a string containing the name of the class to
-     * reflect, or an object.
+     * @return ControllerTag void if class is not a controller
      */
-    public function __construct($arg)
+    public function getControllerTag()
     {
-        parent::__construct($arg);
-        $this->classDocBlock = new DocBlock($this);
+        if (!isset($this->controllerTag)) {
+            foreach (ControllerTag::parseDocBlock(new DocBlock($this)) as $tag) {
+                $this->controllerTag = $tag;
+            }
+        }
+
+        return $this->controllerTag;
     }
 
     /**
@@ -52,23 +57,7 @@ class ReflectionClass extends \ReflectionClass
      */
     public function isController()
     {
-        return $this->classDocBlock->hasTag('controller');
-    }
-
-    /**
-     * Get root path for all routes in controller
-     *
-     * @return string
-     */
-    public function getRootPath()
-    {
-        $path = '';
-        if ($this->isController()) {
-            $tags = $this->classDocBlock->getTagsByName('controller');
-            $path = trim($tags[0]->getDescription());
-        }
-
-        return $path;
+        return !!$this->getControllerTag();
     }
 
     /**
@@ -219,15 +208,14 @@ class ReflectionClass extends \ReflectionClass
                 continue;
             }
 
-            $docblock = new DocBlock($method);
+            $block = new DocBlock($method);
 
-            foreach ($docblock->getTagsByName('route') as $tag) {
-                $tag = new RouteTag($tag);
+            foreach (RouteTag::parseDocBlock($block) as $tag) {
                 $routes[] = array(
                     'methodname' => $method->getName(),
                     'routename' => $this->getShortName() . '::' . $method->getName(),
                     'httpmethod' => $tag->getMethods(),
-                    'path' => $this->getRootPath() . $tag->getPath()
+                    'path' => $this->getControllerTag()->getPath() . $tag->getPath()
                 );
             }
         }

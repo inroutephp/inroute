@@ -4,7 +4,7 @@ namespace unit\data;
 use iio\inroute\Route;
 
 /**
- * @controller /root
+ * @controller </root>
  */
 class Working
 {
@@ -22,7 +22,7 @@ class Working
 
     /**
      * It works even though the spacing is weird 
-     * @route     GET   /foo/{:name}
+     * @route     GET   </foo/{:name}>
      */
     public function foo(Route $route)
     {
@@ -32,8 +32,8 @@ class Working
     /**
      * Multiple routes
      * 
-     * @route POST /bar/{:name}
-     * @route POST /baar/{:name}
+     * @route POST </bar/{:name}>
+     * @route POST </baar/{:name}>
      */
     public function bar()
     {

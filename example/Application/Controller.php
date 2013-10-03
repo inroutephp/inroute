@@ -5,7 +5,7 @@ use iio\inroute\Route;
 /**
  * The @controller annotation tells inroute that this class should be scanned
  *
- * @controller
+ * @controller </base>
  */
 class Controller
 {
@@ -25,8 +25,8 @@ class Controller
      *
      * Use multiple $route tags th create aliases
      *
-     * @route GET /app/{:name}
-     * @route GET /application/{:name}
+     * @route GET </app/{:name}>
+     * @route GET </application/{:name}>
      */
     public function cntrl(Route $route, $customRequest)
     {
@@ -41,7 +41,7 @@ class Controller
     /**
      * Hello world controller. Used when testing.
      *
-     * @route POST /hello-world
+     * @route POST </hello-world>
      */
     public function postHelloWorld()
     {
@@ -51,7 +51,7 @@ class Controller
     /**
      * Hello world controller. Used when testing.
      *
-     * @route GET /hello-world
+     * @route GET </hello-world>
      */
     public function helloWorld()
     {
@@ -61,7 +61,7 @@ class Controller
     /**
      * Controller using multiple methods. Used when testing.
      *
-     * @route GET,POST /postAndGet
+     * @route GET,POST </postAndGet>
      */
     public function postAndGet()
     {

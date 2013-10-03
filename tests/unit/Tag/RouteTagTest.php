@@ -34,7 +34,8 @@ class RouteTagTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidMethod()
     {
-        new RouteTag($this->getTagWithDesc('GET,FOOBAR /www/www'));
+        $tag = new RouteTag($this->getTagWithDesc('GET,FOOBAR </www/www>'));
+        $tag->getMethods();
     }
 
     /**
@@ -42,6 +43,7 @@ class RouteTagTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidRouteDescription()
     {
-        new RouteTag($this->getTagWithDesc(' GET '));
+        $tag = new RouteTag($this->getTagWithDesc(' GET '));
+        $tag->getPath();
     }
 }
