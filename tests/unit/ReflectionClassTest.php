@@ -113,7 +113,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $refl = new ReflectionClass('unit\data\Working');
         $routes = $refl->getRoutes();
         $this->assertTrue(is_array($routes));
-        $this->assertEquals(2, count($routes));
+        $this->assertEquals(3, count($routes));
         $this->assertArrayHasKey('name', $routes[0]);
         $this->assertArrayHasKey('path', $routes[0]);
         $this->assertArrayHasKey('httpmethod', $routes[0]);

@@ -12,6 +12,7 @@ namespace iio\inroute;
 
 use phpDocumentor\Reflection\DocBlock;
 use iio\inroute\Exception\InjectionException;
+use iio\inroute\Tag\RouteTag;
 
 /**
  * ReflectionClass extension with docbloc parsing capabilities
@@ -202,16 +203,15 @@ class ReflectionClass extends \ReflectionClass
             if ($method->isConstructor()) {
                 continue;
             }
+
             $docblock = new DocBlock($method);
-            if ($docblock->hasTag('route')) {
-                $tags = $docblock->getTagsByName('route');
-                list($httpmethod, $path) = array_filter(
-                    explode(" ", $tags[0]->getDescription())
-                );
+
+            foreach ($docblock->getTagsByName('route') as $tag) {
+                $tag = new RouteTag($tag);
                 $routes[] = array(
                     'name' => $method->getName(),
-                    'httpmethod' => explode(',', $httpmethod),
-                    'path' => $path
+                    'httpmethod' => $tag->getMethods(),
+                    'path' => $tag->getPath()
                 );
             }
         }

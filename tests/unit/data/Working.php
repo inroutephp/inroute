@@ -21,7 +21,8 @@ class Working
     }
 
     /**
-     * @route GET /foo/{:name}
+     * It works even though the spacing is weird 
+     * @route     GET   /foo/{:name}
      */
     public function foo()
     {
@@ -29,7 +30,10 @@ class Working
     }
 
     /**
+     * Multiple routes
+     * 
      * @route POST /bar/{:name}
+     * @route POST /baar/{:name}
      */
     public function bar(Route $route)
     {

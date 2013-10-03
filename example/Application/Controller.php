@@ -23,6 +23,9 @@ class Controller
     /**
      * The $route annotation tells inroute when to route requests to this method
      *
+     * Use multiple $route tags th create aliases
+     *
+     * @route GET /app/{:name}
      * @route GET /application/{:name}
      */
     public function cntrl(Route $route, $customRequest)
