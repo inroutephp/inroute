@@ -61,6 +61,15 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException iio\inroute\Exception\InjectionException
      */
+    public function testParamTagMissing()
+    {
+        $refl = new ReflectionClass('unit\data\ParamTagMissing');
+        $refl->getInjections();
+    }
+
+    /**
+     * @expectedException iio\inroute\Exception\InjectionException
+     */
     public function testParamMissing()
     {
         $refl = new ReflectionClass('unit\data\InjectedParameterMissing');

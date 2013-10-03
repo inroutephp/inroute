@@ -18,7 +18,7 @@ in the controller classes using annotations (actually docblock style tags).
 
 Inroute is a code generator. It scans your source tree for classes marked with
 tha @inroute tag. It handles fetching dependencies from your DI-container using
-the @inject tag. And it sets up all routes based on @route tags. From this it
+the @param tag. And it sets up all routes based on @route tags. From this it
 generates a router and a dispatcher. When done all you have to do is to bootstrap
 your application auto-loading and dispatch.
 
@@ -35,12 +35,12 @@ Annotations
 All controller classes that should be processed must use the @inroute tag. Se
 example controller below, or the example app in the source tree.
 
-### @inject
+### @param
 
-Controllers that needs dependencies injected specify these using the @inject
+Controllers that needs dependencies injected specify these using the @param
 tag. The syntax is
 
-    @inject $varName containerMethod
+    @param Type $varName inject:containerMethod
 
 Where $varName is the name of the contructor parameter and containerMethod is
 the name of the DI-container method that should be called to create the dependency.
@@ -130,7 +130,7 @@ Using getDependency to inject $dep and defining two routes.
     class Controller
     {
         /**
-         * @inject $dep getDependency
+         * @param mixed $dep getDependency
          */
         public function __construct($dep)
         {
@@ -197,14 +197,15 @@ Compiling your project
 
 Compile your project using
 
-    > php inroute.phar build [sourcedir] > [target]
+    > php inroute.phar build [sourcedir] --loader=[loader] > [target]
 
-Where sourcedir is the base directory of your application source tree and target
-is the name of the generated file.
+Where sourcedir is the base directory of your application source tree, loader is
+your composer class loader (vendor/autoload.php) and target is the name of the
+generated file.
 
 Optionally you may compile your project using the raw library
 
-    > bin/inroute build [sourcedir] > [target]
+    > bin/inroute build [sourcedir] --loader=[loader] > [target]
 
 
 

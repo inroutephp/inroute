@@ -4,11 +4,8 @@ namespace unit\data;
 /**
  * @inroute
  */
-class InjectionMissing
+class ParamTagMissing
 {
-    /**
-     * @param void $a Inject clause missing...
-     */
     public function __construct($a)
     {
         echo $a;

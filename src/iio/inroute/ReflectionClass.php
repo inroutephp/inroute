@@ -150,25 +150,32 @@ class ReflectionClass extends \ReflectionClass
      *
      * @return array Returns an array of arrays, where the inner arrays contain
      * name, class, array flag and factory values.
-     *
-     * @throws InjectionException If param found in @inject tag does not exist
+     * @throws InjectionException If param found in param tag does not exist
      * @throws InjectionException If any constructor parameter is not injected
      */
     public function getInjections()
     {
         $params = $this->getConstructorParams();
-
         $docblock = new DocBlock($this->getConstructor());
-        foreach ($docblock->getTagsByName('inject') as $tag) {
-            list($name, $factory) = array_filter(explode(" ", $tag->getDescription()));
+
+        /** @var ParamTag $tag */
+        foreach ($docblock->getTagsByName('param') as $tag) {
+            $name = $tag->getVariableName();
             if (!isset($params[$name])) {
                 $msg = "Trying to inject unknown paramater $name into {$this->getName()}";
                 throw new InjectionException($msg);
             }
-            $params[$name]['factory'] = $factory;
+
+            preg_match('/inject:([^\s]+)/i', $tag->getDescription(), $matches);
+            if (!array_key_exists(1, $matches)) {
+                $msg = "Injection clause missing for parameter $name (use inject:xxx)";
+                throw new InjectionException($msg);
+            }
+
+            $params[$name]['factory'] = $matches[1];
         }
 
-        // Is required parameter missing?
+        /** @var array $param */
         foreach ($params as $param) {
             if (!isset($param['factory'])) {
                 $msg = "Parameter {$param['name']} must be injected into {$this->getName()}";

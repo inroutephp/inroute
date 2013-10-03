@@ -10,10 +10,10 @@ use iio\inroute\Route;
 class Controller
 {
     /**
-     * The @inject annotation tells inroute that the $dependency parameter
-     * should be created using DI-container method getDependency
+     * The inject:xxx notation in the @param description tells inroute that the
+     * $dependency parameter should be created using DI-container method getDependency
      *
-     * @inject $dependency getDependency
+     * @param mixed $dependency inject:getDependency
      */
     public function __construct($dependency)
     {

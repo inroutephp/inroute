@@ -9,9 +9,9 @@ use iio\inroute\Route;
 class Working
 {
     /**
-     * @inject $x xfactory
-     * @inject $bar foobar
-     * @inject $y xx
+     * @param array    $x   inject:xfactory
+     * @param DateTime $bar inject:foobar
+     * @param string   $y   INJECT:xx
      */
     public function __construct(\DateTime $bar, array $x, $y = 'optional')
     {

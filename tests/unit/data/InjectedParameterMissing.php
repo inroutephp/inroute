@@ -7,7 +7,7 @@ namespace unit\data;
 class InjectedParameterMissing
 {
     /**
-     * @inject $a foobar
+     * @param string $a foobar
      */
     public function __construct()
     {
