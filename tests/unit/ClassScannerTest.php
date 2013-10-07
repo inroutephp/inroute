@@ -17,11 +17,13 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
         $scanner = new ClassScanner();
         $classes = $scanner
             ->addFile(__DIR__ . '/data/Working.php')
+            ->addFile(__DIR__ . '/data/Working.php')
             ->getClasses();
 
         $this->assertEquals(
             array('unit\data\Working'),
-            $classes
+            $classes,
+            'Multiple scans should not yield multiple array entries'
         );
     }
 

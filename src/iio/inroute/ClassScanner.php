@@ -26,6 +26,22 @@ class ClassScanner
     private $classes = array();
 
     /**
+     * Append classes to store
+     *
+     * @param  array $classes
+     * @return void
+     */
+    private function appendClasses(array $classes)
+    {
+        $this->classes = array_unique(
+            array_merge(
+                $this->classes,
+                $classes
+            )
+        );
+    }
+
+    /**
      * Add directory to scan
      * 
      * @param  string       $dirname
@@ -33,10 +49,10 @@ class ClassScanner
      */
     public function addDir($dirname)
     {
-        $map = ClassMapGenerator::createMap($dirname);
-        $this->classes = array_merge(
-            $this->classes,
-            array_keys($map)
+        $this->appendClasses(
+            array_keys(
+                ClassMapGenerator::createMap($dirname)
+            )
         );
 
         return $this;
@@ -45,13 +61,12 @@ class ClassScanner
     /**
      * Scan file and process found classes
      *
-     * @param  string           $filename
-     * @return ClassScanner     Instance for chaining
+     * @param  string       $filename
+     * @return ClassScanner Instance for chaining
      */
     public function addFile($filename)
     {
-        $this->classes = array_merge(
-            $this->classes,
+        $this->appendClasses(
             ClassMapGenerator::findClasses($filename)
         );
 
