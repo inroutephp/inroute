@@ -17,8 +17,7 @@ use Mustache_Engine;
  * The Inrout router generator
  *
  * Generates php code that returns a custom Inroute object. Input includes
- * classnames, an optional www-root, a caller classname (if the default caller
- * is none is specified) and a DI-container.
+ * controller classnames and optional www-root, caller and DI-container classnames.
  * 
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
@@ -30,9 +29,9 @@ class CodeGenerator
     private $mustache;
 
     /**
-     * @var array List of classes to process
+     * @var array List of controller classes to process
      */
-    private $reflectionClasses = array();
+    private $controllerClasses = array();
 
     /**
      * @var string Root path
@@ -60,32 +59,30 @@ class CodeGenerator
     }
 
     /**
-     * Bulk add array of classnames
+     * Add multiple classes
      *
-     * @param  array         $classes
-     * @return CodeGenerator Instance for chaining
+     * @param  array $classes
+     * @return void
      */
     public function addClasses(array $classes)
     {
         foreach ($classes as $classname) {
             $this->addClass($classname);
         }
-
-        return $this;
     }
 
     /**
      * Add class for processing
      *
-     * @param  string        $classname
-     * @return CodeGenerator Instance for chaining
+     * @param  string $classname
+     * @return void
      */
     public function addClass($classname)
     {
-        if (!isset($this->reflectionClasses[$classname])) {
+        if (!isset($this->controllerClasses[$classname])) {
             $reflClass = new ReflectionClass($classname);
             if ($reflClass->isController()) {
-                $this->reflectionClasses[$classname] = $reflClass;
+                $this->controllerClasses[$classname] = $reflClass;
             }
             if ($reflClass->isContainer()) {
                 $this->setContainerClassName('\\'.$reflClass->getName());
@@ -94,42 +91,48 @@ class CodeGenerator
                 $this->setCallerClassName('\\'.$reflClass->getName());
             }
         }
-
-        return $this;
     }
 
     /**
      * Set root path
      *
-     * @param  string        $root
-     * @return CodeGenerator Instance for chaining
+     * @param  string $root
+     * @return void
      */
     public function setRoot($root)
     {
         assert('is_string($root)');
         $this->root = $root;
-
-        return $this;
     }
 
     /**
      * Set caller class name
      *
-     * @param  string        $classname
-     * @return CodeGenerator Instance for chaining
+     * @param  string $classname
+     * @return void
      */
     public function setCallerClassName($classname)
     {
         assert('is_string($classname)');
         $this->caller = $classname;
+    }
 
-        return $this;
+    /**
+     * Set DI-container class name
+     *
+     * @param  string $classname
+     * @return void
+     */
+    public function setContainerClassName($classname)
+    {
+        assert('is_string($classname)');
+        $this->container = $classname;
     }
 
     /**
      * Get name of caller class
      *
-     * @return string Name of supplied caller class
+     * @return string
      */
     public function getCallerClassName()
     {
@@ -137,23 +140,9 @@ class CodeGenerator
     }
 
     /**
-     * Set DI-container class name
-     *
-     * @param  string        $classname
-     * @return CodeGenerator Instance for chaining
-     */
-    public function setContainerClassName($classname)
-    {
-        assert('is_string($classname)');
-        $this->container = $classname;
-
-        return $this;
-    }
-
-    /**
      * Get name of DI-container class
      *
-     * @return string Name of supplied DI-container
+     * @return string
      */
     public function getContainerClassName()
     {
@@ -168,12 +157,14 @@ class CodeGenerator
     public function getDependencyContainerCode()
     {
         $factories = array();
-        foreach ($this->reflectionClasses as $refl) {
+
+        /** @var ReflectionClass $controller */
+        foreach ($this->controllerClasses as $controller) {
             $factories[] = array(
-                'name' => $refl->getFactoryName(),
-                'class' => $refl->getName(),
-                'signature' => $refl->getSignature(),
-                'params' => $refl->getInjections()
+                'name'      => $controller->getFactoryName(),
+                'class'     => $controller->getName(),
+                'signature' => $controller->getSignature(),
+                'params'    => $controller->getInjections()
             );
         }
 
@@ -189,14 +180,17 @@ class CodeGenerator
     public function getRouteCode()
     {
         $routes = array();
-        foreach ($this->reflectionClasses as $refl) {
-            foreach ($refl->getRoutes() as $route) {
+
+        /** @var ReflectionClass $controller */
+        foreach ($this->controllerClasses as $controller) {
+            /** @var array $route */
+            foreach ($controller->getRoutes() as $route) {
                 $routes[] = array(
-                    'name' => $route['routename'],
-                    'path' => $route['path'],
-                    'method' => $route['httpmethod'],
-                    'cntrlfactory' => $refl->getFactoryName(),
-                    'cntrlmethod' => $route['methodname']
+                    'name'         => $route['routename'],
+                    'path'         => $route['path'],
+                    'method'       => $route['httpmethod'],
+                    'cntrlfactory' => $controller->getFactoryName(),
+                    'cntrlmethod'  => $route['methodname']
                 );
             }
         }
@@ -224,7 +218,7 @@ class CodeGenerator
     /**
      * Generate code
      *
-     * @return string The generated code
+     * @return string
      */
     public function generate()
     {

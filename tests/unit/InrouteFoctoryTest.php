@@ -12,44 +12,9 @@ namespace iio\inroute;
 
 class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    private $settings = array(
-        "root" => "a",
-        "dirs" => "e",
-        "files" => "f",
-        "classes" => "g"
-    );
-
-    public function testSetSettings()
-    {
-        $facade = new InrouteFactory();
-        $facade->setRoot($this->settings['root']);
-        $facade->setDirs($this->settings['dirs']);
-        $facade->setFiles($this->settings['files']);
-        $facade->setClasses($this->settings['classes']);
-        $this->assertEquals($this->settings, $facade->getSettings());
-    }
-
     public function testGenerate()
     {
-        $generator = $this->getMock(
-            '\iio\inroute\CodeGenerator',
-            array('addClass', 'generate'),
-            array(),
-            '',
-            false
-        );
-
-        $scanner = $this->getMock(
-            '\iio\inroute\ClassScanner',
-            array(),
-            array(),
-            '',
-            false
-        );
-
-        $factory = new InrouteFactory($generator, $scanner);
-        $factory->setDirs(array('dirname'));
-        $factory->setFiles(array('filename'));
+        $scanner = $this->getMock('\iio\inroute\ClassScanner');
 
         $scanner->expects($this->once())
             ->method('addDir')
@@ -63,6 +28,14 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getClasses')
             ->will($this->returnValue(array('filename')));
 
+        $generator = $this->getMock(
+            '\iio\inroute\CodeGenerator',
+            array('addClass', 'generate'),
+            array(),
+            '',
+            false
+        );
+
         $generator->expects($this->atLeastOnce())
             ->method('addClass');
 
@@ -70,6 +43,53 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('generate')
             ->will($this->returnValue('output'));
 
+        $factory = new InrouteFactory($generator, $scanner);
+        $factory->addDirs(array('dirname'));
+        $factory->addFiles(array('filename'));
+
         $this->assertEquals('output', $factory->generate());
+    }
+
+    public function testAddClasses()
+    {
+        $scanner = $this->getMock('\iio\inroute\ClassScanner');
+
+        $generator = $this->getMock(
+            '\iio\inroute\CodeGenerator',
+            array('addClasses'),
+            array(),
+            '',
+            false
+        );
+
+        $classes = array('foobar');
+
+        $generator->expects($this->once())
+            ->method('addClasses')
+            ->with($classes);
+
+        $factory = new InrouteFactory($generator, $scanner);
+        $factory->addClasses($classes);
+    }
+
+    public function testSetRoot()
+    {
+        $scanner = $this->getMock('\iio\inroute\ClassScanner');
+
+        $generator = $this->getMock(
+            '\iio\inroute\CodeGenerator',
+            array('setRoot'),
+            array(),
+            '',
+            false
+        );
+
+        $generator->expects($this->once())
+            ->method('setRoot')
+            ->with('foobar');
+
+        $factory = new InrouteFactory($generator, $scanner);
+        $factory->setRoot('foobar');
+
     }
 }

@@ -75,7 +75,7 @@ class BuildCommand extends Command
         $factory = new InrouteFactory();
 
         $dir = $input->getArgument('dir');
-        $factory->setDirs($dir);
+        $factory->addDirs((array) $dir);
         $this->loader->add('', $dir);
 
         $root = $input->getOption('root');

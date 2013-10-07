@@ -40,6 +40,7 @@ class ReflectionClass extends \ReflectionClass
     public function getControllerTag()
     {
         if (!isset($this->controllerTag)) {
+            /** @var ControllerTag $tag */
             foreach (ControllerTag::parseDocBlock(new DocBlock($this)) as $tag) {
                 $this->controllerTag = $tag;
             }
@@ -114,12 +115,13 @@ class ReflectionClass extends \ReflectionClass
         if (!isset($this->params)) {
             $this->params = array();
             if ($this->hasConstructor()) {
+                /** @var \ReflectionParameter $param */
                 foreach ($this->getConstructor()->getParameters() as $param) {
                     $name = '$' . $param->getName();
                     $class = $param->getClass();
                     $classname = $class ? $class->getName() : '';
                     $this->params[$name] = array(
-                        'name' => $name,
+                        'name'  => $name,
                         'class' => $classname,
                         'array' => $param->isArray()
                     );
@@ -191,7 +193,7 @@ class ReflectionClass extends \ReflectionClass
     /**
      * Get a list of routes defined in relfected class
      *
-     * The @route tag is definied as $route [method] [path]. [method] can be
+     * The @route tag is definied as @route [method] <[path]>. [method] can be
      * a comma separeted list of http methods. Note that the list must NOT
      * contain any spaces. [path] is a path template and may contain regular
      * expressions matching subpaths.
@@ -208,14 +210,13 @@ class ReflectionClass extends \ReflectionClass
                 continue;
             }
 
-            $block = new DocBlock($method);
-
-            foreach (RouteTag::parseDocBlock($block) as $tag) {
+            /** @var RouteTag $tag  */
+            foreach (RouteTag::parseDocBlock(new DocBlock($method)) as $tag) {
                 $routes[] = array(
                     'methodname' => $method->getName(),
-                    'routename' => $this->getShortName() . '::' . $method->getName(),
+                    'routename'  => $this->getShortName() . '::' . $method->getName(),
                     'httpmethod' => $tag->getMethods(),
-                    'path' => $this->getControllerTag()->getPath() . $tag->getPath()
+                    'path'       => $this->getControllerTag()->getPath() . $tag->getPath()
                 );
             }
         }

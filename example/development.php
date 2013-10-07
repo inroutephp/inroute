@@ -9,7 +9,7 @@ $loader = include __DIR__ . "/../vendor/autoload.php";
 $loader->add('', __DIR__.'/Application');
 
 $factory = new InrouteFactory();
-$factory->setDirs(array(__DIR__ . '/Application'));
+$factory->addDirs(array(__DIR__ . '/Application'));
 $app = eval($factory->generate());
 
 $uri = '/base/app/pagename';

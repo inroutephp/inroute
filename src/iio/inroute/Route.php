@@ -81,8 +81,7 @@ class Route
     /**
      * Ger route values
      *
-     * @param string $key
-     *
+     * @param  string $key
      * @return string
      */
     public function getValue($key)

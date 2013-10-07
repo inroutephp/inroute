@@ -15,8 +15,6 @@ use Pimple;
 /**
  * Call system controller
  *
- * Sends the raw Route object to the controller.
- *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class DefaultCaller implements CallerInterface
@@ -48,6 +46,8 @@ class DefaultCaller implements CallerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * Sends the raw Route object to the controller.
      *
      * @param  mixed $controller Anything acceptable by call_user_func
      * @param  Route $route
