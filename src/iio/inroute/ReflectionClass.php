@@ -23,11 +23,6 @@ use iio\inroute\Tag\RouteTag;
 class ReflectionClass extends \ReflectionClass
 {
     /**
-     * @var array All constructor parameters
-     */
-    private $params;
-
-    /**
      * @var ControllerTag Class controller tag
      */
     private $controllerTag;
@@ -102,92 +97,47 @@ class ReflectionClass extends \ReflectionClass
     }
 
     /**
-     * Get array of constructor parameters of reflected class
+     * Get a list of defined injections
      *
-     * Array keys are the parameter names. Array values are arrays containing
-     * name, optional classname and flag if parameter is expected to be an
-     * array.
-     * 
-     * @return array
-     */
-    public function getConstructorParams()
-    {
-        if (!isset($this->params)) {
-            $this->params = array();
-            if ($this->hasConstructor()) {
-                /** @var \ReflectionParameter $param */
-                foreach ($this->getConstructor()->getParameters() as $param) {
-                    $name = '$' . $param->getName();
-                    $class = $param->getClass();
-                    $classname = $class ? $class->getName() : '';
-                    $this->params[$name] = array(
-                        'name'  => $name,
-                        'class' => $classname,
-                        'array' => $param->isArray()
-                    );
-                }
-            }
-        }
-
-        return $this->params;
-    }
-
-    /**
-     * Get constructor signature of reflected class
-     *
-     * Does not return a true signature. Class name is not included, nor are
-     * parameter types. Returns a string with is a list of comma separated
-     * parameter names.
-     * 
-     * @return string
-     */
-    public function getSignature()
-    {
-        return implode(', ', array_keys($this->getConstructorParams()));
-    }
-
-    /**
-     * Get a list of injections needed to instantiate relfected class
-     *
-     * Note that all constructor arguments must be injected, this includes
-     * parameters with default values (that on the language level are optional).
-     *
-     * @return array Returns an array of arrays, where the inner arrays contain
-     * name, class, array flag and factory values.
-     * @throws InjectionException If parameter found in tag does not exist
-     * @throws InjectionException If any constructor parameter is not injected
+     * @return array              Array of arrays
+     * @throws InjectionException If inject clause is missing from @param tag
+     * @throws InjectionException If a constructor parameter is not injected
      */
     public function getInjections()
     {
-        $params = $this->getConstructorParams();
+        if (!$this->hasConstructor()) {
+            return array();
+        }
+
+        $injections = array();
         $docblock = new DocBlock($this->getConstructor());
 
         /** @var ParamTag $tag */
         foreach ($docblock->getTagsByName('param') as $tag) {
-            $name = $tag->getVariableName();
-
-            if (!isset($params[$name])) {
-                $msg = "Trying to inject unknown paramater $name into {$this->getName()}";
-                throw new InjectionException($msg);
-            }
-
             if (!preg_match('/inject:([^\s]+)/i', $tag->getDescription(), $matches)) {
-                $msg = "Injection clause missing for parameter $name (use inject:xxx)";
+                $msg = "Injection missing for param {$tag->getVariableName()} (use inject:xxx)";
                 throw new InjectionException($msg);
             }
 
-            $params[$name]['factory'] = $matches[1];
+            $injections[$tag->getVariableName()] = array('factory' => $matches[1]);
         }
 
-        /** @var array $param */
-        foreach ($params as $param) {
-            if (!isset($param['factory'])) {
-                $msg = "Parameter {$param['name']} must be injected into {$this->getName()}";
+        /** @var ReflectionParameter $param */
+        foreach ($this->getConstructor()->getParameters() as $param) {
+            $name = '$' . $param->getName();
+            if (isset($injections[$name])) {
+                $injections[$name]['params'] = array(
+                    'name'    => $name,
+                    'class'   => $param->getClass() ? $param->getClass()->getName() : '',
+                    'isArray' => $param->isArray(),
+                );
+            } elseif (!$param->isOptional()) {
+                $msg = "Parameter {$name} must be injected into {$this->getName()}";
                 throw new InjectionException($msg);
             }
         }
 
-        return array_values($params);
+        return array_values($injections);
     }
 
     /**

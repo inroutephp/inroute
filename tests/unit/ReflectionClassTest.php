@@ -76,36 +76,46 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $refl->getInjections();
     }
 
-    public function testGetSignature()
-    {
-        $refl = new ReflectionClass('unit\data\Working');
-        $this->assertEquals('$bar, $x, $y', $refl->getSignature());
-    }
-
     public function testGetInjections()
     {
         $refl = new ReflectionClass('unit\data\Working');
-        $expected = array(
+        $injections = $refl->getInjections();
+        
+        $this->assertContains(
             array(
-                'name' => '$bar',
-                'class' => 'DateTime',
-                'array' => false,
-                'factory' => 'foobar'
+                'factory' => 'foobar',
+                'params'   => array(
+                    'name'    => '$bar',
+                    'class'   => 'DateTime',
+                    'isArray' => false
+                )
             ),
-            array(
-                'name' => '$x',
-                'class' => '',
-                'array' => true,
-                'factory' => 'xfactory'
-            ),
-            array(
-                'name' => '$y',
-                'class' => '',
-                'array' => false,
-                'factory' => 'xx'
-            )
+            $injections
         );
-        $this->assertEquals($expected, $refl->getInjections());
+        $this->assertContains(
+            array(
+                'factory' => 'xfactory',
+                'params'   => array(
+                    'name'    => '$x',
+                    'class'   => '',
+                    'isArray' => true
+                )
+            ),
+            $injections
+        );
+        $this->assertContains(
+            array(
+                'factory' => 'xx',
+                'params'   => array(
+                    'name'    => '$y',
+                    'class'   => '',
+                    'isArray' => false
+                )
+            ),
+            $injections
+        );
+
+        $this->assertCount(3, $injections, "Working has 3 injections");
     }
 
     public function testGetRoutes()

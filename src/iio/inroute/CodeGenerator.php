@@ -156,20 +156,29 @@ class CodeGenerator
      */
     public function getDependencyContainerCode()
     {
-        $factories = array();
+        $controllers = array();
 
         /** @var ReflectionClass $controller */
         foreach ($this->controllerClasses as $controller) {
-            $factories[] = array(
-                'name'      => $controller->getFactoryName(),
-                'class'     => $controller->getName(),
-                'signature' => $controller->getSignature(),
-                'params'    => $controller->getInjections()
+            $injections = $controller->getInjections();
+            $controllers[] = array(
+                'controller'   => $controller->getName(),
+                'cntrlFactory' => $controller->getFactoryName(),
+                'signature'    => implode(
+                    ',',
+                    array_map(
+                        function (array $injection) {
+                            return $injection['params']['name'];
+                        },
+                        $injections
+                    )
+                ),
+                'injections'   => $injections
             );
         }
 
         return $this->mustache->loadTemplate('Dependencies')
-            ->render(array('factories' => $factories));
+            ->render(array('controllers' => $controllers));
     }
 
     /**

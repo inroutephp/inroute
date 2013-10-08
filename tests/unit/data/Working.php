@@ -13,11 +13,12 @@ class Working
      * @param DateTime $bar inject:foobar
      * @param string   $y   INJECT:xx
      */
-    public function __construct(\DateTime $bar, array $x, $y = 'optional')
+    public function __construct(\DateTime $bar, array $x, $y = null, $z = 'optional')
     {
         var_dump($bar);
         var_dump($x);
         var_dump($y);
+        var_dump($z);
     }
 
     /**
