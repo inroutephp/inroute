@@ -10,7 +10,7 @@ class Dependencies {
             {{# params }}
                 {{ name }} = $this->container["{{ factory }}"];
                 {{# class }}
-                if (!{{ class }} instanceof \{{ class }}) {
+                if (!{{ name }} instanceof \{{ class }}) {
                     throw new DependencyExpection("DI-container method '{{ factory }}' must return a {{ class }} instance.");
                 }
                 {{/ class }}
