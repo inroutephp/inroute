@@ -1,6 +1,5 @@
 INROUTE
 =======
-
 [![Build Status](https://travis-ci.org/iio/inroute.png?branch=master)](https://travis-ci.org/iio/inroute)
 
 Generate web router and dispatcher from docblock annotations
@@ -105,7 +104,6 @@ te example application in the source tree for an example.
 
 The Route object
 ----------------
-
 For each request a Route object is created. You may access it to read path
 parameters.
 
@@ -179,9 +177,8 @@ Defining the getDependency method
 
 Installing
 ----------
-
 Inroute can be installed using composer and the packagist repository. Add
-iio/inroute as a dependency to your composer.json. When installed through
+`iio/inroute` as a dependency to your composer.json. When installed through
 composer the phar binary is accessed via
 
     vendor/bin/inroute
@@ -199,7 +196,6 @@ in your php.ini.
 
 Compiling your project
 ----------------------
-
 Compile your project using
 
     > bin/inroute build [sourcedir] --loader=[loader] > [target]
@@ -216,7 +212,6 @@ Optionally you may compile your project using the phar library
 
 The example app
 ---------------
-
 The inroute source includes an example application. Build the application using
 
     > example/build
@@ -249,27 +244,28 @@ this problem occurs try to uninstall xcache.
 
 Testing
 -------
+Execute unit tests by typing `phpunit`. The unis tests requires FPDI to be
+installed using composer.
 
-Run unittests by typing
+    $ curl -sS https://getcomposer.org/installer | php
+    $ php composer.phar install
+    $ phpunit
 
-    > phpunit
 
-Optionally you can use Phing to run tests together with additional checks.
 
-[Installation instructions.](http://www.phing.info/trac/wiki/Users/Installation)
+Continuous integration
+----------------------
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/iio/inroute/badges/quality-score.png?s=9b2d9c882451cdb18a86471024cc466e62654f47)](https://scrutinizer-ci.com/g/iio/inroute/)
+[![Code Coverage](https://scrutinizer-ci.com/g/iio/inroute/badges/coverage.png?s=72c204520b4c3d064fb1ffb9edc6ad7f6d55c220)](https://scrutinizer-ci.com/g/iio/inroute/)
 
-Then from the root project directory type
-
-    > phing
-
-The build directory will be filled with the test results. Point your browser to
-*build/index.html* to investigate.
+Installing dependencies, running tests and other code analysis tools can be
+handled using `phing`. To run CI tests type `phing` from the project root
+directory, point your browser to `build/index.html` to view the results.
 
 
 
 Building the phar
 -----------------
-
 Build the phar using
 
     > bin/compile
