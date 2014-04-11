@@ -1,5 +1,5 @@
 <?php
-namespace unit\data;
+namespace data;
 
 class NoInroute
 {

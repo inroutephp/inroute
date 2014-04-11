@@ -4,7 +4,7 @@
     "keywords": ["Annotations", "Router", "Code generator"],
     "homepage": "https://github.com/iio/inroute",
     "type": "library",
-    "license": "MIT",
+    "license": "WTFPL",
     "authors": [
         {
             "name": "Hannes Forsgård",

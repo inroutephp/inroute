@@ -1,41 +1,32 @@
 <?php
-/**
- * This file is part of the inroute package
- *
- * Copyright (c) 2013 Hannes Forsgård
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace iio\inroute;
 
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
     public function testIsController()
     {
-        $no = new ReflectionClass('unit\data\NoInroute');
+        $no = new ReflectionClass('data\NoInroute');
         $this->assertFalse($no->isController());
 
-        $yes = new ReflectionClass('unit\data\NoConstructor');
+        $yes = new ReflectionClass('data\NoConstructor');
         $this->assertTrue($yes->isController());
     }
 
     public function testIsCaller()
     {
-        $no = new ReflectionClass('unit\data\NoInroute');
+        $no = new ReflectionClass('data\NoInroute');
         $this->assertFalse($no->isCaller());
     }
 
     public function testIsContainer()
     {
-        $no = new ReflectionClass('unit\data\NoInroute');
+        $no = new ReflectionClass('data\NoInroute');
         $this->assertFalse($no->isContainer());
     }
 
     public function testNoConstructor()
     {
-        $refl = new ReflectionClass('unit\data\NoConstructor');
+        $refl = new ReflectionClass('data\NoConstructor');
         $this->assertEquals(
             array(),
             $refl->getInjections(),
@@ -45,8 +36,8 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFactoryName()
     {
-        $refl = new ReflectionClass('unit\data\NoConstructor');
-        $this->assertEquals('unit_data_NoConstructor', $refl->getFactoryName());
+        $refl = new ReflectionClass('data\NoConstructor');
+        $this->assertEquals('data_NoConstructor', $refl->getFactoryName());
     }
 
     /**
@@ -54,7 +45,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      */
     public function testInjectionMissing()
     {
-        $refl = new ReflectionClass('unit\data\InjectionMissing');
+        $refl = new ReflectionClass('data\InjectionMissing');
         $refl->getInjections();
     }
 
@@ -63,7 +54,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      */
     public function testParamTagMissing()
     {
-        $refl = new ReflectionClass('unit\data\ParamTagMissing');
+        $refl = new ReflectionClass('data\ParamTagMissing');
         $refl->getInjections();
     }
 
@@ -72,13 +63,13 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
      */
     public function testParamMissing()
     {
-        $refl = new ReflectionClass('unit\data\InjectedParameterMissing');
+        $refl = new ReflectionClass('data\InjectedParameterMissing');
         $refl->getInjections();
     }
 
     public function testGetInjections()
     {
-        $refl = new ReflectionClass('unit\data\Working');
+        $refl = new ReflectionClass('data\Working');
         $injections = $refl->getInjections();
         
         $this->assertContains(
@@ -120,7 +111,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRoutes()
     {
-        $refl = new ReflectionClass('unit\data\Working');
+        $refl = new ReflectionClass('data\Working');
         $routes = $refl->getRoutes();
 
         $this->assertEquals(3, count($routes));

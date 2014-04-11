@@ -1,13 +1,4 @@
 <?php
-/**
- * This file is part of the inroute package
- *
- * Copyright (c) 2013 Hannes Forsgård
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace iio\inroute;
 
 class ClassScannerTest extends \PHPUnit_Framework_TestCase
@@ -21,7 +12,7 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
             ->getClasses();
 
         $this->assertEquals(
-            array('unit\data\Working'),
+            array('data\Working'),
             $classes,
             'Multiple scans should not yield multiple array entries'
         );
@@ -35,7 +26,7 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
             ->getClasses();
 
         $this->assertContains(
-            'unit\data\Container',
+            'data\Container',
             $classes
         );
     }
@@ -52,7 +43,7 @@ class ClassScannerTest extends \PHPUnit_Framework_TestCase
             ->getClasses();
 
         $this->assertEquals(
-            array('unit\data\Extended'),
+            array('data\Extended'),
             $classes
         );
     }

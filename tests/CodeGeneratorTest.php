@@ -1,13 +1,4 @@
 <?php
-/**
- * This file is part of the inroute package
- *
- * Copyright (c) 2013 Hannes Forsgård
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace iio\inroute;
 
 class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
@@ -32,7 +23,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('foobar'));
 
         $generator = new CodeGenerator($mustache);
-        $generator->addClass('unit\data\Working');
+        $generator->addClass('data\Working');
 
         $this->assertEquals('foobar', $generator->getDependencyContainerCode());
     }
@@ -58,7 +49,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $generator = new CodeGenerator($mustache);
         $generator->setRoot('root');
-        $generator->addClass('unit\data\Working');
+        $generator->addClass('data\Working');
 
         $this->assertEquals('foobar', $generator->getRouteCode());
     }
@@ -134,9 +125,9 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $mustache = $this->getMock('\Mustache_Engine');
         $generator = new CodeGenerator($mustache);
-        $generator->addClass('\unit\data\Container');
+        $generator->addClass('\data\Container');
         $this->assertEquals(
-            '\unit\data\Container',
+            '\data\Container',
             $generator->getContainerClassName()
         );
     }
