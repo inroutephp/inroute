@@ -6,9 +6,9 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">./src/iio</directory>
+            <directory suffix=".php">./src</directory>
             <exclude>
-                <file>./src/iio/inroute/ClassMapGenerator.php</file>
+                <file>./src/ClassMapGenerator.php</file>
             </exclude>
         </whitelist>
     </filter>

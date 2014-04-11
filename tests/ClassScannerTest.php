@@ -1,5 +1,5 @@
 <?php
-namespace iio\inroute;
+namespace inroute;
 
 class ClassScannerTest extends \PHPUnit_Framework_TestCase
 {

@@ -7,9 +7,9 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace iio\inroute;
+namespace inroute;
 
-use iio\inroute\Exception\RuntimeExpection;
+use inroute\Exception\RuntimeExpection;
 use Mustache_Engine;
 
 /**

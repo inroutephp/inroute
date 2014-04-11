@@ -7,7 +7,7 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace iio\inroute;
+namespace inroute;
 
 use Pimple;
 

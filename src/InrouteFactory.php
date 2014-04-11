@@ -7,7 +7,7 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace iio\inroute;
+namespace inroute;
 
 use Mustache_Engine;
 use Mustache_Loader_ArrayLoader;

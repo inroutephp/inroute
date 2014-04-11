@@ -1,5 +1,5 @@
 <?php
-namespace iio\inroute\Tag;
+namespace inroute\Tag;
 
 class ControllerTagTest extends \PHPUnit_Framework_TestCase
 {

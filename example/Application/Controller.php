@@ -1,6 +1,6 @@
 <?php
 
-use iio\inroute\Route;
+use inroute\Route;
 
 /**
  * The @controller annotation tells inroute that this class should be scanned

@@ -3,7 +3,7 @@
 // Optional usage during development
 // Rebuilds application on every page reload
 
-use iio\inroute\InrouteFactory;
+use inroute\InrouteFactory;
 
 $loader = include __DIR__ . "/../vendor/autoload.php";
 $loader->add('', __DIR__.'/Application');

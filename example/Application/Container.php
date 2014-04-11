@@ -3,7 +3,7 @@
 /**
  * Implementing the ContainerInterface tells inroute this container should be used
  */
-class Container extends \Pimple implements iio\inroute\ContainerInterface
+class Container extends \Pimple implements inroute\ContainerInterface
 {
     public function __construct()
     {

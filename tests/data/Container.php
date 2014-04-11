@@ -1,7 +1,7 @@
 <?php
 namespace data;
 
-use iio\inroute\ContainerInterface;
+use inroute\ContainerInterface;
 
 class Container extends \Pimple implements ContainerInterface
 {

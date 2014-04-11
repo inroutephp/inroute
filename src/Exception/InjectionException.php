@@ -7,15 +7,15 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace iio\inroute\Exception;
+namespace inroute\Exception;
 
-use iio\inroute\Exception;
+use inroute\Exception;
 
 /**
- * Inroute runtime exception
+ * Exception thrown when injection failes
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class RuntimeExpection extends Exception
+class InjectionException extends Exception
 {
 }

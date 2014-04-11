@@ -7,12 +7,12 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace iio\inroute;
+namespace inroute;
 
 use phpDocumentor\Reflection\DocBlock;
-use iio\inroute\Exception\InjectionException;
-use iio\inroute\Tag\ControllerTag;
-use iio\inroute\Tag\RouteTag;
+use inroute\Exception\InjectionException;
+use inroute\Tag\ControllerTag;
+use inroute\Tag\RouteTag;
 
 /**
  * ReflectionClass extension with docbloc parsing capabilities
@@ -62,7 +62,7 @@ class ReflectionClass extends \ReflectionClass
      */
     public function isContainer()
     {
-        return $this->implementsInterface('iio\inroute\ContainerInterface');
+        return $this->implementsInterface('inroute\ContainerInterface');
     }
 
     /**
@@ -72,7 +72,7 @@ class ReflectionClass extends \ReflectionClass
      */
     public function isCaller()
     {
-        return $this->implementsInterface('iio\inroute\CallerInterface');
+        return $this->implementsInterface('inroute\CallerInterface');
     }
 
     /**

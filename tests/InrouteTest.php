@@ -1,10 +1,10 @@
 <?php
-namespace iio\inroute;
+namespace inroute;
 
 class InrouteTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException iio\inroute\Exception\RuntimeExpection
+     * @expectedException inroute\Exception\RuntimeExpection
      */
     public function testNoRouteException()
     {

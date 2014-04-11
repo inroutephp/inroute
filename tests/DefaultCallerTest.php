@@ -1,5 +1,5 @@
 <?php
-namespace iio\inroute;
+namespace inroute;
 
 class DefaultCallerTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +13,7 @@ class DefaultCallerTest extends \PHPUnit_Framework_TestCase
     public function testCall()
     {
         $route = $this->getMock(
-            'iio\inroute\Route',
+            'inroute\Route',
             array(),
             array(),
             '',

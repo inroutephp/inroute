@@ -1,5 +1,5 @@
 <?php
-namespace iio\inroute;
+namespace inroute;
 
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,7 +41,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException iio\inroute\Exception\InjectionException
+     * @expectedException inroute\Exception\InjectionException
      */
     public function testInjectionMissing()
     {
@@ -50,7 +50,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException iio\inroute\Exception\InjectionException
+     * @expectedException inroute\Exception\InjectionException
      */
     public function testParamTagMissing()
     {
@@ -59,7 +59,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException iio\inroute\Exception\InjectionException
+     * @expectedException inroute\Exception\InjectionException
      */
     public function testParamMissing()
     {

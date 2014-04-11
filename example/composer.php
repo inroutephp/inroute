@@ -8,7 +8,7 @@ if (!file_exists(__DIR__ . '/app.php')) {
 // Optional usage when inroute is installed using composer 
 // Requires that the Application classes are autoloaded
 
-use iio\inroute\InrouteFactory;
+use inroute\InrouteFactory;
 
 $loader = include __DIR__ . '/../vendor/autoload.php';
 $loader->add('', __DIR__ . '/Application');

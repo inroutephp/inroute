@@ -1,8 +1,8 @@
 {
-    "name": "iio/inroute",
+    "name": "inroute/inroute",
     "description": "Generate web router and controller dispatcher from docblock annotations",
     "keywords": ["Annotations", "Router", "Code generator"],
-    "homepage": "https://github.com/iio/inroute",
+    "homepage": "https://github.com/inroute/inroute",
     "type": "library",
     "license": "WTFPL",
     "authors": [
@@ -12,8 +12,8 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "iio\\inroute": "src/"
+        "psr-4": {
+            "inroute\\": "src/"
         }
     },
     "require": {

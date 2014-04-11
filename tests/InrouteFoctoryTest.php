@@ -1,11 +1,11 @@
 <?php
-namespace iio\inroute;
+namespace inroute;
 
 class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGenerate()
     {
-        $scanner = $this->getMock('\iio\inroute\ClassScanner');
+        $scanner = $this->getMock('\inroute\ClassScanner');
 
         $scanner->expects($this->once())
             ->method('addDir')
@@ -20,7 +20,7 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array('filename')));
 
         $generator = $this->getMock(
-            '\iio\inroute\CodeGenerator',
+            '\inroute\CodeGenerator',
             array('addClass', 'generate'),
             array(),
             '',
@@ -43,10 +43,10 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testAddClasses()
     {
-        $scanner = $this->getMock('\iio\inroute\ClassScanner');
+        $scanner = $this->getMock('\inroute\ClassScanner');
 
         $generator = $this->getMock(
-            '\iio\inroute\CodeGenerator',
+            '\inroute\CodeGenerator',
             array('addClasses'),
             array(),
             '',
@@ -65,10 +65,10 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testSetRoot()
     {
-        $scanner = $this->getMock('\iio\inroute\ClassScanner');
+        $scanner = $this->getMock('\inroute\ClassScanner');
 
         $generator = $this->getMock(
-            '\iio\inroute\CodeGenerator',
+            '\inroute\CodeGenerator',
             array('setRoot'),
             array(),
             '',

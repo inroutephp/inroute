@@ -1,5 +1,5 @@
 <?php
-namespace iio\inroute\Tag;
+namespace inroute\Tag;
 
 class RouteTagTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class RouteTagTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \iio\inroute\Exception
+     * @expectedException \inroute\Exception
      */
     public function testInvalidMethod()
     {
@@ -30,7 +30,7 @@ class RouteTagTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \iio\inroute\Exception
+     * @expectedException \inroute\Exception
      */
     public function testInvalidRouteDescription()
     {

@@ -1,13 +1,13 @@
 <?php
 
-use iio\inroute\Route;
+use inroute\Route;
 
 /**
  * Implementing the CallerInterface tells inroute this caller should be used
  *
  * TIP: The DI-container is injected into the caller at construct for later use.
  */
-class Caller implements iio\inroute\CallerInterface
+class Caller implements inroute\CallerInterface
 {
     public function call($controller, Route $route)
     {

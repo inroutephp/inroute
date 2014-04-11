@@ -7,14 +7,14 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace iio\inroute\Console;
+namespace inroute\Console;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use iio\inroute\InrouteFactory;
+use inroute\InrouteFactory;
 
 /**
  * Build inroute project command

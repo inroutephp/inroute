@@ -1,6 +1,4 @@
-INROUTE
-=======
-[![Build Status](https://travis-ci.org/iio/inroute.png?branch=master)](https://travis-ci.org/iio/inroute)
+# INROUTE
 
 Generate web router and dispatcher from docblock annotations
 
@@ -126,7 +124,7 @@ A short example
 
 Using getDependency to inject $dep and defining two routes.
 
-    use iio\inroute\Route;
+    use inroute\Route;
 
     /**
      * @controller
@@ -163,7 +161,7 @@ Using getDependency to inject $dep and defining two routes.
 
 Defining the getDependency method
 
-    class Container extends \Pimple implements iio\inroute\ContainerInterface
+    class Container extends \Pimple implements inroute\ContainerInterface
     {
         public function __construct()
         {
@@ -178,7 +176,7 @@ Defining the getDependency method
 Installing
 ----------
 Inroute can be installed using composer and the packagist repository. Add
-`iio/inroute` as a dependency to your composer.json. When installed through
+`inroute/inroute` as a dependency to your composer.json. When installed through
 composer the phar binary is accessed via
 
     vendor/bin/inroute

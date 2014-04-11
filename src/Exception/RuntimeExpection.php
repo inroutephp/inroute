@@ -7,15 +7,15 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace iio\inroute\Exception;
+namespace inroute\Exception;
 
-use iio\inroute\Exception;
+use inroute\Exception;
 
 /**
- * Exception thrown when dependency generation fails
+ * Inroute runtime exception
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class DependencyExpection extends Exception
+class RuntimeExpection extends Exception
 {
 }

@@ -7,9 +7,9 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace iio\inroute\Tag;
+namespace inroute\Tag;
 
-use iio\inroute\Exception;
+use inroute\Exception;
 
 /**
  * Controller annotation class

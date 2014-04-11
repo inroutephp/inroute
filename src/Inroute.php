@@ -7,10 +7,10 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace iio\inroute;
+namespace inroute;
 
 use Aura\Router\Map;
-use iio\inroute\Exception\RuntimeExpection;
+use inroute\Exception\RuntimeExpection;
 
 /**
  * Inroute base class

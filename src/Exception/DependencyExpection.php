@@ -7,15 +7,15 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace iio\inroute\Exception;
+namespace inroute\Exception;
 
-use iio\inroute\Exception;
+use inroute\Exception;
 
 /**
- * Exception thrown when injection failes
+ * Exception thrown when dependency generation fails
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class InjectionException extends Exception
+class DependencyExpection extends Exception
 {
 }

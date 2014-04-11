@@ -1,7 +1,7 @@
 <?php
 namespace data;
 
-use iio\inroute\Route;
+use inroute\Route;
 
 /**
  * @controller </root>

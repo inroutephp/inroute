@@ -1,5 +1,5 @@
 <?php
-namespace iio\inroute;
+namespace inroute;
 
 class RouteTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,5 +1,5 @@
 <?php
-namespace iio\inroute;
+namespace inroute;
 
 class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -82,7 +82,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGenerate()
     {
         $stub = $this->getMock(
-            'iio\inroute\CodeGenerator',
+            'inroute\CodeGenerator',
             array('getStaticCode', 'getRouteCode', 'getDependencyContainerCode'),
             array(),
             '',
@@ -107,7 +107,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testAddClasses()
     {
         $stub = $this->getMock(
-            'iio\inroute\CodeGenerator',
+            'inroute\CodeGenerator',
             array('addClass'),
             array(),
             '',
@@ -136,9 +136,9 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $mustache = $this->getMock('\Mustache_Engine');
         $generator = new CodeGenerator($mustache);
-        $generator->addClass('\iio\inroute\DefaultCaller');
+        $generator->addClass('\inroute\DefaultCaller');
         $this->assertEquals(
-            '\iio\inroute\DefaultCaller',
+            '\inroute\DefaultCaller',
             $generator->getCallerClassName()
         );
     }
