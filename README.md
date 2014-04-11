@@ -241,7 +241,6 @@ a PharException with message '__HALT_COMPILER(); must be declared in a phar'. If
 this problem occurs try to uninstall xcache.
 
 
-
 Testing
 -------
 Execute unit tests by typing `phpunit`. The unis tests requires that dependencies
@@ -250,18 +249,6 @@ are installed using composer.
     $ curl -sS https://getcomposer.org/installer | php
     $ php composer.phar install
     $ phpunit
-
-
-
-Continuous integration
-----------------------
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/iio/inroute/badges/quality-score.png?s=9b2d9c882451cdb18a86471024cc466e62654f47)](https://scrutinizer-ci.com/g/iio/inroute/)
-[![Code Coverage](https://scrutinizer-ci.com/g/iio/inroute/badges/coverage.png?s=72c204520b4c3d064fb1ffb9edc6ad7f6d55c220)](https://scrutinizer-ci.com/g/iio/inroute/)
-
-Installing dependencies, running tests and other code analysis tools can be
-handled using `phing`. To run CI tests type `phing` from the project root
-directory, point your browser to `build/index.html` to view the results.
-
 
 
 Building the phar

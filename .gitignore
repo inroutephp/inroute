@@ -2,8 +2,5 @@
 /vendor
 /composer.phar
 /composer.lock
-/inroute.sublime-project
-/inroute.sublime-workspace
 /example/app.php
 /inroute.phar
-/scrutinizer.phar
