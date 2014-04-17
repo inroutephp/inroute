@@ -21,7 +21,6 @@
         "phpdocumentor/reflection-docblock": "2.*",
         "mustache/mustache": "2.*",
         "pimple/pimple": "1.*",
-        "symfony/finder": "2.*",
         "symfony/console": "2.*",
         "Aura/Router": "1.0.*"
     },

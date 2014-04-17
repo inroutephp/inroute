@@ -15,17 +15,6 @@
         <include name="**/*.php"/>
     </fileset>
 
-    <target name="build">
-        <echo msg="Generation PHAR"/>
-        <exec
-            command="bin/compile"
-            dir="${APP_ROOT}"
-            checkreturn="true"
-            passthru="true"
-            />
-        <echo msg="Done"/>
-    </target>
-
     <target name="buildAll" depends="test,sniff,phpcpd,phpmd,pdepend,document">
     </target>
 
