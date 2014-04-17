@@ -1,8 +1,8 @@
 {
-    "name": "inroute/inroute",
+    "name": "hanneskod/inroute",
     "description": "Generate web router and controller dispatcher from docblock annotations",
     "keywords": ["Annotations", "Router", "Code generator"],
-    "homepage": "https://github.com/inroute/inroute",
+    "homepage": "https://github.com/hanneskod/inroute",
     "type": "library",
     "license": "WTFPL",
     "authors": [
