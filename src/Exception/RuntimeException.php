@@ -16,6 +16,6 @@ use inroute\Exception;
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class RuntimeExpection extends Exception
+class RuntimeException extends Exception
 {
 }
