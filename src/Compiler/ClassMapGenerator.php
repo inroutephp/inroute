@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is copied from the Symfony package.
+ * This file is copied from the Symfony project
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
@@ -10,7 +10,7 @@
  * @license MIT
  */
 
-namespace inroute;
+namespace inroute\Compiler;
 
 /**
  * ClassMapGenerator
@@ -19,24 +19,6 @@ namespace inroute;
  */
 class ClassMapGenerator
 {
-    /**
-     * Generate a class map file
-     *
-     * @param array|string $dirs Directories or a single path to search in
-     * @param string       $file The name of the class map file
-     */
-    public static function dump($dirs, $file)
-    {
-        $dirs = (array) $dirs;
-        $maps = array();
-
-        foreach ($dirs as $dir) {
-            $maps = array_merge($maps, static::createMap($dir));
-        }
-
-        file_put_contents($file, sprintf('<?php return %s;', var_export($maps, true)));
-    }
-
     /**
      * Iterate over all files in the given directory searching for classes
      *

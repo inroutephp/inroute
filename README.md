@@ -33,16 +33,6 @@ All controller classes that should be processed must use the @controller tag.
 Optionally you may specify a root path for all controller routes. Se the example
 controller below, or the example app in the source tree.
 
-### @param
-
-Controllers that needs dependencies injected specify these using the @param
-tag. The syntax is
-
-    @param Type $varName inject:containerMethod
-
-Where $varName is the name of the contructor parameter and containerMethod is
-the name of the DI-container method that should be called to create the dependency.
-
 ### @route
 
 Controller methods that should be routable use the @route tag. The syntax is
@@ -79,27 +69,6 @@ For example you can definie a path that takes a numeric id parameter:
 for routing. For more information see the aura documenatation.)
 
 
-
-Interfaces
-----------
-
-### ContainerInterface
-
-Your DI-container must implement the ContainerInterface for inroute to find it.
-Se the example below or the example application in the source tree.
-
-Containers must currently subclass [Pimple](https://github.com/fabpot/Pimple).
-This is neither a clean or flexible solution. Please fork and hack away!
-
-### CallerInterface
-
-By default controller methods are called with a Route object as single parameter.
-If you want to create more parameters at dispatch (for example some request
-object) you can write your own caller. The syntax is straight forward, se
-te example application in the source tree for an example.
-
-
-
 The Route object
 ----------------
 For each request a Route object is created. You may access it to read path
@@ -122,9 +91,7 @@ A short example
 
 ### A controller
 
-Using getDependency to inject $dep and defining two routes.
-
-    use inroute\Route;
+    use inroute\Router\Route;
 
     /**
      * @controller
@@ -132,18 +99,11 @@ Using getDependency to inject $dep and defining two routes.
     class Controller
     {
         /**
-         * @param mixed $dep inject:getDependency
-         */
-        public function __construct($dep)
-        {
-        }
-
-        /**
          * @route GET </foo/{:name}>
          */
         public function foo(Route $route)
         {
-            return $route->getValue('name');
+            return $route->name;
         }
 
         /**
@@ -152,22 +112,6 @@ Using getDependency to inject $dep and defining two routes.
         public function bar(Route $route)
         {
             var_dump($route);
-        }
-    }
-
-
-
-###A DI-container
-
-Defining the getDependency method
-
-    class Container extends \Pimple implements inroute\ContainerInterface
-    {
-        public function __construct()
-        {
-            $this['getDependency'] = function ($c) {
-                return new Dependency;
-            };
         }
     }
 

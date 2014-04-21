@@ -1,7 +1,8 @@
 <?php
 namespace inroute;
 
-class InrouteTest extends \PHPUnit_Framework_TestCase
+class InrouteTest 
+//extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException inroute\Exception\RuntimeExpection

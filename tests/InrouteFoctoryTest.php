@@ -1,7 +1,8 @@
 <?php
 namespace inroute;
 
-class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
+class InrouteFactoryTest 
+//extends \PHPUnit_Framework_TestCase
 {
     public function testGenerate()
     {

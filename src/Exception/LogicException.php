@@ -7,13 +7,13 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute;
+namespace inroute\Exception;
+
+use inroute\Exception;
 
 /**
- * Default (empty) DI-container
- *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class DefaultContainer extends \Pimple implements ContainerInterface
+class LogicException extends Exception
 {
 }
