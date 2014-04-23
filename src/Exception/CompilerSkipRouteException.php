@@ -9,13 +9,11 @@
 
 namespace inroute\Exception;
 
-use inroute\Exception;
-
 /**
- * Exception thrown when injection failes
+ * Exception thrown when a route should be skipped at compile time
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class InjectionException extends Exception
+class CompilerSkipRouteException extends RuntimeException
 {
 }

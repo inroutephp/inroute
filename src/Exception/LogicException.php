@@ -9,11 +9,9 @@
 
 namespace inroute\Exception;
 
-use inroute\Exception;
-
 /**
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class LogicException extends Exception
+class LogicException extends \LogicException implements \inroute\Exception
 {
 }

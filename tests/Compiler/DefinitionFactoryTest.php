@@ -5,14 +5,42 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetIterator()
     {
-        /*
-        // Pryl bara för att se att det fungerar...
-        $factory = new DefinitionFactory(
-            new ClassIterator(array(__DIR__.'/../data/Working.php')),
-            new \inroute\Plugin\Core
+        $classIterator = $this->getMock('inroute\Compiler\ClassIterator');
+
+        $classIterator->expects($this->once())
+            ->method('getIterator')
+            ->will($this->returnValue(new \ArrayIterator(array(__CLASS__))));
+
+        $plugin = $this->getMock('inroute\PluginInterface');
+
+        $plugin->expects($this->atLeastOnce())
+            ->method('processDefinition');
+
+        $result = iterator_to_array(
+            new DefinitionFactory($classIterator, $plugin)
         );
 
-        print_r(iterator_to_array($factory));
-        */
+        $this->assertFalse(empty($result));
+    }
+
+    public function testCompilerSkipRouteException()
+    {
+        $classIterator = $this->getMock('inroute\Compiler\ClassIterator');
+
+        $classIterator->expects($this->once())
+            ->method('getIterator')
+            ->will($this->returnValue(new \ArrayIterator(array(__CLASS__))));
+
+        $plugin = $this->getMock('inroute\PluginInterface');
+
+        $plugin->expects($this->atLeastOnce())
+            ->method('processDefinition')
+            ->will($this->throwException(new \inroute\Exception\CompilerSkipRouteException));
+
+        $this->assertEmpty(
+            iterator_to_array(
+                new DefinitionFactory($classIterator, $plugin)
+            )
+        );
     }
 }

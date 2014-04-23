@@ -65,9 +65,6 @@ For example you can definie a path that takes a numeric id parameter:
 
     @route GET </object/{:id:(\d+)}>
 
-(Inroute uses the [Aura Router](https://github.com/auraphp/Aura.Router) package
-for routing. For more information see the aura documenatation.)
-
 
 The Route object
 ----------------

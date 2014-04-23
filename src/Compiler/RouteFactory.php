@@ -72,4 +72,60 @@ class RouteFactory
     {
         return $this->routes;
     }
+
+    /*
+        // Route->invoke(): bättre om den tar Caller som argument
+            det är galet att varje route ska lagra referens till samma caller-object!!!
+
+        // RouteFactory ska ta ett DefinitionFactory-object till konstrukt
+            // ska implementera IteratorAggregate
+            // kan gärna returnera en generator från getIterator..
+
+        // För att kompilera har vi nu:
+            $code = (string)new CodeGenerator(
+                new RouteFactory(
+                    new DefinitionFactory(
+                        new ClassIterator(
+                            array(
+                                $path1,
+                                $path2
+                            )
+                        ),
+                        new PluginManager(
+                            new $plugin1,
+                            new $plugin2
+                        )
+                    ),
+                    $caller
+                )
+            );
+        // Denna kod kan wrappas i en Compiler med ett förenklat gränssnitt...
+        // eller varför inte helt enkelt låta detta var i BuildCommand
+            $code = (
+                new Compiler(
+                    array(
+                        $path1,
+                        $path2
+                    ),
+                    array(
+                        new $plugin1,
+                        new $plugin2
+                    ),
+                    $caller
+                )
+            )->compile();
+        // och så när swagger kommer så skriver jag ett SwaggerCommand
+            $ php bin/inroute swagger ...
+
+        Anpassa exempel mm till den nya annotations-syntaxen
+            * https://github.com/pgraham/php-annotations
+
+        Det som är tests/data kan kanske flytta till example istället??
+            det hade varit tjusigare om dessa klasser spelade en dubbel roll
+            och då skulle vi få automatiska tester av att example verkligen
+            fungerar
+
+        Todo: om multiple @route tags i controller ska leda till olika definitions så måste jag arbeta om 
+            på något sätt..
+     */
 }

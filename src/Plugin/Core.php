@@ -19,6 +19,13 @@ use inroute\Compiler\Definition;
  */
 class Core implements PluginInterface
 {
+    /**
+     * Array of valid HTTP methods
+     */
+    private static $validMethods = array(
+        'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'PATCH'
+    );
+
     private $root;
 
     /**
@@ -31,8 +38,24 @@ class Core implements PluginInterface
 
     public function processDefinition(Definition $definition)
     {
+        // TODO validera http metod
+        // TODO validera att path finns med...
+        // TODO CompilerSkipRouteException
+            // om class ej @controller
+            // om method ej @route
+
         $definition->path = $this->root
             . $definition->getClassAnnotation('controller')
             . $definition->getMethodAnnotation('route');
+
+        /*
+        // Från RouteTag
+        foreach ($this->methods as $method) {
+            if (!in_array($method, self::$validMethods)) {
+                $msg = "Unable to create route using http method $method";
+                throw new Exception($msg);
+            }
+        }
+        */
     }
 }

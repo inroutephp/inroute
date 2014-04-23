@@ -9,13 +9,9 @@
 
 namespace inroute\Exception;
 
-use inroute\Exception;
-
 /**
- * Inroute runtime exception
- *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class RuntimeException extends Exception
+class RuntimeException extends \RuntimeException implements \inroute\Exception
 {
 }
