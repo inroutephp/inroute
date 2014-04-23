@@ -14,13 +14,13 @@ use ArrayIterator;
 use inroute\Exception\RuntimeException;
 
 /**
- * Search filesystem for classes
+ * Iterate over classes found in filesystem
  *
- * ClassFinder is a facade to ClassMapGenerator that enables dependancy injection.
+ * ClassIterator is a facade to ClassMapGenerator
  * 
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class ClassFinder implements IteratorAggregate
+class ClassIterator implements IteratorAggregate
 {
     private $classes = array();
 

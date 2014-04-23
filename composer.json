@@ -19,7 +19,8 @@
     "require": {
         "php": ">=5.3.3",
         "phpdocumentor/reflection-docblock": "2.*",
-        "symfony/console": "2.*",
+        "zeptech/annotations": "1.1.*",
+        "symfony/console": "2.*"
     },
     "bin": [
         "bin/inroute"

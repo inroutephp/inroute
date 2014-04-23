@@ -1,11 +1,11 @@
 <?php
 namespace inroute\Compiler;
 
-class ClassFinderTest extends \PHPUnit_Framework_TestCase
+class ClassIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testNoConstructArgs()
     {
-        foreach (new ClassFinder as $class) {
+        foreach (new ClassIterator as $class) {
             $this->assertTrue(false, 'This line should never happen');
         }
     }
@@ -13,12 +13,12 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
     public function testInvalidConstructorArgs()
     {
         $this->setExpectedException('inroute\Exception\RuntimeException');
-        new ClassFinder(array('not-a-file-or-dir'));
+        new ClassIterator(array('not-a-file-or-dir'));
     }
 
     public function testScanFile()
     {
-        $finder = new ClassFinder(
+        $finder = new ClassIterator(
             array(
                 __DIR__ . '/../data/Working.php',
                 __DIR__ . '/../data/Working.php'
@@ -34,7 +34,7 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
 
     public function testScanDir()
     {
-        $finder = new ClassFinder(array(__DIR__ . '/../data/'));
+        $finder = new ClassIterator(array(__DIR__ . '/../data/'));
         $this->assertContains(
             'data\Working',
             $finder->getIterator()
@@ -47,7 +47,7 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
      */
     public function testScanInheritedClass()
     {
-        $finder = new ClassFinder(array(__DIR__ . '/../data/Extended.php'));
+        $finder = new ClassIterator(array(__DIR__ . '/../data/Extended.php'));
         $this->assertEquals(
             new \ArrayIterator(array('data\Extended')),
             $finder->getIterator()

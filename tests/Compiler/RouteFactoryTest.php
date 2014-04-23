@@ -30,7 +30,7 @@ class RouteFactoryTest extends \PHPUnit_Framework_TestCase
 
         $factory = new RouteFactory($closure, $tokenizer);
 
-        $extractor = $this->getMockBuilder('inroute\Compiler\DefinitionFinder')
+        $extractor = $this->getMockBuilder('inroute\Compiler\DefinitionFinderOld')
             ->disableOriginalConstructor()
             ->getMock();
 

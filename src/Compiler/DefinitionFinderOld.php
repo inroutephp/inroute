@@ -22,7 +22,7 @@ use inroute\Exception\RuntimeException;
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class DefinitionFinder extends ReflectionClass implements IteratorAggregate
+class DefinitionFinderOld extends ReflectionClass implements IteratorAggregate
 {
     /**
      * @var ControllerTag Class controller tag

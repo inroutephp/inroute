@@ -1,0 +1,161 @@
+<?php
+/**
+ * This program is free software. It comes without any warranty, to
+ * the extent permitted by applicable law. You can redistribute it
+ * and/or modify it under the terms of the Do What The Fuck You Want
+ * To Public License, Version 2, as published by Sam Hocevar. See
+ * http://www.wtfpl.net/ for more details.
+ */
+
+namespace inroute\Compiler;
+
+use zpt\anno\Annotations;
+use Closure;
+
+/**
+ * A Definition describes an annotated controller method
+ *
+ * @author Hannes Forsgård <hannes.forsgard@fripost.org>
+ */
+class Definition
+{
+    private $classAnnotations, $methodAnnotations, $data = array(), $preFilters = array(), $postFilters = array();
+
+    /**
+     * @param Annotations $classAnnotations  Controller class annotations
+     * @param Annotations $methodAnnotations Controller method annotations
+     */
+    public function __construct(Annotations $classAnnotations, Annotations $methodAnnotations)
+    {
+        $this->classAnnotations = $classAnnotations;
+        $this->methodAnnotations = $methodAnnotations;
+    }
+
+    /**
+     * Check if controller class contains annotation
+     *
+     * @param  string  $annotation
+     * @return boolean
+     */
+    public function hasClassAnnotation($annotation)
+    {
+        return $this->classAnnotations->hasAnnotation($annotation);
+    }
+
+    /**
+     * Read controller class annotation
+     *
+     * @param  string $annotation
+     * @return mixed  Empty string if annotation does not exist
+     */
+    public function getClassAnnotation($annotation)
+    {
+        if (!$this->hasClassAnnotation($annotation)) {
+            return '';
+        }
+        return $this->classAnnotations->offsetGet($annotation);
+    }
+
+    /**
+     * Check if controller method contains annotation
+     *
+     * @param  string  $annotation
+     * @return boolean
+     */
+    public function hasMethodAnnotation($annotation)
+    {
+        return $this->methodAnnotations->hasAnnotation($annotation);
+    }
+
+    /**
+     * Read controller method annotation
+     *
+     * @param  string $annotation
+     * @return mixed  Empty string if annotation does not exist
+     */
+    public function getMethodAnnotation($annotation)
+    {
+        if (!$this->hasMethodAnnotation($annotation)) {
+            return '';
+        }
+        return $this->methodAnnotations->offsetGet($annotation);
+    }
+
+    /**
+     * Add a pre route filter
+     *
+     * @param  Closure $filter
+     * @return void
+     */
+    public function addPreFilter(Closure $filter)
+    {
+        $this->preFilters[] = $filter;
+    }
+
+    /**
+     * Get pre route filters
+     *
+     * @return array
+     */
+    public function getPreFilters()
+    {
+        return $this->preFilters;
+    }
+
+    /**
+     * Add a post route filter
+     *
+     * @param  Closure $filter
+     * @return void
+     */
+    public function addPostFilter(Closure $filter)
+    {
+        $this->postFilters[] = $filter;
+    }
+
+    /**
+     * Get post route filters
+     *
+     * @return array
+     */
+    public function getPostFilters()
+    {
+        return $this->postFilters;
+    }
+
+    /**
+     * Store definition data
+     *
+     * @param  string $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        $this->data[$key] = $value;
+    }
+
+    /**
+     * Read definition data
+     *
+     * @param  string $key
+     * @return mixed Empty string id data is not set
+     */
+    public function __get($key)
+    {
+        if (isset($this->data[$key])) {
+            return $this->data[$key];
+        }
+        return '';
+    }
+
+    /**
+     * Get stored definition data
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->data;
+    }
+}

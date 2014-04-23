@@ -46,10 +46,10 @@ class RouteFactory
     /**
      * Create routes from route descriptions
      *
-     * @param  DefinitionFinder $definitions
+     * @param  DefinitionFinderOld $definitions
      * @return void
      */
-    public function addRoutes(DefinitionFinder $definitions)
+    public function addRoutes(DefinitionFinderOld $definitions)
     {
         foreach ($definitions as $def) {
             $this->routes[] = new Route(

@@ -10,91 +10,62 @@
 namespace inroute\Compiler;
 
 use IteratorAggregate;
+use ReflectionClass;
+use inroute\PluginInterface;
 
 /**
- * Create route definitions from parsed classes
+ * Create route definitions from controller classes
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class DefinitionFactory implements IteratorAggregate
 {
-    private $classes, $pluginManager;
+    private $classes, $plugin;
 
     /**
-     * @param ClassFinder     $classes
-     * @param PluginInterface $pluginManager
+     * @param ClassIterator   $classes
+     * @param PluginInterface $plugin
      */
-    public function __construct(ClassFinder $classes, PluginInterface $pluginManager = null)
+    public function __construct(ClassIterator $classes, PluginInterface $plugin)
     {
         $this->classes = $classes;
-        $this->pluginManager = $pluginManager ?: new PluginManager;
+        $this->plugin = $plugin;
     }
 
     /**
      * @return \Iterator
+     * @todo   Implement as a generator
      */
     public function getIterator()
     {
-        // Bra läge att implementera som en generator!!
         $definitions = array();
 
-        foreach ($this->classes as $class) {
-            foreach (new DefinitionFinder($class) as $def) {
+        foreach ($this->classes as $className) {
+            /** @var Definition $definition */
+            foreach (new DefinitionIterator(new ReflectionClass($className)) as $definition) {
                 try {
-                    $definitions[] = $this->pluginManager->processDefinition($def);
-                    // Plugin ska registrera till def den Closure som ska köras
-                    // pre eller post vid routing...
-                    // detta ska sparas i Definition->preFilters samt postFilters
-                    // och kan utelämnas i Definition->toArray()
+                    $this->plugin->processDefinition($definition);
+                    $definitions[] = $definition;
                 } catch (CompilerSkipException $e) {
                 }
             }
         }
 
-        return new ArrayIterator($definitions);
+        return new \ArrayIterator($definitions);
     }
 
     /*
-        // Definition är programmatisk representation av annotations...
-        $def = new Definition($classAnnotations, $methodAnnotations)
-            ->getAnnotations() ->getAnnotationByName() osv...
-            ->set($key, $value) //error om $key redan är satt... //används i plugin->processDefinition
-            ->toArray() //hämta definition som array
+        Nästa steg nu är att skriva test till DefinitionFactory
+            sen kan snart DefinitionFinderOld samt Tag/ försvinna...
 
-        // Plugins kan arbeta på def bäst de vill...
-        new Plugin()->processDefinition($def)
-        
         // Core kan läsa definition på detta sätt...
         $compiler = new Compiler;
         $compiler->loadPlugin(new Plugin\Core);
-            Det är bra därför att jag samlar kod för att ändra syntax på ett ställe!
             Men hur ska vi i så fall fatta att en klass/metod inte ska routas??
                 throw new CompilerSkipException()
-            Hur ska det i så fall fungera mrf plugins i RouteFactory
-                först måste Route skapas
-            Lägg till möjlighet att sätta en root-path till Core
-                så att denna path prependas till alla paths som skapas
-                se CodeGenerator i gamla versionen...
 
-        // DefinitionFinder skapar en Definition per metod i klass
-        DefinitionFinder($class)
-            // väldigt enkel wrapper till annotations-lib.
-            // Bara hämtar annotations och skapar Definitions
-            // Bra användningsområde för en generator??
-
-        // Använd något externt bibliotek för att läsa annotations
-            * https://github.com/pgraham/php-annotations
-                testa med denna! det är antagligen det enklaste
-                kräver att jag ändrar syntaxen något..
-
-            * https://github.com/marcioAlmada/annotations
-                Har stöd för namespaced annotations
-                    @route.access ...
-                php 5.4
-
-        // PluginManager implements PluginInterface
-            // hanterar massa olika plugins på en gång
-            // samt ser till att Core alltid laddas
+        // Route->invoke(): bättre om den tar Caller som argument
+            det är galet att varje route ska lagra referens till samma caller-object!!!
 
         // RouteFactory ska ta ett DefinitionFactory-object till konstrukt
             // ska implementera IteratorAggregate
@@ -104,7 +75,7 @@ class DefinitionFactory implements IteratorAggregate
             $code = (string)new CodeGenerator(
                 new RouteFactory(
                     new DefinitionFactory(
-                        new ClassFinder(
+                        new ClassIterator(
                             array(
                                 $path1,
                                 $path2
@@ -119,6 +90,7 @@ class DefinitionFactory implements IteratorAggregate
                 )
             );
         // Denna kod kan wrappas i en Compiler med ett förenklat gränssnitt...
+        // eller varför inte helt enkelt låta detta var i BuildCommand
             $code = (
                 new Compiler(
                     array(
@@ -132,11 +104,20 @@ class DefinitionFactory implements IteratorAggregate
                     $caller
                 )
             )->compile();
+        // och så när swagger kommer så skriver jag ett SwaggerCommand
+            $ php bin/inroute swagger ...
 
+        Anpassa exempel mm till den nya annotations-syntaxen
+            * https://github.com/pgraham/php-annotations
 
         Det som är tests/data kan kanske flytta till example istället??
             det hade varit tjusigare om dessa klasser spelade en dubbel roll
             och då skulle vi få automatiska tester av att example verkligen
             fungerar
+
+        Skriv om Exceptions så att den arbetar med SPL exceptions!!
+
+        Todo: om multiple @route tags i controller ska leda till olika definitions så måste jag arbeta om 
+            på något sätt..
      */
 }

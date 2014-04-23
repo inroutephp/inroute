@@ -1,19 +1,19 @@
 <?php
 namespace inroute\Compiler;
 
-class DefinitionFinderTest extends \PHPUnit_Framework_TestCase
+class DefinitionFinderOldTest extends \PHPUnit_Framework_TestCase
 {
     public function testNonController()
     {
         $this->setExpectedException('inroute\Exception\RuntimeException');
-        new DefinitionFinder('data\NoInroute');
+        new DefinitionFinderOld('data\NoInroute');
     }
 
     public function testExtract()
     {
         $defs = array();
 
-        foreach (new DefinitionFinder('data\Working') as $def) {
+        foreach (new DefinitionFinderOld('data\Working') as $def) {
             $defs[] = $def;
         }
 
