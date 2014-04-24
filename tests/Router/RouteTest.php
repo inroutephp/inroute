@@ -5,22 +5,75 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 {
     public function testInvoke()
     {
-        $that = $this;
-
         $route = new Route(
             array(),
             new Regex,
             array(),
             'cntrlClass',
             'cntrlMethod',
-            function ($cntrl, $method, $route) use ($that) {
-                $that->assertEquals('cntrlClass', $cntrl);
-                $that->assertEquals('cntrlMethod', $method);
-                $that->assertEquals('cntrlClass::cntrlMethod', $route->getName());
-            }
+            array(),
+            array()
         );
 
-        $route();
+        $that = $this;
+        $route->invoke(        
+            function (array $args) use ($that) {
+                $that->assertEquals('cntrlClass', $args['controller']);
+                $that->assertEquals('cntrlMethod', $args['method']);
+                $that->assertEquals('cntrlClass::cntrlMethod', $args['route']->getName());
+            }
+        );
+    }
+
+    public function testPreFilters()
+    {
+        $that = $this;
+        $route = new Route(
+            array(),
+            new Regex,
+            array(),
+            'cntrlClass',
+            'cntrlMethod',
+            array(
+                function (array &$args) use ($that) {
+                    $that->assertFalse(isset($args['foo']));
+                    $args['foo'] = 'bar';
+                }
+            ),
+            array()
+        );
+        $route->invoke(
+            function (array $args) use ($that) {
+                $that->assertEquals('bar', $args['foo']);
+            }
+        );
+    }
+
+    public function testPostFilters()
+    {
+        $that = $this;
+        $route = new Route(
+            array(),
+            new Regex,
+            array(),
+            'cntrlClass',
+            'cntrlMethod',
+            array(),
+            array(
+                function (&$return) use ($that) {
+                    $that->assertEquals('returned-from-route', $return);
+                    $return .= '-altered-in-filter';
+                },
+                function ($return) use ($that) {
+                    $that->assertEquals('returned-from-route-altered-in-filter', $return);
+                }
+            )
+        );
+        $route->invoke(
+            function (array $args) {
+                return 'returned-from-route';
+            }
+        );
     }
 
     public function testIsMethodMatch()
@@ -31,7 +84,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             array('GET'),
             '',
             '',
-            function () {}
+            array(),
+            array()
         );
 
         $this->assertEquals('', $route->getMethod());
@@ -49,7 +103,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             array(),
             '',
             '',
-            function () {}
+            array(),
+            array()
         );
 
         $this->assertEquals('', $route->getPath());
@@ -77,7 +132,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             array(),
             '',
             '',
-            function () {}
+            array(),
+            array()
         );
 
         $this->assertEquals('/path/123', $route->generate(array('id' => '123')));

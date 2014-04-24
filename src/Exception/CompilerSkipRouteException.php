@@ -14,6 +14,6 @@ namespace inroute\Exception;
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class CompilerSkipRouteException extends RuntimeException
+class CompilerSkipRouteException extends CompileTimeException
 {
 }

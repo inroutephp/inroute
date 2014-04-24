@@ -17,39 +17,56 @@ use Closure;
  */
 class Route
 {
-    private $tokens, $regex, $httpMethods, $controller, $controllerMethod, $caller, $methodMatch = '', $pathMatch = '';
+    private $tokens, $regex, $httpMethods, $controller, $controllerMethod, $preFilters, $postFilters, $methodMatch = '', $pathMatch = '';
 
     /**
-     * @param array   $tokens           Path tokens used when generating paths
-     * @param Regex   $regex            Regular expression used when matching a path
-     * @param array   $httpMethods      Array of routable http methods
-     * @param string  $controller       Controller class name
-     * @param string  $controllerMethod Controller method name
-     * @param Closure $caller           Closure used when invoking this route
+     * @param array     $tokens           Path tokens used when generating paths
+     * @param Regex     $regex            Regular expression used when matching a path
+     * @param array     $httpMethods      Array of routable http methods
+     * @param string    $controller       Controller class name
+     * @param string    $controllerMethod Controller method name
+     * @param Closure[] $preFilters       Filters executed pre route
+     * @param Closure[] $postFilters      Filters executed post route
      */
-    public function __construct(array $tokens, Regex $regex, array $httpMethods, $controller, $controllerMethod, Closure $caller)
+    public function __construct(array $tokens, Regex $regex, array $httpMethods, $controller, $controllerMethod, array $preFilters, array $postFilters)
     {
         $this->tokens = $tokens;
         $this->regex = $regex;
         $this->httpMethods = $httpMethods;
         $this->controller = $controller;
         $this->controllerMethod = $controllerMethod;
-        $this->caller = $caller;
+        $this->preFilters = $preFilters;
+        $this->postFilters = $postFilters;
     }
 
     /**
      * Execute route
      *
+     * @param  Closure $caller
      * @return mixed Whatever the defined route returns
+     * @todo   Use Closure->bindTo() instead of sending $this in argument list
      */
-    public function __invoke()
+    public function invoke(Closure $caller)
     {
-        return call_user_func(
-            $this->caller,
-            $this->controller,
-            $this->controllerMethod,
-            $this
+        $args = array(
+            'controller' => $this->controller,
+            'method' => $this->controllerMethod,
+            'route' => $this
         );
+
+        /** @var Closure $filter */
+        foreach ($this->preFilters as $filter) {
+            $filter($args);
+        }
+
+        $return = $caller($args);
+
+        /** @var Closure $filter */
+        foreach ($this->postFilters as $filter) {
+            $filter($return);
+        }
+
+        return $return;
     }
 
     /**

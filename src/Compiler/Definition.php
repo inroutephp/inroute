@@ -95,7 +95,7 @@ class Definition
     /**
      * Get pre route filters
      *
-     * @return array
+     * @return Closure[]
      */
     public function getPreFilters()
     {
@@ -116,7 +116,7 @@ class Definition
     /**
      * Get post route filters
      *
-     * @return array
+     * @return Closure[]
      */
     public function getPostFilters()
     {

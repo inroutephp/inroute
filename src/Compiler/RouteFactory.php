@@ -9,77 +9,68 @@
 
 namespace inroute\Compiler;
 
-use inroute\PluginInterface;
-use inroute\Router\Route;
-use Closure;
+use IteratorAggregate;
 
 /**
- * Create route objects from reflected controller classes
+ * Create Routes from Definition
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class RouteFactory
+class RouteFactory implements IteratorAggregate
 {
-    private $caller, $tokenizer, $plugins = array(), $routes = array();
+    private $definitions, $tokenizer, $routes = array();
 
     /**
-     * @param Closure   $caller    Closure used when invoking routes
-     * @param Tokenizer $tokenizer Tokenizer used when parsing paths
+     * @param DefinitionFactory $definitions Route definition source
+     * @param Tokenizer         $tokenizer   Tokenizer used when parsing paths
      */
-    public function __construct(Closure $caller, Tokenizer $tokenizer = null)
+    public function __construct(DefinitionFactory $definitions, Tokenizer $tokenizer = null)
     {
-        $this->caller = $caller;
+        $this->definitions = $definitions;
         $this->tokenizer = $tokenizer ?: new Tokenizer;
     }
 
     /**
-     * Load inroute plugin
-     *
-     * @param  PluginInterface $plugin
-     * @return void
+     * @return \Iterator
+     * @todo   Implement as a generator
      */
-    public function loadPlugin(PluginInterface $plugin)
+    public function getIterator()
     {
-        $this->plugins[] = $plugin;
-    }
+        $routes = array();
 
-    /**
-     * Create routes from route descriptions
-     *
-     * @param  DefinitionFinderOld $definitions
-     * @return void
-     */
-    public function addRoutes(DefinitionFinderOld $definitions)
-    {
-        foreach ($definitions as $def) {
-            $this->routes[] = new Route(
-                $this->tokenizer->tokenize($def['path']),
+        foreach ($this->definitions as $definition) {
+            $routes[] = new Route(
+                $this->tokenizer->tokenize($definition->path),
                 $this->tokenizer->getRegex(),
-                $def['httpmethods'],
-                $def['controller'],
-                $def['controllerMethod'],
-                $this->caller
+                $definition->httpmethods,
+                $definition->controller,
+                $definition->controllerMethod,
+                $definition->getPreFilters(),
+                $definition->getPostFilters()
             );
         }
-    }
 
-    /**
-     * Get routes definied in controller
-     *
-     * @return array<Route>
-     */
-    public function getRoutes()
-    {
-        return $this->routes;
+        return \ArrayIterator($routes);
     }
 
     /*
-        // Route->invoke(): bättre om den tar Caller som argument
-            det är galet att varje route ska lagra referens till samma caller-object!!!
+        Skriv test för RouteFatory!!
 
-        // RouteFactory ska ta ett DefinitionFactory-object till konstrukt
-            // ska implementera IteratorAggregate
-            // kan gärna returnera en generator från getIterator..
+        // Dokumentera hur pre och post filter ska vara utformade...
+            Kolla i Route och RouteTest hur jag har skrivit
+            Skriv dokumentationen till PluginInterface
+                Även om CompilerSkipRouteException
+            Det är ju viktigt att utvecklare vet hur de ska skriva sina filter..
+
+            Däremot så kan filter behöva känna till data från Definition
+                @accept text/plain => då måste ju filter veta vad det stod i
+                annotation
+            Detta kan sparas i Closure som laddas i Plugin
+                spara kommentarer om detta i Core så länge...
+            Data läggs till genom att ändra på args i closure..
+
+        //I DefinitionFactoryTest kan jag kanske använda något annat än __CLASS__
+            det skulle göra att jag kan köra test snabbare..
 
         // För att kompilera har vi nu:
             $code = (string)new CodeGenerator(
@@ -95,27 +86,9 @@ class RouteFactory
                             new $plugin1,
                             new $plugin2
                         )
-                    ),
-                    $caller
+                    )
                 )
             );
-        // Denna kod kan wrappas i en Compiler med ett förenklat gränssnitt...
-        // eller varför inte helt enkelt låta detta var i BuildCommand
-            $code = (
-                new Compiler(
-                    array(
-                        $path1,
-                        $path2
-                    ),
-                    array(
-                        new $plugin1,
-                        new $plugin2
-                    ),
-                    $caller
-                )
-            )->compile();
-        // och så när swagger kommer så skriver jag ett SwaggerCommand
-            $ php bin/inroute swagger ...
 
         Anpassa exempel mm till den nya annotations-syntaxen
             * https://github.com/pgraham/php-annotations
@@ -124,8 +97,5 @@ class RouteFactory
             det hade varit tjusigare om dessa klasser spelade en dubbel roll
             och då skulle vi få automatiska tester av att example verkligen
             fungerar
-
-        Todo: om multiple @route tags i controller ska leda till olika definitions så måste jag arbeta om 
-            på något sätt..
      */
 }
