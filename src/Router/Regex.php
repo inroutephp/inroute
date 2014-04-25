@@ -16,26 +16,49 @@ class Regex
 {
     private $regex, $matches = array();
 
+    /**
+     * @param string $regex
+     */
     public function __construct($regex = '')
     {
         $this->regex = $regex ?: '[^/]+';
     }
 
+    /**
+     * @return string
+     */
     public function __tostring()
     {
         return $this->regex;
     }
 
+    /**
+     * Get a complete regex with delimiters
+     *
+     * @return string
+     */
     public function getRegex()
     {
         return "#^{$this->regex}$#";
     }
 
+    /**
+     * Match string against regular expression
+     *
+     * @param  string $str
+     * @return bool   True if match, false otherwise
+     */
     public function match($str)
     {
         return !!preg_match($this->getRegex(), $str, $this->matches);
     }
 
+    /**
+     * Read captured parameter
+     *
+     * @param  string $key
+     * @return string
+     */
     public function __get($key)
     {
         if (isset($this->matches[$key])) {

@@ -1,20 +1,15 @@
 <?php
+/**
+ * Optional usage when inroute is installed using composer
+ */
+require __DIR__ . '/../vendor/autoload.php';
 
-if (!file_exists(__DIR__ . '/app.php')) {
-    echo 'run example/build to generate inroute application';
-    die();
+$pathToRouter = __DIR__ . '/router.php';
+
+if (!file_exists($pathToRouter)) {
+    die('Run example/build to generate router');
 }
 
-// Optional usage when inroute is installed using composer 
-// Requires that the Application classes are autoloaded
+$router = require $pathToRouter;
 
-use inroute\InrouteFactory;
-
-$loader = include __DIR__ . '/../vendor/autoload.php';
-$loader->add('', __DIR__ . '/Application');
-
-$app = include __DIR__ . '/app.php';
-
-$uri = '/base/app/pagename';
-
-echo $app->dispatch($uri, $_SERVER);
+echo $router->dispatch('/base/app/pagename', $_SERVER);

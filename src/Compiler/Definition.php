@@ -11,6 +11,7 @@ namespace inroute\Compiler;
 
 use zpt\anno\Annotations;
 use Closure;
+use inroute\Exception\LogicException;
 
 /**
  * A Definition describes an annotated controller method
@@ -130,23 +131,35 @@ class Definition
      * @param  mixed  $value
      * @return void
      */
-    public function __set($key, $value)
+    public function write($key, $value)
     {
         $this->data[$key] = $value;
     }
 
     /**
-     * Read definition data
+     * Check if value is stored
      *
      * @param  string $key
-     * @return mixed Empty string id data is not set
+     * @return bool
      */
-    public function __get($key)
+    public function exists($key)
     {
-        if (isset($this->data[$key])) {
+        return isset($this->data[$key]);
+    }
+
+    /**
+     * Read definition data
+     *
+     * @param  string         $key
+     * @return mixed          Empty string id data is not set
+     * @throws LogicException If key is not definied
+     */
+    public function read($key)
+    {
+        if ($this->exists($key)) {
             return $this->data[$key];
         }
-        return '';
+        throw new LogicException("Trying to read undefinied value <$key> from route definition.");
     }
 
     /**

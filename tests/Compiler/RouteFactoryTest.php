@@ -1,59 +1,48 @@
 <?php
 namespace inroute\Compiler;
 
-use inroute\Router\Route;
-use inroute\Router\Regex;
-
 class RouteFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    function testVoid(){}
-
-    public function createRoute()
+    public function testGetIterator()
     {
-        // Detta test kan inte köras längre, eftersom det kräver DefinitionFinderOld...
-        $closure = function(){};
+        $definition = $this->getMockBuilder('inroute\Compiler\Definition')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $routeDef = array(
-            'controller'       => 'controller',
-            'controllerMethod' => 'method',
-            'httpmethods'      => array('GET'),
-            'path'             => '/root/foo/{:name}'
-        );
+        $definition->expects($this->exactly(4))
+            ->method('read')
+            ->will($this->onConsecutiveCalls('path', array(), 'cntrl', 'method'));
+
+        $definition->expects($this->once())
+            ->method('getPreFilters')
+            ->will($this->returnValue(array()));
+
+        $definition->expects($this->once())
+            ->method('getPostFilters')
+            ->will($this->returnValue(array()));
+
+        $definitionFactory = $this->getMockBuilder('inroute\Compiler\DefinitionFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $definitionFactory->expects($this->once())
+            ->method('getIterator')
+            ->will($this->returnValue(new \ArrayIterator(array($definition))));
 
         $tokenizer = $this->getMock('inroute\Compiler\Tokenizer');
 
         $tokenizer->expects($this->once())
             ->method('tokenize')
-            ->with($routeDef['path'])
+            ->with('path')
             ->will($this->returnValue(array()));
 
         $tokenizer->expects($this->once())
             ->method('getRegex')
-            ->will($this->returnValue(new Regex));
+            ->will($this->returnValue(new \inroute\Router\Regex));
 
-        $factory = new RouteFactory($closure, $tokenizer);
+        $routeFactory = new RouteFactory($definitionFactory, $tokenizer);
 
-        $extractor = $this->getMockBuilder('inroute\Compiler\DefinitionFinderOld')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $extractor->expects($this->once())
-            ->method('getIterator')
-            ->will($this->returnValue(new \ArrayIterator(array($routeDef))));
-
-        $factory->addRoutes($extractor);
-
-        $expected = array(
-            new Route(
-                array(),
-                new Regex,
-                $routeDef['httpmethods'],
-                $routeDef['controller'],
-                $routeDef['controllerMethod'],
-                $closure
-            )
-        );
-
-        $this->assertEquals($expected, $factory->getRoutes());
+        $result = iterator_to_array($routeFactory);
+        $this->assertInstanceOf('inroute\Router\Route', $result[0]);
     }
 }

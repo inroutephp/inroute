@@ -7,22 +7,11 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute;
-
-use inroute\Compiler\Definition;
-use inroute\Exception\CompilerSkipRouteException;
+namespace inroute\Exception;
 
 /**
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-interface PluginInterface
+class CompileTimeException extends \Exception implements \inroute\Exception
 {
-    /**
-     * Edit a route definition
-     *
-     * @param  Definition $definition
-     * @return void
-     * @throws CompilerSkipRouteException If definition should be ignored
-     */
-    public function processDefinition(Definition $definition);
 }

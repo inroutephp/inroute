@@ -15,8 +15,10 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
             ->with($definition);
 
         $manager = new PluginManager(
-            $plugin,
-            $plugin
+            array(
+                $plugin,
+                $plugin
+            )
         );
 
         $manager->processDefinition($definition);

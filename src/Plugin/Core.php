@@ -44,9 +44,14 @@ class Core implements PluginInterface
             // om class ej @controller
             // om method ej @route
 
-        $definition->path = $this->root
-            . $definition->getClassAnnotation('controller')
-            . $definition->getMethodAnnotation('route');
+        $definition->write(
+            'path',
+            $this->root
+                . $definition->getClassAnnotation('controller')
+                . $definition->getMethodAnnotation('route')
+        );
+
+        $definition->write('httpmethods', array());
 
         /*
         // Från RouteTag

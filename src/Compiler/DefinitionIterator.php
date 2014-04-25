@@ -50,8 +50,8 @@ class DefinitionIterator implements IteratorAggregate
                 new Annotations($method)
             );
 
-            $definition->controller = $this->class->getName();
-            $definition->controllerMethod = $method->getName();
+            $definition->write('controller', $this->class->getName());
+            $definition->write('controllerMethod', $method->getName());
 
             $definitions[] = $definition;
         }

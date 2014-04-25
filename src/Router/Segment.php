@@ -9,8 +9,6 @@
 
 namespace inroute\Router;
 
-use inroute\Exception\RuntimeException;
-
 /**
  * A segment is a named regular expression subpart of a path
  *
@@ -20,27 +18,46 @@ class Segment
 {
     private $name, $regex;
 
+    /**
+     * @param string $name
+     * @param Regex  $regex
+     */
     public function __construct($name, Regex $regex)
     {
         $this->name = $name;
         $this->regex = $regex;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Get segment as a named capturing regular expression
+     *
+     * @return string
+     */
     public function __tostring()
     {
         return "(?<{$this->name}>{$this->regex})";
     }
 
+    /**
+     * Substitute segment with value
+     *
+     * @param  mixed             $value
+     * @return mixed             The substituted value
+     * @throws \RuntimeException If value does not match regex
+     */
     public function substitute($value)
     {
         if ($this->regex->match($value)) {
             return $value;
         }
-        throw new RuntimeException("Unable to substitute token <{$this->name}> with <$value>.");
+        throw new \RuntimeException("Unable to substitute token <{$this->name}> with <$value>.");
     }
 }

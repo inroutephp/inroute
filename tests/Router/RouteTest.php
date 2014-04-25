@@ -139,7 +139,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/path/123', $route->generate(array('id' => '123')));
 
         // Generate with param id missing
-        $this->setExpectedException('inroute\Exception\RuntimeException');
+        $this->setExpectedException('RuntimeException');
         $route->generate(array());
     }
 }

@@ -22,11 +22,11 @@ class PluginManager implements PluginInterface
     private $plugins;
 
     /**
-     * @param PluginInterface,... $plugin Any number of PluginInterface objects
+     * @param PluginInterface[] $plugins
      */
-    public function __construct(PluginInterface $plugin)
+    public function __construct(array $plugins)
     {
-        $this->plugins = func_get_args();
+        $this->plugins = $plugins;
     }
 
     public function processDefinition(Definition $definition)

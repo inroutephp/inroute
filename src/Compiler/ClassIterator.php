@@ -25,7 +25,7 @@ class ClassIterator implements IteratorAggregate
     private $classes = array();
 
     /**
-     * @param  array            $paths
+     * @param  array $paths
      * @throws RuntimeException If a nonvalid path is supplied
      */
     public function __construct(array $paths = null)

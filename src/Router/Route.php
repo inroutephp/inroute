@@ -9,9 +9,6 @@
 
 namespace inroute\Router;
 
-use inroute\Exception\RuntimeException;
-use Closure;
-
 /**
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
@@ -20,13 +17,13 @@ class Route
     private $tokens, $regex, $httpMethods, $controller, $controllerMethod, $preFilters, $postFilters, $methodMatch = '', $pathMatch = '';
 
     /**
-     * @param array     $tokens           Path tokens used when generating paths
-     * @param Regex     $regex            Regular expression used when matching a path
-     * @param array     $httpMethods      Array of routable http methods
-     * @param string    $controller       Controller class name
-     * @param string    $controllerMethod Controller method name
-     * @param Closure[] $preFilters       Filters executed pre route
-     * @param Closure[] $postFilters      Filters executed post route
+     * @param array      $tokens           Path tokens used when generating paths
+     * @param Regex      $regex            Regular expression used when matching a path
+     * @param array      $httpMethods      Array of routable http methods
+     * @param string     $controller       Controller class name
+     * @param string     $controllerMethod Controller method name
+     * @param \Closure[] $preFilters       Filters executed pre route
+     * @param \Closure[] $postFilters      Filters executed post route
      */
     public function __construct(array $tokens, Regex $regex, array $httpMethods, $controller, $controllerMethod, array $preFilters, array $postFilters)
     {
@@ -42,11 +39,11 @@ class Route
     /**
      * Execute route
      *
-     * @param  Closure $caller
-     * @return mixed Whatever the defined route returns
+     * @param  \Closure $caller
+     * @return mixed    Whatever the defined route returns
      * @todo   Use Closure->bindTo() instead of sending $this in argument list
      */
-    public function invoke(Closure $caller)
+    public function invoke(\Closure $caller)
     {
         $args = array(
             'controller' => $this->controller,
@@ -54,14 +51,14 @@ class Route
             'route' => $this
         );
 
-        /** @var Closure $filter */
+        /** @var \Closure $filter */
         foreach ($this->preFilters as $filter) {
             $filter($args);
         }
 
         $return = $caller($args);
 
-        /** @var Closure $filter */
+        /** @var \Closure $filter */
         foreach ($this->postFilters as $filter) {
             $filter($return);
         }
@@ -147,6 +144,7 @@ class Route
      *
      * @param  array  $params List of named parameters
      * @return string
+     * @throws \RuntimeException If any parameter is missing
      */
     public function generate(array $params)
     {
@@ -159,7 +157,7 @@ class Route
             }
 
             if (!isset($params[$token->getName()])) {
-                throw new RuntimeException("Parameter <{$token->getName()}> missing.");
+                throw new \RuntimeException("Parameter <{$token->getName()}> missing.");
             }
 
             $parts[] = $token->substitute($params[$token->getName()]);

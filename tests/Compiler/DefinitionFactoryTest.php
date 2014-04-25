@@ -9,7 +9,7 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 
         $classIterator->expects($this->once())
             ->method('getIterator')
-            ->will($this->returnValue(new \ArrayIterator(array(__CLASS__))));
+            ->will($this->returnValue(new \ArrayIterator(array('Exception'))));
 
         $plugin = $this->getMock('inroute\PluginInterface');
 
@@ -29,7 +29,7 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 
         $classIterator->expects($this->once())
             ->method('getIterator')
-            ->will($this->returnValue(new \ArrayIterator(array(__CLASS__))));
+            ->will($this->returnValue(new \ArrayIterator(array('Exception'))));
 
         $plugin = $this->getMock('inroute\PluginInterface');
 

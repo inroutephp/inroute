@@ -20,13 +20,13 @@ class ClassIteratorTest extends \PHPUnit_Framework_TestCase
     {
         $finder = new ClassIterator(
             array(
-                __DIR__ . '/../data/Working.php',
-                __DIR__ . '/../data/Working.php'
+                __DIR__ . '/../../example/Working.php',
+                __DIR__ . '/../../example/Working.php'
             )
         );
 
         $this->assertEquals(
-            new \ArrayIterator(array('data\Working')),
+            new \ArrayIterator(array('inroute\example\Working')),
             $finder->getIterator(),
             'Multiple scans should not yield multiple array entries'
         );
@@ -34,9 +34,9 @@ class ClassIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testScanDir()
     {
-        $finder = new ClassIterator(array(__DIR__ . '/../data/'));
+        $finder = new ClassIterator(array(__DIR__ . '/../../example/'));
         $this->assertContains(
-            'data\Working',
+            'inroute\example\Working',
             $finder->getIterator()
         );
     }
@@ -47,9 +47,9 @@ class ClassIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testScanInheritedClass()
     {
-        $finder = new ClassIterator(array(__DIR__ . '/../data/Extended.php'));
+        $finder = new ClassIterator(array(__DIR__ . '/../../example/Extended.php'));
         $this->assertEquals(
-            new \ArrayIterator(array('data\Extended')),
+            new \ArrayIterator(array('inroute\example\Extended')),
             $finder->getIterator()
         );
     }

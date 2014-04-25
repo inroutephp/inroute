@@ -22,7 +22,7 @@ class SegmentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('123', $segment->substitute('123'));
 
         // Substitute a non-matching value
-        $this->setExpectedException('inroute\Exception\RuntimeException');
+        $this->setExpectedException('RuntimeException');
         $segment->substitute('foobar');
     }
 }

@@ -22,16 +22,12 @@ class ClassMapGenerator
     /**
      * Iterate over all files in the given directory searching for classes
      *
-     * @param \Iterator|string $dir The directory to search in or an iterator
-     *
-     * @return array A class map array
+     * @param  string $dir The directory to search in or an iterator
+     * @return array  A class map array
      */
     public static function createMap($dir)
     {
-        if (is_string($dir)) {
-            $dir = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
-        }
-
+        $dir = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
         $map = array();
 
         foreach ($dir as $file) {
@@ -59,9 +55,8 @@ class ClassMapGenerator
     /**
      * Extract the classes in the given file
      *
-     * @param string $path The file to check
-     *
-     * @return array The found classes
+     * @param  string $path The file to check
+     * @return array  The found classes
      */
     public static function findClasses($path)
     {

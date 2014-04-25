@@ -7,22 +7,13 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute;
-
-use inroute\Compiler\Definition;
-use inroute\Exception\CompilerSkipRouteException;
+namespace inroute\Exception;
 
 /**
+ * Throw to transfer control to next executable route (actively skipping this route at runtime)
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-interface PluginInterface
+class NextRouteException extends RuntimeException
 {
-    /**
-     * Edit a route definition
-     *
-     * @param  Definition $definition
-     * @return void
-     * @throws CompilerSkipRouteException If definition should be ignored
-     */
-    public function processDefinition(Definition $definition);
 }

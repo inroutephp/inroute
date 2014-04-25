@@ -10,15 +10,17 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
             $this->getMock('zpt\anno\Annotations')
         );
 
-        $this->assertEquals('', $def->foo);
-
-        $def->foo = 'bar';
-        $this->assertEquals('bar', $def->foo);
+        $def->write('foo', 'bar');
+        $this->assertEquals('bar', $def->read('foo'));
 
         $this->assertEquals(
             array('foo'=>'bar'),
             $def->toArray()
         );
+
+        $this->setExpectedException('inroute\Exception\LogicException');
+        $this->assertFalse($def->exists('does-not-exist'));
+        $def->read('does-not-exist');
     }
 
     public function testFilters()
