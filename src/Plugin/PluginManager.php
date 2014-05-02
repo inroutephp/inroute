@@ -22,6 +22,9 @@ class PluginManager implements PluginInterface
 {
     private $plugins = array();
 
+    /**
+     * @param LoggerInterface $logger
+     */
     public function __construct(LoggerInterface $logger)
     {
         $this->setLogger($logger);

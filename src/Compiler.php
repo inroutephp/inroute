@@ -24,7 +24,7 @@ use inroute\Settings\SettingsManager;
  */
 class Compiler implements LoggerAwareInterface
 {
-    private $classIterator, $plugins = array();
+    private $classIterator;
 
     public function __construct(ReflectionClassIterator $classIterator = null)
     {
@@ -45,11 +45,6 @@ class Compiler implements LoggerAwareInterface
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
-    }
-
-    public function registerPlugin(PluginInterface $plugin)
-    {
-        $this->plugins[] = $plugin;
     }
 
     public function addPath($path)
@@ -87,16 +82,10 @@ class Compiler implements LoggerAwareInterface
             $this->getLogger()
         );
 
-        $pluginManager = new PluginManager;
-        $pluginManager->setLogger($this->getLogger());
-
+        $pluginManager = new PluginManager($this->getLogger());
         $pluginManager->registerPlugin(new Core($settings->getRootPath()));
 
         foreach ($settings->getPlugins() as $plugin) {
-            $pluginManager->registerPlugin($plugin);
-        }
-
-        foreach ($this->plugins as $plugin) {
             $pluginManager->registerPlugin($plugin);
         }
 
@@ -124,11 +113,6 @@ class Compiler implements LoggerAwareInterface
                 eller tvärt om
                 $plugin = new PluginManager(new SettingsManager(...))
                 det känns bättre på något sätt!
-                men det är fortfarande oklart hur göra med compiler->registerPlugin()
-                    får det kanske inte vara med??
-                    ja varför egentligen ha två olika sätt att registrera plugins??
-                    addPath är ändå intressant eftersom folk kanske vill använda inroute
-                    utan att använda composer..
 
         kanske behöver jag inte Log subpaketet
             (om det inte är tillräckligt många som implementerar...)

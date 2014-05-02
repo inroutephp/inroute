@@ -9,7 +9,6 @@
 
 namespace inroute\classtools;
 
-use ReflectionException;
 use ArrayIterator;
 
 /**
