@@ -13,9 +13,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getIterator')
             ->will($this->returnValue(new \ArrayIterator(array())));
 
-        $classIterator = $this->getMockBuilder('inroute\classtools\ReflectionClassIteratorInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $classIterator = $this->getMock('inroute\classtools\ReflectionClassIterator');
 
         $classIterator->expects($this->once())
             ->method('getIterator')

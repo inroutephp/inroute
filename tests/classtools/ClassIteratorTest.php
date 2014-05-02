@@ -18,45 +18,17 @@ class ClassIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testScanFile()
     {
-        $classIterator = new ClassIterator(
-            array(
-                __DIR__ . '/../../example/Working.php',
-                __DIR__ . '/../../example/Working.php'
-            )
-        );
-
-        $this->assertEquals(
-            new \ArrayIterator(
-                array(
-                    'inroute\example\Working' => new \ReflectionClass('inroute\example\Working')
-                )
-            ),
-            $classIterator->getIterator(),
-            'Multiple scans should not yield multiple array entries'
+        $this->assertArrayHasKey(
+            __CLASS__,
+            iterator_to_array(new ClassIterator(__FILE__))
         );
     }
 
     public function testScanDir()
     {
-        $classIterator = new ClassIterator(array(__DIR__ . '/../../example/'));
-        $return = iterator_to_array($classIterator);
-        $this->assertEquals(
-            new \ReflectionClass('inroute\example\Working'),
-            $return['inroute\example\Working']
+        $this->assertArrayHasKey(
+            __CLASS__,
+            iterator_to_array(new ClassIterator(array(__DIR__)))
         );
-    }
-
-    /**
-     * See Issue #15.
-     * Scanning a class that extends a class not availiable at scan time.
-     * @todo No longer supported due to use of ReflectionClass, check issue...
-     */
-    public function testScanInheritedClass()
-    {
-        /*$finder = new ClassIterator(array(__DIR__ . '/../../example/Extended.php'));
-        $this->assertEquals(
-            new \ArrayIterator(array('inroute\example\Extended')),
-            $finder->getIterator()
-        );*/
     }
 }

@@ -30,13 +30,13 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
             $this->getMock('zpt\anno\Annotations')
         );
 
-        $filter = function(){};
+        $filter = function () {};
 
-        $this->assertEmpty($def->getPreFilters());        
+        $this->assertEmpty($def->getPreFilters());
         $def->addPreFilter($filter);
         $this->assertEquals(array($filter), $def->getPreFilters());
 
-        $this->assertEmpty($def->getPostFilters());        
+        $this->assertEmpty($def->getPostFilters());
         $def->addPostFilter($filter);
         $this->assertEquals(array($filter), $def->getPostFilters());
     }

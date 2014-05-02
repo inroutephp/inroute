@@ -78,7 +78,7 @@ class ClassMinimizer
         $newStr  = '';
         $ignoreTokens = array(T_COMMENT, T_DOC_COMMENT, T_OPEN_TAG);
 
-        foreach (token_get_all($str) as $token) {    
+        foreach (token_get_all($str) as $token) {
             if (is_array($token)) {
                 if (in_array($token[0], $ignoreTokens)) {
                     continue;

@@ -16,8 +16,10 @@ use Psr\Log\NullLogger;
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-trait LoggerAwareTrait extends \Psr\Log\LoggerAwareTrait
+trait LoggerAwareTrait 
 {
+    use \Psr\Log\LoggerAwareTrait;
+
     /**
      * @return \Psr\Log\LoggerInterface
      */
