@@ -7,18 +7,28 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Compiler;
+namespace inroute\classtools;
 
 use ReflectionClass;
 
 /**
+ * Get a minimized version of the code defining reflected class
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class ClassMinimizer extends ReflectionClass
+class ClassMinimizer
 {
+    private $class;
+
     /**
-     * Get a minimized version of the code defining this class
-     *
+     * @param ReflectionClass $class
+     */
+    public function __construct(ReflectionClass $class)
+    {
+        $this->class = $class;
+    }
+
+    /**
      * @return string
      */
     public function __tostring()
@@ -27,7 +37,7 @@ class ClassMinimizer extends ReflectionClass
     }
 
     /**
-     * Get the code defining this class
+     * Get the code defining class
      *
      * @return string
      */
@@ -36,15 +46,15 @@ class ClassMinimizer extends ReflectionClass
         return implode(
             "",
             array_slice(
-                file($this->getFileName()),
-                $this->getStartLine() - 1,
-                $this->getEndLine() - $this->getStartLine() + 1
+                file($this->class->getFileName()),
+                $this->class->getStartLine() - 1,
+                $this->class->getEndLine() - $this->class->getStartLine() + 1
             )
         );
     }
 
     /**
-     * Get a minimized version of the code defining this class
+     * Get a minimized version of the code defining class
      *
      * @return string
      */
@@ -63,7 +73,7 @@ class ClassMinimizer extends ReflectionClass
      * @param  string $str
      * @return string
      */
-    public static function removeComments($str)
+    private static function removeComments($str)
     {
         $newStr  = '';
         $ignoreTokens = array(T_COMMENT, T_DOC_COMMENT, T_OPEN_TAG);
@@ -89,7 +99,7 @@ class ClassMinimizer extends ReflectionClass
      * @param  string $str
      * @return string
      */
-    public static function removeEmptyLines($str)
+    private static function removeEmptyLines($str)
     {
         return implode(
             "\n",

@@ -7,45 +7,59 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Compiler;
+namespace inroute\classtools;
 
-use IteratorAggregate;
 use ArrayIterator;
+use ReflectionClass;
 use inroute\Exception\RuntimeException;
 
 /**
  * Iterate over classes found in filesystem
  *
- * ClassIterator is a facade to ClassMapGenerator
- * 
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class ClassIterator implements IteratorAggregate
+class ClassIterator implements ReflectionClassIteratorInterface
 {
     private $classes = array();
 
     /**
-     * @param  array $paths
-     * @throws RuntimeException If a nonvalid path is supplied
+     * @param array $paths
      */
     public function __construct(array $paths = null)
     {
         foreach ((array)$paths as $path) {
-            if (is_dir($path)) {
-                $this->addDir($path);
-            } elseif(is_file($path)) {
-                $this->addFile($path);
-            } else {
-                throw new RuntimeException("<$path> is not a valid filesystem path.");
-            }
+            $this->addPath($path);
         }
+    }
+
+    /**
+     * @param  string $path
+     * @throws RuntimeException If $path is not a valid path
+     */
+    public function addPath($path)
+    {
+        if (is_dir($path)) {
+            $this->addDir($path);
+        } elseif(is_file($path)) {
+            $this->addFile($path);
+        } else {
+            throw new RuntimeException("<$path> is not a valid filesystem path.");
+        }
+    }
+
+    /**
+     * @return \Iterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->classes);
     }
 
     /**
      * @param  string $dirname
      * @return void
      */
-    public function addDir($dirname)
+    private function addDir($dirname)
     {
         $this->appendClasses(
             array_keys(
@@ -58,7 +72,7 @@ class ClassIterator implements IteratorAggregate
      * @param  string $filename
      * @return void
      */
-    public function addFile($filename)
+    private function addFile($filename)
     {
         $this->appendClasses(
             ClassMapGenerator::findClasses($filename)
@@ -66,24 +80,15 @@ class ClassIterator implements IteratorAggregate
     }
 
     /**
-     * @return \Iterator
-     */
-    public function getIterator()
-    {
-        return new ArrayIterator($this->classes);
-    }
-
-    /**
-     * @param  array $classes
+     * @param  array $classnames
      * @return void
      */
-    private function appendClasses(array $classes)
+    private function appendClasses(array $classnames)
     {
-        $this->classes = array_unique(
-            array_merge(
-                $this->classes,
-                $classes
-            )
-        );
+        foreach ($classnames as $classname) {
+            if (!isset($this->classes[$classname])) {
+                $this->classes[$classname] = new ReflectionClass($classname);
+            }
+        }
     }
 }

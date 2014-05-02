@@ -14,7 +14,7 @@ use Closure;
 use inroute\Exception\LogicException;
 
 /**
- * A Definition describes an annotated controller method
+ * Describes an annotated controller method (a route)
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */

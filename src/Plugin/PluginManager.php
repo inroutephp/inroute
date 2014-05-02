@@ -11,6 +11,7 @@ namespace inroute\Plugin;
 
 use inroute\PluginInterface;
 use inroute\Compiler\Definition;
+use Psr\Log\LoggerInterface;
 
 /**
  * Handle a collection of plugins
@@ -19,20 +20,45 @@ use inroute\Compiler\Definition;
  */
 class PluginManager implements PluginInterface
 {
-    private $plugins;
+    private $plugins = array();
 
-    /**
-     * @param PluginInterface[] $plugins
-     */
-    public function __construct(array $plugins)
+    public function __construct(LoggerInterface $logger)
     {
-        $this->plugins = $plugins;
+        $this->setLogger($logger);
     }
 
+    /**
+     * @param  PluginInterface $plugin
+     * @return void
+     */
+    public function registerPlugin(PluginInterface $plugin)
+    {
+        // TODO logg plugin
+        // $this->getLogger()->info("Using plugin {get_class($plugin)}");
+        $plugin->setLogger($this->getLogger());
+        $this->plugins[] = $plugin;
+    }
+
+    /**
+     * @param  Definition $definition
+     * @return void
+     */
     public function processDefinition(Definition $definition)
     {
         foreach ($this->plugins as $plugin) {
             $plugin->processDefinition($definition);
         }
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        // TODO use trait instead...
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        // TODO use trait instead...
+        return $this->logger;
     }
 }

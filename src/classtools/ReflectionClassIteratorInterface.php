@@ -7,20 +7,19 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Router;
+namespace inroute\classtools;
 
 /**
+ * Iterate over reflection class objects
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class Router
+interface ReflectionClassIteratorInterface extends \IteratorAggregate
 {
-    private $routes;
-
     /**
-     * @param Route[] $routes
+     * Iterator yields class names as keys and ReflectionClass-objects as values
+     *
+     * @return \Iterator
      */
-    public function __construct(array $routes)
-    {
-        $this->routes = $routes;
-    }
+    public function getIterator();
 }

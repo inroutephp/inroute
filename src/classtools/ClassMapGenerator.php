@@ -10,7 +10,7 @@
  * @license MIT
  */
 
-namespace inroute\Compiler;
+namespace inroute\classtools;
 
 /**
  * ClassMapGenerator

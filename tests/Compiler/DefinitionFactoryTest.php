@@ -5,11 +5,19 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetIterator()
     {
-        $classIterator = $this->getMock('inroute\Compiler\ClassIterator');
+        $controllerIterator = $this->getMockBuilder('inroute\classtools\ReflectionClassIteratorInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $classIterator->expects($this->once())
+        $controllerIterator->expects($this->once())
             ->method('getIterator')
-            ->will($this->returnValue(new \ArrayIterator(array('Exception'))));
+            ->will(
+                $this->returnValue(
+                    new \ArrayIterator(
+                        array('Exception' => new \ReflectionClass('Exception'))
+                    )
+                )
+            );
 
         $plugin = $this->getMock('inroute\PluginInterface');
 
@@ -17,7 +25,7 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('processDefinition');
 
         $result = iterator_to_array(
-            new DefinitionFactory($classIterator, $plugin)
+            new DefinitionFactory($controllerIterator, $plugin)
         );
 
         $this->assertFalse(empty($result));
@@ -25,11 +33,19 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCompilerSkipRouteException()
     {
-        $classIterator = $this->getMock('inroute\Compiler\ClassIterator');
+        $controllerIterator = $this->getMockBuilder('inroute\classtools\ReflectionClassIteratorInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $classIterator->expects($this->once())
+        $controllerIterator->expects($this->once())
             ->method('getIterator')
-            ->will($this->returnValue(new \ArrayIterator(array('Exception'))));
+            ->will(
+                $this->returnValue(
+                    new \ArrayIterator(
+                        array('Exception' => new \ReflectionClass('Exception'))
+                    )
+                )
+            );
 
         $plugin = $this->getMock('inroute\PluginInterface');
 
@@ -39,7 +55,7 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEmpty(
             iterator_to_array(
-                new DefinitionFactory($classIterator, $plugin)
+                new DefinitionFactory($controllerIterator, $plugin)
             )
         );
     }

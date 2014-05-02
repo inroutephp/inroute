@@ -9,8 +9,11 @@
 
 namespace inroute\Compiler;
 
+use inroute\classtools\ReflectionClassIteratorInterface;
+use inroute\classtools\ClassMinimizer;
+
 /**
- * Generate stand alone router creating code
+ * Generate stand alone router code
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
@@ -19,12 +22,13 @@ class CodeGenerator
     private $factory, $classIterator;
 
     /**
-     * @param RouteFactory $factory
+     * @param RouteFactory                     $factory
+     * @param ReflectionClassIteratorInterface $classIterator
      */
-    public function __construct(RouteFactory $factory, ClassIterator $classIterator = null)
+    public function __construct(RouteFactory $factory, ReflectionClassIteratorInterface $classIterator)
     {
         $this->factory = $factory;
-        $this->classIterator = $classIterator ?: new ClassIterator(array(__DIR__.'/../Router'));
+        $this->classIterator = $classIterator;
     }
 
     /**
@@ -39,7 +43,7 @@ class CodeGenerator
     /**
      * @return string
      */
-    public function generateRouterCode()
+    private function generateRouterCode()
     {
         return "return new Router(unserialize('"
             . serialize(iterator_to_array($this->factory))
@@ -49,13 +53,13 @@ class CodeGenerator
     /**
      * @return string
      */
-    public function generateStaticCode()
+    private function generateStaticCode()
     {
         $code = "namespace inroute\Router;\n";
 
-        foreach ($this->classIterator as $classname) {
-            $code .= "if (!class_exists('$classname')) {\n"
-                . new ClassMinimizer($classname)
+        foreach ($this->classIterator as $className => $reflectedClass) {
+            $code .= "if (!class_exists('$className')) {\n"
+                . new ClassMinimizer($reflectedClass)
                 . "\n}\n";
         }
 

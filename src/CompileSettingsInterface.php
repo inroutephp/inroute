@@ -7,20 +7,26 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Router;
+namespace inroute;
 
 /**
+ * Defines compile time settings
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class Router
+interface CompileSettingsInterface
 {
-    private $routes;
+    /**
+     * Get path to prepend to all routes
+     *
+     * @return string
+     */
+    public function getRootPath();
 
     /**
-     * @param Route[] $routes
+     * Get array of plugin objects to load att compile time
+     *
+     * @return PluginInterface[]
      */
-    public function __construct(array $routes)
-    {
-        $this->routes = $routes;
-    }
+    public function getPlugins();
 }

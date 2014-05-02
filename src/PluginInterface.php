@@ -9,13 +9,16 @@
 
 namespace inroute;
 
+use inroute\Log\LoggerAwareInterface;
 use inroute\Compiler\Definition;
 use inroute\Exception\CompilerSkipRouteException;
 
 /**
+ * Defines an inroute plugin
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-interface PluginInterface
+interface PluginInterface extends LoggerAwareInterface
 {
     /**
      * Edit a route definition

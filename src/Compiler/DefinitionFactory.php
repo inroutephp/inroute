@@ -10,8 +10,11 @@
 namespace inroute\Compiler;
 
 use IteratorAggregate;
-use ReflectionClass;
+use inroute\Log\LoggerAwareInterface;
+use inroute\Log\LoggerAwareTrait;
+use inroute\classtools\ReflectionClassIteratorInterface;
 use inroute\PluginInterface;
+use Psr\Log\LoggerInterface;
 use inroute\Exception\CompilerSkipRouteException;
 
 /**
@@ -19,18 +22,20 @@ use inroute\Exception\CompilerSkipRouteException;
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class DefinitionFactory implements IteratorAggregate
+class DefinitionFactory implements IteratorAggregate //, LoggerAwareInterface
 {
-    private $classes, $plugin;
+    private $controllerIterator, $plugin;
 
     /**
-     * @param ClassIterator   $classes
-     * @param PluginInterface $plugin
+     * @param ReflectionClassIteratorInterface $controllerIterator
+     * @param PluginInterface                  $plugin
+     * @param LoggerInterface                  $logger
      */
-    public function __construct(ClassIterator $classes, PluginInterface $plugin)
+    public function __construct(ReflectionClassIteratorInterface $controllerIterator, PluginInterface $plugin, LoggerInterface $logger = null)
     {
-        $this->classes = $classes;
+        $this->controllerIterator = $controllerIterator;
         $this->plugin = $plugin;
+        $this->logger = $logger;
     }
 
     /**
@@ -41,15 +46,20 @@ class DefinitionFactory implements IteratorAggregate
     {
         $definitions = array();
 
-        /** @var string $className */
-        foreach ($this->classes as $className) {
+        foreach ($this->controllerIterator as $className => $reflectedClass) {
+            // TODO logg controller
+            //$this->getLogger()->info("Reading routes from $className");
             /** @var Definition $definition */
-            foreach (new DefinitionIterator(new ReflectionClass($className)) as $definition) {
+            foreach (new DefinitionIterator($reflectedClass) as $definition) {
                 try {
                     $this->plugin->processDefinition($definition);
                     $definitions[] = $definition;
+                    // TODO logg route
+                    //$this->getLogger()->info("Found route {$definition->controllerMethod}", $definition->toArray());
                 } catch (CompilerSkipRouteException $e) {
                     // Ignore definition on CompilerSkipRouteException
+                    // TODO logg skipped route
+                    //$this->getLogger()->debug("Skipped route {$definition->controllerMethod}");
                 }
             }
         }

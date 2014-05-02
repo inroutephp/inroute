@@ -14,12 +14,12 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
             ->method('processDefinition')
             ->with($definition);
 
-        $manager = new PluginManager(
-            array(
-                $plugin,
-                $plugin
-            )
-        );
+        $logger = $this->getMock('Psr\Log\LoggerInterface');
+
+        $manager = new PluginManager($logger);
+
+        $manager->registerPlugin($plugin);
+        $manager->registerPlugin($plugin);
 
         $manager->processDefinition($definition);
     }

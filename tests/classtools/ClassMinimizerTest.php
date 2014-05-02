@@ -1,11 +1,13 @@
 <?php
-namespace inroute\Compiler;
+namespace inroute\classtools;
 
 class ClassMinimizerTest extends \PHPUnit_Framework_TestCase
 {
     public function testMinimize()
     {
-        $minimizer = new ClassMinimizer('inroute\Compiler\ClassMinimizer');
+        $minimizer = new ClassMinimizer(
+            new \ReflectionClass('inroute\classtools\ClassMinimizer')
+        );
         $this->assertRegExp(
             '/public function getPhpCode/',
             $minimizer->minimize(),

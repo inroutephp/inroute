@@ -7,20 +7,13 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Router;
+namespace inroute;
 
 /**
+ * Inroute controllers must implement the controller interface
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class Router
+interface ControllerInterface
 {
-    private $routes;
-
-    /**
-     * @param Route[] $routes
-     */
-    public function __construct(array $routes)
-    {
-        $this->routes = $routes;
-    }
 }

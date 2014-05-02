@@ -7,20 +7,22 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Router;
+namespace inroute\Log;
+
+use Psr\Log\NullLogger;
 
 /**
+ * Adds the getLogger method to basic LoggerAwareInterface implementation
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class Router
+trait LoggerAwareTrait extends \Psr\Log\LoggerAwareTrait
 {
-    private $routes;
-
     /**
-     * @param Route[] $routes
+     * @return \Psr\Log\LoggerInterface
      */
-    public function __construct(array $routes)
+    public function getLogger()
     {
-        $this->routes = $routes;
+        return $this->logger ?: new NullLogger;
     }
 }

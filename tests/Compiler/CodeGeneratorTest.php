@@ -3,7 +3,7 @@ namespace inroute\Compiler;
 
 class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGenerate()
+    public function testGenerateCode()
     {
         $factory = $this->getMockBuilder('inroute\Compiler\RouteFactory')
             ->disableOriginalConstructor()
@@ -13,13 +13,19 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
             ->method('getIterator')
             ->will($this->returnValue(new \ArrayIterator(array())));
 
-        $classIterator = $this->getMockBuilder('inroute\Compiler\ClassIterator')
+        $classIterator = $this->getMockBuilder('inroute\classtools\ReflectionClassIteratorInterface')
             ->disableOriginalConstructor()
             ->getMock();
 
         $classIterator->expects($this->once())
             ->method('getIterator')
-            ->will($this->returnValue(new \ArrayIterator(array(__CLASS__))));
+            ->will(
+                $this->returnValue(
+                    new \ArrayIterator(
+                        array(__CLASS__ => new \ReflectionClass(__CLASS__))
+                    )
+                )
+            );
 
         $generator = new CodeGenerator($factory, $classIterator);
 

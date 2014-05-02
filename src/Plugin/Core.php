@@ -26,14 +26,14 @@ class Core implements PluginInterface
         'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'PATCH'
     );
 
-    private $root;
+    private $rootPath;
 
     /**
-     * @param string $root Root path prepended to all paths
+     * @param string $rootPath Root path prepended to all paths
      */
-    public function __construct($root = '')
+    public function __construct($rootPath)
     {
-        $this->root = $root;
+        $this->rootPath = $rootPath;
     }
 
     public function processDefinition(Definition $definition)
@@ -41,12 +41,11 @@ class Core implements PluginInterface
         // TODO validera http metod
         // TODO validera att path finns med...
         // TODO CompilerSkipRouteException
-            // om class ej @controller
             // om method ej @route
 
         $definition->write(
             'path',
-            $this->root
+            $this->rootPath
                 . $definition->getClassAnnotation('controller')
                 . $definition->getMethodAnnotation('route')
         );
