@@ -14,6 +14,7 @@ class DefinitionIteratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('ControllerClassName'));
 
         $constructor = $this->getMockBuilder('ReflectionMethod')
+            ->setMethods(array('isConstructor'))
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -22,6 +23,7 @@ class DefinitionIteratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $route = $this->getMockBuilder('ReflectionMethod')
+            ->setMethods(array('isConstructor', 'getName', 'getDocComment'))
             ->disableOriginalConstructor()
             ->getMock();
 

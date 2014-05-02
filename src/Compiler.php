@@ -9,7 +9,6 @@
 
 namespace inroute;
 
-use inroute\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use inroute\Plugin\PluginManager;
 use inroute\Plugin\Core;
@@ -22,34 +21,19 @@ use inroute\Settings\SettingsManager;
 /**
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class Compiler implements LoggerAwareInterface
+class Compiler
 {
-    private $classIterator;
+    private $classIterator, $logger;
 
-    public function __construct(ReflectionClassIterator $classIterator = null)
+    public function __construct(ReflectionClassIterator $classIterator, LoggerInterface $logger)
     {
-        $this->classIterator = $classIterator ?: new ReflectionClassIterator;
-    }
-
-    /**
-     * @todo Använd LoggerAwareTrait istället
-     */
-    public function getLogger()
-    {
-        return $this->logger ?: new NullLogger;
-    }
-
-    /**
-     * @todo Använd LoggerAwareTrait istället
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
+        $this->classIterator = $classIterator;
         $this->logger = $logger;
     }
 
     public function addPath($path)
     {
-        // $this->getLogger()->info("Using path $path");
+        // $this->logger->info("Using path $path");
         $this->classIterator->addPath($path);
     }
 
@@ -60,7 +44,7 @@ class Compiler implements LoggerAwareInterface
                 new DefinitionFactory(
                     $this->classIterator,
                     $this->getPluginManager(),
-                    $this->getLogger()
+                    $this->logger
                 )
             ),
             new ReflectionClassIterator(
@@ -79,10 +63,10 @@ class Compiler implements LoggerAwareInterface
     {
         $settings = new SettingsManager(
             $this->classIterator,
-            $this->getLogger()
+            $this->logger
         );
 
-        $pluginManager = new PluginManager($this->getLogger());
+        $pluginManager = new PluginManager($this->logger);
         $pluginManager->registerPlugin(new Core($settings->getRootPath()));
 
         foreach ($settings->getPlugins() as $plugin) {
@@ -95,31 +79,24 @@ class Compiler implements LoggerAwareInterface
     /*
         Skriv test för SettingsManager
 
-        Skriv en getClassIterator på liknande sätt som jag skrivit getPluginManager
-            getPluginManager letar ju i settings
-            getClassIterator ska leta i ComposerJsonWrapper...
+        PluginManager kan gott skapas från utifrån SettingsManager
+            $plugin = new PluginManager(new SettingsManager(...))
 
-        Att skapa kompiler blir då bara $compiler = new Compiler('/path/to/composer.json').
-            och sedan $compiler->setLogger($logger);
+        ska InrouteFactory vara en tunnare fasad till Compiler\Compiler
+            I så fall kan Compiler ta en konfigurerad ReflectionClassIterator per DI och bara pussla ihop allt
+                $factory = new InrouteFactory('/path/to/composer.json');
+                $factory->setLogger($logger);
 
-        Efter det har jag något som funkar
-            kolla att jag inte helt har gjort bort mig (bygg example...)
-            är det läge att skriva om compiler mer testbart???
-            ska Inroute vara en tunnare fasad till Compiler\Compiler som tar fler
-                konfigurerade object per injection??
-                    I så fall kan Compiler ta en konfigurerad ReflectionClassIterator
-            Kanske ska getPluginManager() vara en metod hos SettingsManager()?
-                return $settingsManager->registerPlugins(new PluginManager);
-                eller tvärt om
-                $plugin = new PluginManager(new SettingsManager(...))
-                det känns bättre på något sätt!
+        // Appropå logging
+            Factory kan vara LoggerAware och producera en NullLogger om det behövs
+            alla andra objekt längre ner i hierarkin kan faktiskt kräva en logger (de får ju en NullLogger om inte annat)
+            på detta sätt skulle jag kunna klara mig undan att använda traits
+                men ändå ha enkel kod
+                och ändå få ett bra stöd för att logga i exempelvis plugins...
 
-        kanske behöver jag inte Log subpaketet
-            (om det inte är tillräckligt många som implementerar...)
-            om jag använder Trait eller inte måste göra skillnad för om jag stödjer php 5.3 eller inte
+        // Implementera LOGGING fullt ut
+            om jag använder Trait måste göra skillnad för stödet av php 5.3
                 se composer.json samt .travis.yml
-
-        // LOGGING
             vilken composer.json den läser
                 använd någon form av composer.json-wrapper...
                 läs paths från autoload
