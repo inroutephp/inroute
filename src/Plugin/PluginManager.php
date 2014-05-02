@@ -10,6 +10,7 @@
 namespace inroute\Plugin;
 
 use inroute\PluginInterface;
+use inroute\CompileSettingsInterface;
 use inroute\Compiler\Definition;
 use Psr\Log\LoggerInterface;
 
@@ -20,14 +21,21 @@ use Psr\Log\LoggerInterface;
  */
 class PluginManager implements PluginInterface
 {
-    private $plugins = array();
+    private $logger, $plugins = array();
 
     /**
+     * @param CompileSettingsInterface $settings
      * @param LoggerInterface $logger
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(CompileSettingsInterface $settings, LoggerInterface $logger)
     {
         $this->setLogger($logger);
+
+        $this->registerPlugin(new Core($settings->getRootPath()));
+
+        foreach ($settings->getPlugins() as $plugin) {
+            $this->registerPlugin($plugin);
+        }
     }
 
     /**
@@ -36,9 +44,8 @@ class PluginManager implements PluginInterface
      */
     public function registerPlugin(PluginInterface $plugin)
     {
-        // TODO logg plugin
-        // $this->getLogger()->info("Using plugin {get_class($plugin)}");
-        $plugin->setLogger($this->getLogger());
+        $this->logger->info("Plugin ".get_class($plugin)." registered");
+        $plugin->setLogger($this->logger);
         $this->plugins[] = $plugin;
     }
 
@@ -53,15 +60,11 @@ class PluginManager implements PluginInterface
         }
     }
 
+    /**
+     * @param LoggerInterface $logger
+     */
     public function setLogger(LoggerInterface $logger)
     {
-        // TODO use trait instead...
         $this->logger = $logger;
-    }
-
-    public function getLogger()
-    {
-        // TODO use trait instead...
-        return $this->logger;
     }
 }

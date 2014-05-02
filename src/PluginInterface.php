@@ -9,7 +9,7 @@
 
 namespace inroute;
 
-use inroute\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareInterface;
 use inroute\Compiler\Definition;
 use inroute\Exception\CompilerSkipRouteException;
 

@@ -11,6 +11,7 @@ namespace inroute\Plugin;
 
 use inroute\PluginInterface;
 use inroute\Compiler\Definition;
+use Psr\Log\LoggerInterface;
 
 /**
  * Inroute core plugin
@@ -26,7 +27,7 @@ class Core implements PluginInterface
         'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'PATCH'
     );
 
-    private $rootPath;
+    private $rootPath, $logger;
 
     /**
      * @param string $rootPath Root path prepended to all paths
@@ -61,5 +62,13 @@ class Core implements PluginInterface
             }
         }
         */
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

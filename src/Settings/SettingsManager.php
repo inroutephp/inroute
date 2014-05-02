@@ -25,10 +25,9 @@ class SettingsManager implements CompileSettingsInterface
     public function __construct(ReflectionClassIterator $classIterator, LoggerInterface $logger)
     {
         foreach ($classIterator->filterType('inroute\CompileSettingsInterface') as $reflectedClass) {
-            // TODO logg settings class
-            //$logger->info("Reading build settings from {$reflectedClass->getName()}");
+            $logger->info("Reading build settings from {$reflectedClass->getName()}");
 
-            $settings = $reflectedClass->newInstance();
+            $settings = $reflectedClass->newInstance(0);
 
             $this->root = $settings->getRootPath();
 

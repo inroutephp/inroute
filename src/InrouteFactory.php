@@ -10,107 +10,75 @@
 namespace inroute;
 
 use Psr\Log\LoggerInterface;
-use inroute\Plugin\PluginManager;
-use inroute\Plugin\Core;
-use inroute\classtools\ReflectionClassIterator;
-use inroute\Compiler\CodeGenerator;
-use inroute\Compiler\RouteFactory;
-use inroute\Compiler\DefinitionFactory;
-use inroute\Settings\SettingsManager;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\NullLogger;
+use inroute\Compiler\Compiler;
+use inroute\Settings\ComposerJsonParser;
 
 /**
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class Compiler
+class InrouteFactory implements LoggerAwareInterface
 {
     private $classIterator, $logger;
 
-    public function __construct(ReflectionClassIterator $classIterator, LoggerInterface $logger)
+    public function parseComposerJson($pathToComposerJson)
     {
-        $this->classIterator = $classIterator;
-        $this->logger = $logger;
+        $this->getLogger()->info("Reading paths from $pathToComposerJson");
+
+        $parser = new ComposerJsonParser(
+            json_decode(
+                file_get_contents($pathToComposerJson)
+            )
+        );
+
+        $this->classIterator = new ReflectionClassIterator($parser->getPaths());
+    }
+
+    public function getClassIterator()
+    {
+        if (!isset($this->classIterator)) {
+            $this->classIterator = new ReflectionClassIterator;
+        }
+        return $this->classIterator;
     }
 
     public function addPath($path)
     {
-        // $this->logger->info("Using path $path");
-        $this->classIterator->addPath($path);
+        $this->getLogger()->info("Using path $path");
+        $this->getClassIterator()->addPath($path);
     }
 
-    public function compile()
+    public function getCompiler()
     {
-        return (string) new CodeGenerator(
-            new RouteFactory(
-                new DefinitionFactory(
-                    $this->classIterator,
-                    $this->getPluginManager(),
-                    $this->logger
-                )
-            ),
-            new ReflectionClassIterator(
-                array(
-                    __DIR__.'/Router',
-                    __DIR__.'/ControllerInterface.php'
-                )
-            )
+        return new Compiler(
+            $this->getClassIterator(),
+            $this->getLogger()
         );
     }
 
-    /**
-     * @return PluginManager
-     */
-    private function getPluginManager()
+    public function generate()
     {
-        $settings = new SettingsManager(
-            $this->classIterator,
-            $this->logger
-        );
+        return $this->getCompiler()->compile();
+    }
 
-        $pluginManager = new PluginManager($this->logger);
-        $pluginManager->registerPlugin(new Core($settings->getRootPath()));
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
-        foreach ($settings->getPlugins() as $plugin) {
-            $pluginManager->registerPlugin($plugin);
+    public function getLogger()
+    {
+        if (!isset($this->logger)) {
+            $this->logger = new NullLogger;
         }
-
-        return $pluginManager;
+        return $this->logger;
     }
+}
 
     /*
-        Skriv test för SettingsManager
-
-        PluginManager kan gott skapas från utifrån SettingsManager
-            $plugin = new PluginManager(new SettingsManager(...))
-
-        ska InrouteFactory vara en tunnare fasad till Compiler\Compiler
-            I så fall kan Compiler ta en konfigurerad ReflectionClassIterator per DI och bara pussla ihop allt
-                $factory = new InrouteFactory('/path/to/composer.json');
-                $factory->setLogger($logger);
-
-        // Appropå logging
-            Factory kan vara LoggerAware och producera en NullLogger om det behövs
-            alla andra objekt längre ner i hierarkin kan faktiskt kräva en logger (de får ju en NullLogger om inte annat)
-            på detta sätt skulle jag kunna klara mig undan att använda traits
-                men ändå ha enkel kod
-                och ändå få ett bra stöd för att logga i exempelvis plugins...
-
-        // Implementera LOGGING fullt ut
-            om jag använder Trait måste göra skillnad för stödet av php 5.3
-                se composer.json samt .travis.yml
-            vilken composer.json den läser
-                använd någon form av composer.json-wrapper...
-                läs paths från autoload
-            vilken fil den skriver till (bara med cli)
-            vilka controllers den hittar (DONE DefinitionFactory)
-            vilka settings den hittar (DONE SettingsManager)
-            vilka plugins den använder (DONE PluginManager)
-            plugins kan logga vad de vill
-                kolla hur det blir med det som redan loggas innan jag börjar logga en massa i Core
-                kanske är det onödigt att göra plugins LoggerAwware?
-                    Nej det är väldigt bra för möjligheten att debugga sin site build...
-            När vi sedan använder en konkret logger (i command eller development) så
-                kan vi välja verbosity level när vi configurerar logger (info eller debug har jag nu..)
-                kan vi välja att ex skicka det loggade till chrome...
+        Skriv ComposerJsonWrapper
+            läs paths från autoload
 
         //  ** Accept plugin skulle skriva något sånt här **
             // #### FEL FEL FEL jag kan aldrig!! referera till Definition i plugin!!  ####
@@ -171,5 +139,14 @@ class Compiler
             setup(){$this->router = eval(Compiler::compile('inroute example app'))}
                 //ska göras en gång när testet startas
                 //sen ska denna router användas på alla tänkbara sätt
+
+        // Kolla hur loggandet fungerar när jag skriver Example...
+            vilken composer.json den läser (DONE InrouteFactory)
+            vilken fil den skriver till (DONE Comment in Command)
+            vilka controllers den hittar (DONE DefinitionFactory)
+            vilka settings den hittar (DONE SettingsManager)
+            vilka plugins den använder (DONE PluginManager)
+            När vi sedan använder en konkret logger (i command eller development) så
+                kan vi välja verbosity level när vi configurerar logger (info eller debug har jag nu..)
+                kan vi välja att ex skicka det loggade till chrome...
      */
-}

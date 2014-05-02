@@ -71,6 +71,10 @@ class BuildCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /*
+            TODO Log (info) the output file used
+        */
+
         $factory = new InrouteFactory();
 
         $dir = $input->getArgument('dir');
