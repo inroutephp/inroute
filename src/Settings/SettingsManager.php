@@ -9,8 +9,8 @@
 
 namespace inroute\Settings;
 
-use inroute\CompileSettingsInterface
-use inroute\classtools\ReflectionClassIteratorInterface;
+use inroute\CompileSettingsInterface;
+use inroute\classtools\ReflectionClassIterator;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -22,9 +22,9 @@ class SettingsManager implements CompileSettingsInterface
 {
     private $root = '', $plugins = array();
 
-    public function __construct(ReflectionClassIteratorInterface $settingsClasses, LoggerInterface $logger)
+    public function __construct(ReflectionClassIterator $classIterator, LoggerInterface $logger)
     {
-        foreach ($settingsClasses as $reflectedClass) {
+        foreach ($classIterator->filterType('inroute\CompileSettingsInterface') as $reflectedClass) {
             // TODO logg settings class
             //$logger->info("Reading build settings from {$reflectedClass->getName()}");
 

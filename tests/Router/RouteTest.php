@@ -16,7 +16,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         );
 
         $that = $this;
-        $route->invoke(        
+        $route->invoke(
             function (array $args) use ($that) {
                 $that->assertEquals('cntrlClass', $args['controller']);
                 $that->assertEquals('cntrlMethod', $args['method']);

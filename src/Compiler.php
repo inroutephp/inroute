@@ -13,8 +13,7 @@ use inroute\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use inroute\Plugin\PluginManager;
 use inroute\Plugin\Core;
-use inroute\classtools\ClassIterator;
-use inroute\classtools\InterfaceIterator;
+use inroute\classtools\ReflectionClassIterator;
 use inroute\Compiler\CodeGenerator;
 use inroute\Compiler\RouteFactory;
 use inroute\Compiler\DefinitionFactory;
@@ -27,9 +26,9 @@ class Compiler implements LoggerAwareInterface
 {
     private $classIterator, $plugins = array();
 
-    public function __construct(ClassIterator $classIterator = null)
+    public function __construct(ReflectionClassIterator $classIterator = null)
     {
-        $this->classIterator = $classIterator ?: new ClassIterator;
+        $this->classIterator = $classIterator ?: new ReflectionClassIterator;
     }
 
     /**
@@ -37,7 +36,7 @@ class Compiler implements LoggerAwareInterface
      */
     public function getLogger()
     {
-        return $this->logger ?: new NullLogger();
+        return $this->logger ?: new NullLogger;
     }
 
     /**
@@ -64,15 +63,12 @@ class Compiler implements LoggerAwareInterface
         return (string) new CodeGenerator(
             new RouteFactory(
                 new DefinitionFactory(
-                    new InterfaceIterator(
-                        'inroute\ControllerInterface',
-                        $this->classIterator
-                    ),
+                    $this->classIterator,
                     $this->getPluginManager(),
                     $this->getLogger()
                 )
             ),
-            new ClassIterator(
+            new ReflectionClassIterator(
                 array(
                     __DIR__.'/Router',
                     __DIR__.'/ControllerInterface.php'
@@ -82,29 +78,19 @@ class Compiler implements LoggerAwareInterface
     }
 
     /**
-     * @return CompileSettingsInterface
-     */
-    private function getSettingsManager()
-    {
-        return new SettingsManager(
-            new InterfaceIterator(
-                'inroute\CompileSettingsInterface',
-                $this->classIterator
-            ),
-            $this->getLogger()
-        );
-    }
-
-    /**
      * @return PluginManager
      */
     private function getPluginManager()
     {
-        $settings = $this->getSettingsManager();
+        $settings = new SettingsManager(
+            $this->classIterator,
+            $this->getLogger()
+        );
+
         $pluginManager = new PluginManager;
         $pluginManager->setLogger($this->getLogger());
 
-        $pluginManager->registerPlugin(new Core($settings->getRootPath());
+        $pluginManager->registerPlugin(new Core($settings->getRootPath()));
 
         foreach ($settings->getPlugins() as $plugin) {
             $pluginManager->registerPlugin($plugin);
@@ -132,8 +118,7 @@ class Compiler implements LoggerAwareInterface
             är det läge att skriva om compiler mer testbart???
             ska Inroute vara en tunnare fasad till Compiler\Compiler som tar fler
                 konfigurerade object per injection??
-                    I så fall kan Compiler ta en konfigurerad ClassIterator
-                        eller rättare sagt ReflectionClassIteratorInterface...???
+                    I så fall kan Compiler ta en konfigurerad ReflectionClassIterator
             Kanske ska getPluginManager() vara en metod hos SettingsManager()?
                 return $settingsManager->registerPlugins(new PluginManager);
                 eller tvärt om
@@ -147,6 +132,8 @@ class Compiler implements LoggerAwareInterface
 
         kanske behöver jag inte Log subpaketet
             (om det inte är tillräckligt många som implementerar...)
+            om jag använder Trait eller inte måste göra skillnad för om jag stödjer php 5.3 eller inte
+                se composer.json samt .travis.yml
 
         // LOGGING
             vilken composer.json den läser

@@ -32,7 +32,7 @@
             standard="${CODE_STANDARD}"
             showWarnings="true"
             encoding="utf8"
-            haltonerror="true"
+            haltonerror="false"
             haltonwarning="false"
             docGenerator="HTML"
             docFile="${BUILD_DIR}/phpcs/rules.html"

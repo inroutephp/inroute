@@ -19,7 +19,7 @@ use inroute\Router\Route;
  */
 class RouteFactory implements IteratorAggregate
 {
-    private $definitions, $tokenizer, $routes = array();
+    private $definitions, $tokenizer;
 
     /**
      * @param DefinitionFactory $definitions Route definition source

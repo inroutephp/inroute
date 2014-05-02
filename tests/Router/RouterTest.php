@@ -5,6 +5,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 {
     public function testVoid()
     {
-        $r = new Router(array());
+        new Router(array());
     }
 }

@@ -12,7 +12,7 @@ namespace inroute\Compiler;
 use IteratorAggregate;
 use inroute\Log\LoggerAwareInterface;
 use inroute\Log\LoggerAwareTrait;
-use inroute\classtools\ReflectionClassIteratorInterface;
+use inroute\classtools\ReflectionClassIterator;
 use inroute\PluginInterface;
 use Psr\Log\LoggerInterface;
 use inroute\Exception\CompilerSkipRouteException;
@@ -24,16 +24,16 @@ use inroute\Exception\CompilerSkipRouteException;
  */
 class DefinitionFactory implements IteratorAggregate //, LoggerAwareInterface
 {
-    private $controllerIterator, $plugin;
+    private $classIterator, $plugin;
 
     /**
-     * @param ReflectionClassIteratorInterface $controllerIterator
-     * @param PluginInterface                  $plugin
-     * @param LoggerInterface                  $logger
+     * @param ReflectionClassIterator $classIterator
+     * @param PluginInterface         $plugin
+     * @param LoggerInterface         $logger
      */
-    public function __construct(ReflectionClassIteratorInterface $controllerIterator, PluginInterface $plugin, LoggerInterface $logger = null)
+    public function __construct(ReflectionClassIterator $classIterator, PluginInterface $plugin, LoggerInterface $logger = null)
     {
-        $this->controllerIterator = $controllerIterator;
+        $this->classIterator = $classIterator->filterType('inroute\ControllerInterface');
         $this->plugin = $plugin;
         $this->logger = $logger;
     }
@@ -46,7 +46,7 @@ class DefinitionFactory implements IteratorAggregate //, LoggerAwareInterface
     {
         $definitions = array();
 
-        foreach ($this->controllerIterator as $className => $reflectedClass) {
+        foreach ($this->classIterator as $className => $reflectedClass) {
             // TODO logg controller
             //$this->getLogger()->info("Reading routes from $className");
             /** @var Definition $definition */

@@ -9,7 +9,7 @@
 
 namespace inroute\Compiler;
 
-use inroute\classtools\ReflectionClassIteratorInterface;
+use inroute\classtools\ReflectionClassIterator;
 use inroute\classtools\ClassMinimizer;
 
 /**
@@ -22,10 +22,10 @@ class CodeGenerator
     private $factory, $classIterator;
 
     /**
-     * @param RouteFactory                     $factory
-     * @param ReflectionClassIteratorInterface $classIterator
+     * @param RouteFactory            $factory
+     * @param ReflectionClassIterator $classIterator
      */
-    public function __construct(RouteFactory $factory, ReflectionClassIteratorInterface $classIterator)
+    public function __construct(RouteFactory $factory, ReflectionClassIterator $classIterator)
     {
         $this->factory = $factory;
         $this->classIterator = $classIterator;

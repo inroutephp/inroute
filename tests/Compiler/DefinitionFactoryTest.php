@@ -5,11 +5,14 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetIterator()
     {
-        $controllerIterator = $this->getMockBuilder('inroute\classtools\ReflectionClassIteratorInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $classIterator = $this->getMock('inroute\classtools\ReflectionClassIterator');
 
-        $controllerIterator->expects($this->once())
+        $classIterator->expects($this->once())
+            ->method('filterType')
+            ->with('inroute\ControllerInterface')
+            ->will($this->returnValue($classIterator));
+
+        $classIterator->expects($this->once())
             ->method('getIterator')
             ->will(
                 $this->returnValue(
@@ -25,7 +28,7 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('processDefinition');
 
         $result = iterator_to_array(
-            new DefinitionFactory($controllerIterator, $plugin)
+            new DefinitionFactory($classIterator, $plugin)
         );
 
         $this->assertFalse(empty($result));
@@ -33,11 +36,14 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCompilerSkipRouteException()
     {
-        $controllerIterator = $this->getMockBuilder('inroute\classtools\ReflectionClassIteratorInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $classIterator = $this->getMock('inroute\classtools\ReflectionClassIterator');
 
-        $controllerIterator->expects($this->once())
+        $classIterator->expects($this->once())
+            ->method('filterType')
+            ->with('inroute\ControllerInterface')
+            ->will($this->returnValue($classIterator));
+
+        $classIterator->expects($this->once())
             ->method('getIterator')
             ->will(
                 $this->returnValue(
@@ -55,7 +61,7 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEmpty(
             iterator_to_array(
-                new DefinitionFactory($controllerIterator, $plugin)
+                new DefinitionFactory($classIterator, $plugin)
             )
         );
     }
