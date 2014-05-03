@@ -9,8 +9,6 @@
 
 namespace inroute\classtools;
 
-use IteratorAggregate;
-
 /**
  * Basic implementation of filterable interface
  *

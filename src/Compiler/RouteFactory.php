@@ -33,14 +33,11 @@ class RouteFactory implements IteratorAggregate
 
     /**
      * @return \Iterator
-     * @todo   Implement as a generator
      */
     public function getIterator()
     {
-        $routes = array();
-
         foreach ($this->definitions as $definition) {
-            $routes[] = new Route(
+            yield new Route(
                 $this->tokenizer->tokenize($definition->read('path')),
                 $this->tokenizer->getRegex(),
                 $definition->read('httpmethods'),
@@ -50,7 +47,5 @@ class RouteFactory implements IteratorAggregate
                 $definition->getPostFilters()
             );
         }
-
-        return new \ArrayIterator($routes);
     }
 }

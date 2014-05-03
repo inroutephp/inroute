@@ -38,26 +38,21 @@ class DefinitionFactory implements IteratorAggregate
 
     /**
      * @return \Iterator
-     * @todo   Implement as a generator
      */
     public function getIterator()
     {
-        $definitions = array();
-
         foreach ($this->classIterator as $classname => $reflectedClass) {
             $this->logger->info("Reading routes from $classname");
             /** @var Definition $definition */
             foreach (new DefinitionIterator($reflectedClass) as $definition) {
                 try {
                     $this->plugin->processDefinition($definition);
-                    $definitions[] = $definition;
                     $this->logger->info("Found route {$definition->read('controllerMethod')}", $definition->toArray());
+                    yield $definition;
                 } catch (CompilerSkipRouteException $e) {
                     $this->logger->debug("Skipped route {$definition->read('controllerMethod')}");
                 }
             }
         }
-
-        return new \ArrayIterator($definitions);
     }
 }

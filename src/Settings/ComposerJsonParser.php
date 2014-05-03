@@ -9,10 +9,6 @@
 
 namespace inroute\Settings;
 
-use inroute\CompileSettingsInterface;
-use inroute\classtools\ReflectionClassIterator;
-use Psr\Log\LoggerInterface;
-
 /**
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */

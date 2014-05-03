@@ -77,8 +77,23 @@ class InrouteFactory implements LoggerAwareInterface
 }
 
     /*
+        Lägg till exemplify exempel till classtools
+            vilket kanske iofs kräver att jag flyttar ut det till sin eget paket...
+            fundera på hur jag vill göra med minimizer
+                issue om den uppdateringen jag tänkte på innan?
+                göra iterator och minimizer till två olika subpaket?
+                    eller räcker det för mig att stoppa in filter i ett eget subpaket??
+            kör phpunit som installeras från kommandorad
+                kräver det ändringar av travis och scrutinizer??
+                uppdatera pskeleton på en gång
+                    och inroute!!
+            skriv examples md till fil i testkatalogen
+                så slipper jag README.md där..
+
         Skriv ComposerJsonWrapper
             läs paths från autoload
+            behöver antagligen ta path istället för array
+            skriv det testbart...
 
         //  ** Accept plugin skulle skriva något sånt här **
             // #### FEL FEL FEL jag kan aldrig!! referera till Definition i plugin!!  ####

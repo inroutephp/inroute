@@ -32,12 +32,10 @@ class DefinitionIterator implements IteratorAggregate
 
     /**
      * @return \Iterator
-     * @todo   Implement as a generator
      */
     public function getIterator()
     {
         $classAnnotations = new Annotations($this->class);
-        $definitions = array();
 
         /** @var \ReflectionMethod $method */
         foreach ($this->class->getMethods() as $method) {
@@ -53,9 +51,7 @@ class DefinitionIterator implements IteratorAggregate
             $definition->write('controller', $this->class->getName());
             $definition->write('controllerMethod', $method->getName());
 
-            $definitions[] = $definition;
+            yield $definition;
         }
-
-        return new \ArrayIterator($definitions);
     }
 }
