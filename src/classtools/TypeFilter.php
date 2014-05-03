@@ -10,50 +10,42 @@
 namespace inroute\classtools;
 
 use ReflectionException;
-use ArrayIterator;
 
 /**
  * Filter classes of a spefcified type
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class TypeFilterIterator extends ReflectionClassIterator
+class TypeFilter implements FilterInterface
 {
-    private $typename, $iterator;
+    use FilterInterfaceTrait, FilterableTrait;
 
-    public function __construct($typename, ReflectionClassIterator $iterator = null)
+    private $typename;
+
+    public function __construct($typename)
     {
         $this->typename = $typename;
-        $this->iterator = $iterator ?: new ReflectionClassIterator;
-    }
-
-    public function addPath($path)
-    {
-        return $this->iterator->addPath($path);
     }
 
     public function getIterator()
     {
-        // TODO implement as a generator
-
-        $controllers = array();
-
-        foreach ($this->iterator as $className => $reflectedClass) {
+        foreach ($this->getFilterable() as $className => $reflectedClass) {
             try {
                 if ($reflectedClass->implementsInterface($this->typename)) {
-                    $controllers[$className] = $reflectedClass;
+                    yield $className => $reflectedClass;
                 }
             } catch (ReflectionException $e) {
                 try {
-                    if ($reflectedClass->isSubclassOf($this->typename) || $reflectedClass->getName() == $this->typename) {
-                        $controllers[$className] = $reflectedClass;
+                    if (
+                        $reflectedClass->isSubclassOf($this->typename)
+                        || $reflectedClass->getName() == $this->typename
+                    ) {
+                        yield $className => $reflectedClass;
                     }
                 } catch (ReflectionException $e) {
                     // Nope
                 }
             }
         }
-
-        return new ArrayIterator($controllers);
     }
 }

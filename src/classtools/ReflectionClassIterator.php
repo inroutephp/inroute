@@ -18,29 +18,9 @@ use ReflectionClass;
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class ReflectionClassIterator extends ClassIterator
+class ReflectionClassIterator extends ClassIterator implements Filterable
 {
-    /**
-     * Create a new iterator where classes are filtered based on type
-     *
-     * @param  string $typename
-     * @return ReflectionClassIterator
-     */
-    public function filterType($typename)
-    {
-        return new TypeFilterIterator($typename, $this);
-    }
-
-    /**
-     * Create a new iterator where classes are filtered based on name
-     *
-     * @param  string $pattern Regular expression used when filtering
-     * @return ReflectionClassIterator
-     */
-    public function filterName($pattern)
-    {
-        return new NameFilterIterator($pattern, $this);
-    }
+    use FilterableTrait;
 
     /**
      * Add class to iterator
