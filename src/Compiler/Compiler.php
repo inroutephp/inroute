@@ -9,7 +9,8 @@
 
 namespace inroute\Compiler;
 
-use inroute\classtools\ReflectionClassIterator;
+use hanneskod\classtools\FilterableClassIterator;
+use hanneskod\classtools\ClassIterator;
 use Psr\Log\LoggerInterface;
 use inroute\Plugin\PluginManager;
 use inroute\Settings\SettingsManager;
@@ -23,7 +24,7 @@ class Compiler
 {
     private $classIterator, $logger;
 
-    public function __construct(ReflectionClassIterator $classIterator, LoggerInterface $logger)
+    public function __construct(FilterableClassIterator $classIterator, LoggerInterface $logger)
     {
         $this->classIterator = $classIterator;
         $this->logger = $logger;
@@ -45,10 +46,12 @@ class Compiler
                     $this->logger
                 )
             ),
-            new ReflectionClassIterator(
-                array(
-                    __DIR__.'/../Router',
-                    __DIR__.'/../ControllerInterface.php'
+            new FilterableClassIterator(
+                new ClassIterator(
+                    array(
+                        __DIR__.'/../Router',
+                        __DIR__.'/../ControllerInterface.php'
+                    )
                 )
             )
         );

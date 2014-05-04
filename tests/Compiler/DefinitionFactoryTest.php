@@ -5,7 +5,9 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetIterator()
     {
-        $classIterator = $this->getMock('inroute\classtools\ReflectionClassIterator');
+        $classIterator = $this->getMockBuilder('hanneskod\classtools\FilterableClassIterator')
+            ->disableOriginalConstructor()
+            ->getMock();
         $classIterator->expects($this->once())
             ->method('filterType')
             ->with('inroute\ControllerInterface')
@@ -35,7 +37,9 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCompilerSkipRouteException()
     {
-        $classIterator = $this->getMock('inroute\classtools\ReflectionClassIterator');
+        $classIterator = $this->getMockBuilder('hanneskod\classtools\FilterableClassIterator')
+            ->disableOriginalConstructor()
+            ->getMock();
         $classIterator->expects($this->once())
             ->method('filterType')
             ->with('inroute\ControllerInterface')

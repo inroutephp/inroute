@@ -9,8 +9,8 @@
 
 namespace inroute\Compiler;
 
-use inroute\classtools\ReflectionClassIterator;
-use inroute\classtools\ClassMinimizer;
+use hanneskod\classtools\FilterableClassIterator;
+use hanneskod\classtools\Minimizer\ClassMinimizer;
 
 /**
  * Generate stand alone router code
@@ -23,9 +23,9 @@ class CodeGenerator
 
     /**
      * @param RouteFactory            $factory
-     * @param ReflectionClassIterator $classIterator
+     * @param FilterableClassIterator $classIterator
      */
-    public function __construct(RouteFactory $factory, ReflectionClassIterator $classIterator)
+    public function __construct(RouteFactory $factory, FilterableClassIterator $classIterator)
     {
         $this->factory = $factory;
         $this->classIterator = $classIterator;

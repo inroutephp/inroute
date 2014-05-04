@@ -23,7 +23,9 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
             ->method('newInstance')
             ->will($this->returnValue($settingsClass));
 
-        $classIterator = $this->getMock('inroute\classtools\ReflectionClassIterator');
+        $classIterator = $this->getMockBuilder('hanneskod\classtools\FilterableClassIterator')
+            ->disableOriginalConstructor()
+            ->getMock();
         $classIterator->expects($this->once())
             ->method('filterType')
             ->with('inroute\CompileSettingsInterface')

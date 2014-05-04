@@ -10,7 +10,7 @@
 namespace inroute\Settings;
 
 use inroute\CompileSettingsInterface;
-use inroute\classtools\ReflectionClassIterator;
+use hanneskod\classtools\FilterableClassIterator;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -22,7 +22,7 @@ class SettingsManager implements CompileSettingsInterface
 {
     private $root = '', $plugins = array();
 
-    public function __construct(ReflectionClassIterator $classIterator, LoggerInterface $logger)
+    public function __construct(FilterableClassIterator $classIterator, LoggerInterface $logger)
     {
         foreach ($classIterator->filterType('inroute\CompileSettingsInterface') as $reflectedClass) {
             $logger->info("Reading build settings from {$reflectedClass->getName()}");

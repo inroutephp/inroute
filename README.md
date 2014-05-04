@@ -164,5 +164,5 @@ Testing using [phpunit](http://phpunit.de/)
 The unis tests requires that dependencies are installed using composer.
 
     $ curl -sS https://getcomposer.org/installer | php
-    $ php composer.phar install
-    $ phpunit
+    $ php composer.phar install --dev
+    $ vendor/bin/phpunit

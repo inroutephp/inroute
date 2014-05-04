@@ -10,9 +10,9 @@
 namespace inroute\Compiler;
 
 use IteratorAggregate;
-use inroute\classtools\ReflectionClassIterator;
-use inroute\PluginInterface;
+use hanneskod\classtools\FilterableClassIterator;
 use Psr\Log\LoggerInterface;
+use inroute\PluginInterface;
 use inroute\Exception\CompilerSkipRouteException;
 
 /**
@@ -25,11 +25,11 @@ class DefinitionFactory implements IteratorAggregate
     private $classIterator, $plugin, $logger;
 
     /**
-     * @param ReflectionClassIterator $classIterator
+     * @param FilterableClassIterator $classIterator
      * @param PluginInterface         $plugin
      * @param LoggerInterface         $logger
      */
-    public function __construct(ReflectionClassIterator $classIterator, PluginInterface $plugin, LoggerInterface $logger)
+    public function __construct(FilterableClassIterator $classIterator, PluginInterface $plugin, LoggerInterface $logger)
     {
         $this->classIterator = $classIterator->filterType('inroute\ControllerInterface');
         $this->plugin = $plugin;

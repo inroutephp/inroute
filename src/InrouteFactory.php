@@ -14,6 +14,8 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\NullLogger;
 use inroute\Compiler\Compiler;
 use inroute\Settings\ComposerJsonParser;
+use hanneskod\classtools\ClassIterator;
+use hanneskod\classtools\FilterableClassIterator;
 
 /**
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
@@ -32,13 +34,13 @@ class InrouteFactory implements LoggerAwareInterface
             )
         );
 
-        $this->classIterator = new ReflectionClassIterator($parser->getPaths());
+        $this->classIterator = new ClassIterator($parser->getPaths());
     }
 
     public function getClassIterator()
     {
         if (!isset($this->classIterator)) {
-            $this->classIterator = new ReflectionClassIterator;
+            $this->classIterator = new ClassIterator;
         }
         return $this->classIterator;
     }
@@ -52,7 +54,7 @@ class InrouteFactory implements LoggerAwareInterface
     public function getCompiler()
     {
         return new Compiler(
-            $this->getClassIterator(),
+            new FilterableClassIterator($this->getClassIterator()),
             $this->getLogger()
         );
     }
@@ -77,18 +79,9 @@ class InrouteFactory implements LoggerAwareInterface
 }
 
     /*
-        Lägg till exemplify exempel till classtools
-            vilket kanske iofs kräver att jag flyttar ut det till sin eget paket...
-            fundera på hur jag vill göra med minimizer
-                issue om den uppdateringen jag tänkte på innan?
-                göra iterator och minimizer till två olika subpaket?
-                    eller räcker det för mig att stoppa in filter i ett eget subpaket??
-            kör phpunit som installeras från kommandorad
-                kräver det ändringar av travis och scrutinizer??
-                uppdatera pskeleton på en gång
-                    och inroute!!
-            skriv examples md till fil i testkatalogen
-                så slipper jag README.md där..
+        Scrutinizers version av php-analyzer klarar inte av yield
+            är det någonting som jag kan göra någonting åt
+            eller måste jag bara vänta på att scrutinizer uppdaterar sin kod??
 
         Skriv ComposerJsonWrapper
             läs paths från autoload

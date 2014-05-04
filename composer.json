@@ -19,9 +19,13 @@
     },
     "require": {
         "php": ">=5.5",
+        "hanneskod/classtools": "dev-master@dev",
         "zeptech/annotations": "1.1.*",
         "psr/log": "1.*",
         "symfony/console": "2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
     },
     "bin": [
         "bin/inroute"

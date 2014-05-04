@@ -5,7 +5,9 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
 {
     public function testCompile()
     {
-        $classIterator = $this->getMock('inroute\classtools\ReflectionClassIterator');
+        $classIterator = $this->getMockBuilder('hanneskod\classtools\FilterableClassIterator')
+            ->disableOriginalConstructor()
+            ->getMock();
         $classIterator->expects($this->any())
             ->method('filterType')
             ->will($this->returnValue($classIterator));
