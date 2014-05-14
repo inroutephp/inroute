@@ -13,7 +13,6 @@ namespace inroute\Settings;
  * Default compile time settings
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
- * @todo   Write a test that asserts that this is a complete implementation of CompileSettingsInterface
  */
 trait DefaultCompileSettingsTrait
 {
@@ -30,7 +29,7 @@ trait DefaultCompileSettingsTrait
     /**
      * Get array of plugin objects to load att compile time
      *
-     * @return PluginInterface[]
+     * @return \inroute\Plugin\PluginInterface[]
      */
     public function getPlugins()
     {

@@ -9,7 +9,6 @@
 
 namespace inroute\Plugin;
 
-use inroute\PluginInterface;
 use inroute\Compiler\Definition;
 use Psr\Log\LoggerInterface;
 
@@ -27,7 +26,8 @@ class Core implements PluginInterface
         'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'OPTIONS', 'PATCH'
     );
 
-    private $rootPath, $logger;
+    private $rootPath;
+    private $logger;
 
     /**
      * @param string $rootPath Root path prepended to all paths
@@ -47,8 +47,8 @@ class Core implements PluginInterface
         $definition->write(
             'path',
             $this->rootPath
-                . $definition->getClassAnnotation('controller')
-                . $definition->getMethodAnnotation('route')
+            . $definition->getClassAnnotation('controller')
+            . $definition->getMethodAnnotation('route')
         );
 
         $definition->write('httpmethods', array());

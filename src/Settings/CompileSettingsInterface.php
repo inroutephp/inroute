@@ -7,7 +7,7 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute;
+namespace inroute\Settings;
 
 /**
  * Defines compile time settings
@@ -26,7 +26,7 @@ interface CompileSettingsInterface
     /**
      * Get array of plugin objects to load att compile time
      *
-     * @return PluginInterface[]
+     * @return \inroute\Plugin\PluginInterface[]
      */
     public function getPlugins();
 }

@@ -9,8 +9,7 @@
 
 namespace inroute\Plugin;
 
-use inroute\PluginInterface;
-use inroute\CompileSettingsInterface;
+use inroute\Settings\CompileSettingsInterface;
 use inroute\Compiler\Definition;
 use Psr\Log\LoggerInterface;
 
@@ -21,9 +20,19 @@ use Psr\Log\LoggerInterface;
  */
 class PluginManager implements PluginInterface
 {
-    private $logger, $plugins = array();
+    /**
+     * @var LoggerInterface Event logger
+     */
+    private $logger;
 
     /**
+     * @var PluginInterface[] Registered plugins
+     */
+    private $plugins = array();
+
+    /**
+     * Constructor
+     *
      * @param CompileSettingsInterface $settings
      * @param LoggerInterface $logger
      */
@@ -39,6 +48,8 @@ class PluginManager implements PluginInterface
     }
 
     /**
+     * Register plugin with manager
+     *
      * @param  PluginInterface $plugin
      * @return void
      */
@@ -50,6 +61,8 @@ class PluginManager implements PluginInterface
     }
 
     /**
+     * Implementation of PluginInterface
+     *
      * @param  Definition $definition
      * @return void
      */
@@ -61,6 +74,8 @@ class PluginManager implements PluginInterface
     }
 
     /**
+     * Implementation of PluginInterface
+     *
      * @param LoggerInterface $logger
      */
     public function setLogger(LoggerInterface $logger)

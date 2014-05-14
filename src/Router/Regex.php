@@ -10,14 +10,26 @@
 namespace inroute\Router;
 
 /**
+ * Wrapper around preg_match
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class Regex
 {
-    private $regex, $matches = array();
+    /**
+     * @var string Internal regular expression
+     */
+    private $regex;
 
     /**
-     * @param string $regex
+     * @var array Matches filled by preg_match
+     */
+    private $matches = array();
+
+    /**
+     * Load regex at construct
+     *
+     * @param string $regex Note that delimiters should not be used
      */
     public function __construct($regex = '')
     {
@@ -25,6 +37,8 @@ class Regex
     }
 
     /**
+     * Get regex as plain string
+     *
      * @return string
      */
     public function __tostring()

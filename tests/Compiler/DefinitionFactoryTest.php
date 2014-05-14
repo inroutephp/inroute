@@ -12,7 +12,7 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $plugin = \Mockery::mock('inroute\PluginInterface');
+        $plugin = \Mockery::mock('inroute\Plugin\PluginInterface');
         $plugin->shouldReceive('processDefinition')->zeroOrMoreTimes();
 
         $logger = \Mockery::mock('Psr\Log\LoggerInterface');
@@ -34,8 +34,8 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $plugin = \Mockery::mock('inroute\PluginInterface');
-        $plugin->shouldReceive('processDefinition')->zeroOrMoreTimes()->andThrow(new \inroute\Exception\CompilerSkipRouteException);
+        $plugin = \Mockery::mock('inroute\Plugin\PluginInterface');
+        $plugin->shouldReceive('processDefinition')->andThrow(new \inroute\Exception\CompilerSkipRouteException);
 
         $logger = \Mockery::mock('Psr\Log\LoggerInterface');
         $logger->shouldReceive('info')->zeroOrMoreTimes();

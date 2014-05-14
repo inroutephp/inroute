@@ -19,9 +19,19 @@ use hanneskod\classtools\Minimizer\ClassMinimizer;
  */
 class CodeGenerator
 {
-    private $factory, $classIterator;
+    /**
+     * @var RouteFactory Routes in project
+     */
+    private $factory;
 
     /**
+     * @var FilterableClassIterator Class definitions to include in generated code
+     */
+    private $classIterator;
+
+    /**
+     * Constructor
+     *
      * @param RouteFactory            $factory
      * @param FilterableClassIterator $classIterator
      */
@@ -32,6 +42,8 @@ class CodeGenerator
     }
 
     /**
+     * Generate code
+     *
      * @return string
      */
     public function __tostring()
@@ -41,6 +53,8 @@ class CodeGenerator
     }
 
     /**
+     * Get serialized router code
+     *
      * @return string
      */
     private function generateRouterCode()
@@ -51,6 +65,8 @@ class CodeGenerator
     }
 
     /**
+     * Get class definitions
+     *
      * @return string
      */
     private function generateStaticCode()

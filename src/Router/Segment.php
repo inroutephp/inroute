@@ -16,9 +16,19 @@ namespace inroute\Router;
  */
 class Segment
 {
-    private $name, $regex;
+    /**
+     * @var string Name of segment
+     */
+    private $name;
 
     /**
+     * @var Regex Regular expression path subpart
+     */
+    private $regex;
+
+    /**
+     * Constructor
+     *
      * @param string $name
      * @param Regex  $regex
      */
@@ -29,6 +39,8 @@ class Segment
     }
 
     /**
+     * Get segment name
+     *
      * @return string
      */
     public function getName()

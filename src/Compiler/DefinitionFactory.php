@@ -12,7 +12,7 @@ namespace inroute\Compiler;
 use IteratorAggregate;
 use hanneskod\classtools\FilterableClassIterator;
 use Psr\Log\LoggerInterface;
-use inroute\PluginInterface;
+use inroute\Plugin\PluginInterface;
 use inroute\Exception\CompilerSkipRouteException;
 
 /**
@@ -22,21 +22,32 @@ use inroute\Exception\CompilerSkipRouteException;
  */
 class DefinitionFactory implements IteratorAggregate
 {
-    private $classIterator, $plugin, $logger;
+    private $classIterator;
+    private $plugin;
+    private $logger;
 
     /**
+     * Constructor
+     *
      * @param FilterableClassIterator $classIterator
      * @param PluginInterface         $plugin
      * @param LoggerInterface         $logger
      */
-    public function __construct(FilterableClassIterator $classIterator, PluginInterface $plugin, LoggerInterface $logger)
-    {
-        $this->classIterator = $classIterator->filterType('inroute\ControllerInterface')->where('isInstantiable');
+    public function __construct(
+        FilterableClassIterator $classIterator,
+        PluginInterface $plugin,
+        LoggerInterface $logger
+    ) {
+        $this->classIterator = $classIterator
+            ->filterType('inroute\Router\ControllerInterface')
+            ->where('isInstantiable');
         $this->plugin = $plugin;
         $this->logger = $logger;
     }
 
     /**
+     * Implementation of IteratorAggregate
+     *
      * @return \Iterator
      */
     public function getIterator()
@@ -47,7 +58,10 @@ class DefinitionFactory implements IteratorAggregate
             foreach (new DefinitionIterator($reflectedClass) as $definition) {
                 try {
                     $this->plugin->processDefinition($definition);
-                    $this->logger->info("Found route <{$definition->read('controllerMethod')}>.", $definition->toArray());
+                    $this->logger->info(
+                        "Found route <{$definition->read('controllerMethod')}>.",
+                        $definition->toArray()
+                    );
                     yield $definition;
                 } catch (CompilerSkipRouteException $e) {
                     $this->logger->debug("Skipped route <{$definition->read('controllerMethod')}>.");

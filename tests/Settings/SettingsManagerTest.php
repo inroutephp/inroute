@@ -8,11 +8,11 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $logger = \Mockery::mock('Psr\Log\LoggerInterface');
         $logger->shouldReceive('info')->zeroOrMoreTimes();
 
-        $settingsA = $mock = \Mockery::mock('inroute\CompileSettingsInterface');
+        $settingsA = $mock = \Mockery::mock('inroute\Settings\CompileSettingsInterface');
         $settingsA->shouldReceive('getRootPath')->once()->andReturn('foopath');
         $settingsA->shouldReceive('getPlugins')->once()->andReturn(['fooplugin']);
 
-        $settingsB = $mock = \Mockery::mock('inroute\CompileSettingsInterface');
+        $settingsB = $mock = \Mockery::mock('inroute\Settings\CompileSettingsInterface');
         $settingsB->shouldReceive('getRootPath')->once()->andReturn('barpath');
         $settingsB->shouldReceive('getPlugins')->once()->andReturn(['barplugin']);
 

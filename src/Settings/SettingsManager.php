@@ -9,7 +9,6 @@
 
 namespace inroute\Settings;
 
-use inroute\CompileSettingsInterface;
 use hanneskod\classtools\FilterableClassIterator;
 use Psr\Log\LoggerInterface;
 
@@ -26,7 +25,7 @@ class SettingsManager implements CompileSettingsInterface
     private $root = '';
 
     /**
-     * @var \inroute\PluginInterface[] Array of loaded plugins
+     * @var \inroute\Plugin\PluginInterface[] Array of loaded plugins
      */
     private $plugins = array();
 
@@ -38,10 +37,12 @@ class SettingsManager implements CompileSettingsInterface
      */
     public function __construct(FilterableClassIterator $classIterator, LoggerInterface $logger)
     {
-        $iterator = $classIterator->filterType('inroute\CompileSettingsInterface')->where('isInstantiable');
+        $iterator = $classIterator->filterType('inroute\Settings\CompileSettingsInterface')->where('isInstantiable');
         foreach ($iterator as $reflectedClass) {
             if ($reflectedClass->getConstructor()->getNumberOfParameters() > 0) {
-                $logger->warning("Unable to instantiate <{$reflectedClass->getName()}>, constructor should not take parameters.");
+                $logger->warning(
+                    "Unable to instantiate <{$reflectedClass->getName()}>, constructor should not take parameters."
+                );
                 continue;
             }
 
@@ -70,7 +71,7 @@ class SettingsManager implements CompileSettingsInterface
     /**
      * Get plugins to load
      *
-     * @return \inroute\PluginInterface[]
+     * @return \inroute\Plugin\PluginInterface[]
      */
     public function getPlugins()
     {

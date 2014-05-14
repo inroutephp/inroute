@@ -7,7 +7,7 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute;
+namespace inroute\Plugin;
 
 use Psr\Log\LoggerAwareInterface;
 use inroute\Compiler\Definition;

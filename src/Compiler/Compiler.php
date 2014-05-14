@@ -22,14 +22,33 @@ use inroute\Settings\SettingsManager;
  */
 class Compiler
 {
-    private $classIterator, $logger;
+    /**
+     * @var FilterableClassIterator Project iterator
+     */
+    private $classIterator;
 
+    /**
+     * @var LoggerInterface Compile event logger
+     */
+    private $logger;
+
+    /**
+     * Constructor
+     *
+     * @param FilterableClassIterator $classIterator
+     * @param LoggerInterface         $logger
+     */
     public function __construct(FilterableClassIterator $classIterator, LoggerInterface $logger)
     {
         $this->classIterator = $classIterator;
         $this->logger = $logger;
     }
 
+    /**
+     * Generate php code from project
+     *
+     * @return string
+     */
     public function compile()
     {
         return (string) new CodeGenerator(
@@ -47,12 +66,7 @@ class Compiler
                 )
             ),
             new FilterableClassIterator(
-                new ClassIterator(
-                    array(
-                        __DIR__.'/../Router',
-                        __DIR__.'/../ControllerInterface.php'
-                    )
-                )
+                new ClassIterator([__DIR__.'/../Router'])
             )
         );
     }

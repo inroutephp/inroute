@@ -3,6 +3,7 @@ namespace inroute\Console;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class BuildCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,6 +21,9 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
                 '--output' => $targetFileName,
                 '--no-composer',
                 '--path' => __DIR__ . '/../../example'
+            ],
+            [
+                'verbosity' => OutputInterface::VERBOSITY_VERBOSE
             ]
         );
 

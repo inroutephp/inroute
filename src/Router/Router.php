@@ -10,13 +10,20 @@
 namespace inroute\Router;
 
 /**
+ * The inroute router
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class Router
 {
+    /**
+     * @var Route[] Loaded routes
+     */
     private $routes;
 
     /**
+     * Constructor
+     *
      * @param Route[] $routes
      */
     public function __construct(array $routes)

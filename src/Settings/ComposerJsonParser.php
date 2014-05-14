@@ -46,7 +46,7 @@ class ComposerJsonParser
     public function __construct(array $composerData, $basePath)
     {
         foreach (['autoload', 'autoload-dev'] as $sectionName) {
-            if (isset($composerData[$sectionName])) { 
+            if (isset($composerData[$sectionName])) {
                 foreach ($composerData[$sectionName] as $section) {
                     foreach ($section as $paths) {
                         foreach ((array)$paths as $path) {

@@ -20,9 +20,14 @@ use zpt\anno\Annotations;
  */
 class DefinitionIterator implements IteratorAggregate
 {
+    /**
+     * @var ReflectionClass Controller class
+     */
     private $class;
 
     /**
+     * Constructor
+     *
      * @param ReflectionClass $class Reflected controller class
      */
     public function __construct(ReflectionClass $class)
@@ -31,6 +36,8 @@ class DefinitionIterator implements IteratorAggregate
     }
 
     /**
+     * Implementation of IteratorAggregate
+     *
      * @return \Iterator
      */
     public function getIterator()

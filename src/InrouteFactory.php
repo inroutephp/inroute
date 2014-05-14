@@ -18,17 +18,38 @@ use hanneskod\classtools\ClassIterator;
 use hanneskod\classtools\FilterableClassIterator;
 
 /**
+ * Facade to the compiler package
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class InrouteFactory implements LoggerAwareInterface
 {
-    private $classIterator, $logger;
+    /**
+     * @var ClassIterator Project class iterator
+     */
+    private $classIterator;
 
+    /**
+     * @var LoggerInterface Compilation event logger
+     */
+    private $logger;
+
+    /**
+     * Optionally inject class iterator
+     *
+     * @param ClassIterator $classIterator
+     */
     public function __construct(ClassIterator $classIterator = null)
     {
         $this->classIterator = $classIterator ?: new ClassIterator;
     }
 
+    /**
+     * Add paths read from composer.json
+     *
+     * @param  string $pathToComposerJson
+     * @return void
+     */
     public function parseComposerJson($pathToComposerJson)
     {
         if (!is_readable($pathToComposerJson)) {
@@ -37,11 +58,18 @@ class InrouteFactory implements LoggerAwareInterface
         }
 
         $this->getLogger()->info("Reading paths from <$pathToComposerJson>.");
+
         foreach (ComposerJsonParser::createFromFile($pathToComposerJson)->getPaths() as $path) {
             $this->addPath($path);
         }
     }
 
+    /**
+     * Add path to class iterator
+     *
+     * @param  string $path
+     * @return void
+     */
     public function addPath($path)
     {
         try {
@@ -52,6 +80,11 @@ class InrouteFactory implements LoggerAwareInterface
         }
     }
 
+    /**
+     * Create compiler for this build
+     *
+     * @return Compiler
+     */
     public function createCompiler()
     {
         return new Compiler(
@@ -60,34 +93,42 @@ class InrouteFactory implements LoggerAwareInterface
         );
     }
 
+    /**
+     * Compile project
+     *
+     * @return string
+     */
     public function generate()
     {
         return $this->createCompiler()->compile();
     }
 
+    /**
+     * Set compile event logger
+     *
+     * @param  LoggerInterface $logger [description]
+     * @return void
+     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
+    /**
+     * Get compile event logger
+     *
+     * @return LoggerInterface
+     */
     public function getLogger()
     {
         if (!isset($this->logger)) {
-            $this->logger = new NullLogger;
+            $this->setLogger(new NullLogger);
         }
         return $this->logger;
     }
 }
 
     /*
-        Skriv test här för InrouteFactory
-            och dokumentation
-
-        pskeleton:
-            kan jag forcera reload i iframe??
-                det blir ofta problem när jag rättat till fel..
-            varför kan inte sniffer report parsas nu...
-
         Liskov Substitution Principle
             Jag måste styra upp det här att filter i classtools förväntas ärva
             FilterableIterator... Det krävs ett interface för att jag ska kunna skriva så...
@@ -115,6 +156,7 @@ class InrouteFactory implements LoggerAwareInterface
                 }
             });
             Kolla i Route och RouteTest hur jag har skrivit
+            ## När detta är klart kan jag stänga issue om plugin system, #29 ##
 
         Skriv Router
             (tänk efter vilka funktioner som jag tycker borde finnas)
@@ -131,13 +173,13 @@ class InrouteFactory implements LoggerAwareInterface
             ->dispatch($path, $httpMethod, $caller)
                 kör hela baletten
             -> ... fler??
+            ## När detta är klart kan jag stänga issue om router package, #28 ##
 
         Anpassa exempel mm till den nya annotations-syntaxen
             * https://github.com/pgraham/php-annotations
             * Core måste läsa rätt från annotation, skriv klart Core samtidigt...
             * Example ska göra allt kul som inroute kan...
                 (Och presentera det med trevlig html...)
-
         ExampleIntegrationTest
             Bygger på /example och kontrollerar att allt routas som det ska
             Använda så mycket som möjligt av genererad router.php, för code-coverage
@@ -152,6 +194,7 @@ class InrouteFactory implements LoggerAwareInterface
             setup(){$this->router = eval(Compiler::compile('inroute example app'))}
                 //ska göras en gång när testet startas
                 //sen ska denna router användas på alla tänkbara sätt
+            ## När detta är klart jag kan stänga issue #30 om DI samt #18 om require-dev ##
 
         // Kolla hur loggandet fungerar när jag skriver Example...
             vilken composer.json den läser (DONE InrouteFactory)

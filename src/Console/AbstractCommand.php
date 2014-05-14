@@ -36,31 +36,31 @@ abstract class AbstractCommand extends Command
     protected function configure()
     {
         $this->addOption(
-                'composer-path',
-                'c',
-                InputOption::VALUE_REQUIRED,
-                'Path to composer.json',
-                'composer.json'
-            )
-            ->addOption(
-                'no-composer',
-                null,
-                InputOption::VALUE_NONE,
-                'Skip parsing composer.json'
-            )
-            ->addOption(
-                'output',
-                'o',
-                InputOption::VALUE_REQUIRED,
-                'Save generated output to file',
-                'router.php'
-            )
-            ->addOption(
-                'path',
-                'p',
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Path(s) to scan for inroute classes'
-            );
+            'composer-path',
+            'c',
+            InputOption::VALUE_REQUIRED,
+            'Path to composer.json',
+            'composer.json'
+        )
+        ->addOption(
+            'no-composer',
+            null,
+            InputOption::VALUE_NONE,
+            'Skip parsing composer.json'
+        )
+        ->addOption(
+            'output',
+            'o',
+            InputOption::VALUE_REQUIRED,
+            'Save generated output to file',
+            'router.php'
+        )
+        ->addOption(
+            'path',
+            'p',
+            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+            'Path(s) to scan for inroute classes'
+        );
     }
 
     /**
@@ -98,7 +98,7 @@ abstract class AbstractCommand extends Command
         if (!isset($this->logger)) {
             $loglevel = Logger::INFO;
 
-            if ($output->isVerbose()) {
+            if (OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity()) {
                 $loglevel = Logger::DEBUG;
             }
 

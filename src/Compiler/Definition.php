@@ -20,9 +20,15 @@ use inroute\Exception\LogicException;
  */
 class Definition
 {
-    private $classAnnotations, $methodAnnotations, $data = array(), $preFilters = array(), $postFilters = array();
+    private $classAnnotations;
+    private $methodAnnotations;
+    private $data = array();
+    private $preFilters = array();
+    private $postFilters = array();
 
     /**
+     * Constructor
+     *
      * @param Annotations $classAnnotations  Controller class annotations
      * @param Annotations $methodAnnotations Controller method annotations
      */

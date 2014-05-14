@@ -39,7 +39,7 @@ class DocumentCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $options = $this->getOptions($input, $output);
+        $this->getOptions($input, $output);
         throw new \Exception("Not implemented..");
     }
 }

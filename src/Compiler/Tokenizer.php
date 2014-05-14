@@ -19,9 +19,19 @@ use inroute\Router\Segment;
  */
 class Tokenizer
 {
-    private $segmentRegex, $tokens = array();
+    /**
+     * @var Regex Regular expression to match a segment
+     */
+    private $segmentRegex;
 
     /**
+     * @var array Tokens found when tokenizing path
+     */
+    private $tokens = [];
+
+    /**
+     * Constructor
+     *
      * @param Regex $segmentRegex Regular expression for identifying a segment
      */
     public function __construct(Regex $segmentRegex = null)
@@ -37,7 +47,7 @@ class Tokenizer
      */
     public function tokenize($path)
     {
-        $this->tokens = array();
+        $this->tokens = [];
 
         foreach (explode('/', $path) as $token) {
             if ($this->segmentRegex->match($token)) {

@@ -19,9 +19,19 @@ use inroute\Router\Route;
  */
 class RouteFactory implements IteratorAggregate
 {
-    private $definitions, $tokenizer;
+    /**
+     * @var DefinitionFactory Route definitions iterator
+     */
+    private $definitions;
 
     /**
+     * @var Tokenizer Path tokenizer
+     */
+    private $tokenizer;
+
+    /**
+     * Constructor
+     *
      * @param DefinitionFactory $definitions Route definition source
      * @param Tokenizer         $tokenizer   Tokenizer used when parsing paths
      */
@@ -32,6 +42,8 @@ class RouteFactory implements IteratorAggregate
     }
 
     /**
+     * Implementation of IteratorAggregate
+     *
      * @return \Iterator
      */
     public function getIterator()

@@ -30,7 +30,8 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
             \Mockery::mock('zpt\anno\Annotations')
         );
 
-        $filter = function () {};
+        $filter = function () {
+        };
 
         $this->assertEmpty($def->getPreFilters());
         $def->addPreFilter($filter);

@@ -9,12 +9,12 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $plugin = $this->getMock('inroute\PluginInterface');
+        $plugin = $this->getMock('inroute\Plugin\PluginInterface');
         $plugin->expects($this->exactly(2))
             ->method('processDefinition')
             ->with($definition);
 
-        $settings = $this->getMock('inroute\CompileSettingsInterface');
+        $settings = $this->getMock('inroute\Settings\CompileSettingsInterface');
         $settings->expects($this->once())->method('getRootPath');
         $settings->expects($this->once())
             ->method('getPlugins')

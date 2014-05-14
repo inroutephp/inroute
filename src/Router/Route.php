@@ -10,13 +10,25 @@
 namespace inroute\Router;
 
 /**
+ * Base route
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class Route
 {
-    private $tokens, $regex, $httpMethods, $controller, $controllerMethod, $preFilters, $postFilters, $methodMatch = '', $pathMatch = '';
+    private $tokens;
+    private $regex;
+    private $httpMethods;
+    private $controller;
+    private $controllerMethod;
+    private $preFilters;
+    private $postFilters;
+    private $methodMatch = '';
+    private $pathMatch = '';
 
     /**
+     * Construct
+     *
      * @param array      $tokens           Path tokens used when generating paths
      * @param Regex      $regex            Regular expression used when matching a path
      * @param array      $httpMethods      Array of routable http methods
@@ -25,8 +37,15 @@ class Route
      * @param \Closure[] $preFilters       Filters executed pre route
      * @param \Closure[] $postFilters      Filters executed post route
      */
-    public function __construct(array $tokens, Regex $regex, array $httpMethods, $controller, $controllerMethod, array $preFilters, array $postFilters)
-    {
+    public function __construct(
+        array $tokens,
+        Regex $regex,
+        array $httpMethods,
+        $controller,
+        $controllerMethod,
+        array $preFilters,
+        array $postFilters
+    ) {
         $this->tokens = $tokens;
         $this->regex = $regex;
         $this->httpMethods = $httpMethods;
