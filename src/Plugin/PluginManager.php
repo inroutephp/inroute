@@ -44,7 +44,7 @@ class PluginManager implements PluginInterface
      */
     public function registerPlugin(PluginInterface $plugin)
     {
-        $this->logger->info("Plugin ".get_class($plugin)." registered");
+        $this->logger->info("Plugin <".get_class($plugin)."> registered");
         $plugin->setLogger($this->logger);
         $this->plugins[] = $plugin;
     }

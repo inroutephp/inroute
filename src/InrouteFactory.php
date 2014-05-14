@@ -24,44 +24,45 @@ class InrouteFactory implements LoggerAwareInterface
 {
     private $classIterator, $logger;
 
-    public function parseComposerJson($pathToComposerJson)
+    public function __construct(ClassIterator $classIterator = null)
     {
-        $this->getLogger()->info("Reading paths from $pathToComposerJson");
-
-        $parser = new ComposerJsonParser(
-            json_decode(
-                file_get_contents($pathToComposerJson)
-            )
-        );
-
-        $this->classIterator = new ClassIterator($parser->getPaths());
+        $this->classIterator = $classIterator ?: new ClassIterator;
     }
 
-    public function getClassIterator()
+    public function parseComposerJson($pathToComposerJson)
     {
-        if (!isset($this->classIterator)) {
-            $this->classIterator = new ClassIterator;
+        if (!is_readable($pathToComposerJson)) {
+            $this->getLogger()->warning("Unable to parse composer settings from <$pathToComposerJson>.");
+            return;
         }
-        return $this->classIterator;
+
+        $this->getLogger()->info("Reading paths from <$pathToComposerJson>.");
+        foreach (ComposerJsonParser::createFromFile($pathToComposerJson)->getPaths() as $path) {
+            $this->addPath($path);
+        }
     }
 
     public function addPath($path)
     {
-        $this->getLogger()->info("Using path $path");
-        $this->getClassIterator()->addPath($path);
+        try {
+            $this->classIterator->addPath($path);
+            $this->getLogger()->info("Using path <$path>.");
+        } catch (\hanneskod\classtools\Exception\RuntimeException $e) {
+            $this->getLogger()->error($e->getMessage());
+        }
     }
 
-    public function getCompiler()
+    public function createCompiler()
     {
         return new Compiler(
-            new FilterableClassIterator($this->getClassIterator()),
+            new FilterableClassIterator($this->classIterator),
             $this->getLogger()
         );
     }
 
     public function generate()
     {
-        return $this->getCompiler()->compile();
+        return $this->createCompiler()->compile();
     }
 
     public function setLogger(LoggerInterface $logger)
@@ -79,14 +80,18 @@ class InrouteFactory implements LoggerAwareInterface
 }
 
     /*
-        Scrutinizers version av php-analyzer klarar inte av yield
-            är det någonting som jag kan göra någonting åt
-            eller måste jag bara vänta på att scrutinizer uppdaterar sin kod??
+        Skriv test här för InrouteFactory
+            och dokumentation
 
-        Skriv ComposerJsonWrapper
-            läs paths från autoload
-            behöver antagligen ta path istället för array
-            skriv det testbart...
+        pskeleton:
+            kan jag forcera reload i iframe??
+                det blir ofta problem när jag rättat till fel..
+            varför kan inte sniffer report parsas nu...
+
+        Liskov Substitution Principle
+            Jag måste styra upp det här att filter i classtools förväntas ärva
+            FilterableIterator... Det krävs ett interface för att jag ska kunna skriva så...
+            faktiskt viktigt!!
 
         //  ** Accept plugin skulle skriva något sånt här **
             // #### FEL FEL FEL jag kan aldrig!! referera till Definition i plugin!!  ####

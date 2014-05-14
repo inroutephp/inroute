@@ -1,36 +1,30 @@
 #!/usr/bin/env php
 <?php
-namespace inroute;
+
+namespace inroute\Console;
 
 use Symfony\Component\Console\Application;
 
-$loaderPaths = array(
-    'autoload.php',
-    'vendor/autoload.php',
-    '../vendor/autoload.php',
-    '../../vendor/autoload.php',
-    '../../../vendor/autoload.php',
+$files = array(
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php'
 );
 
-foreach ($loaderPaths as $filename) {
-    if (file_exists($filename)) {
-        $loader = include $filename;
+$found = false;
+
+foreach ($files as $file) {
+    if (file_exists($file)) {
+        require $file;
+        $found = true;
+        break;
     }
 }
 
-if (!isset($loader)) {
-    foreach ($argv as $arg) {
-        if (preg_match('/--loader=([^\s]+)/', $arg, $match)) {
-            $loader = $match[1];
-        }
-    }
+if (!$found) {
+    die('Autoloader not found.');
 }
 
-if (!isset($loader)) {
-    echo "Unable to find composer autoloader, use --loader=path/to/autoload.php to specify\n";
-    die();
-}
-
-$app = new Application('inroute', 'dev');
-$app->add(new Console\BuildCommand($loader));
+$app = new Application('Inroute');
+$app->add(new BuildCommand());
+$app->add(new DocumentCommand());
 $app->run();

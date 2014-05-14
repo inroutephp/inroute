@@ -6,8 +6,8 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     public function testStoredValues()
     {
         $def = new Definition(
-            $this->getMock('zpt\anno\Annotations'),
-            $this->getMock('zpt\anno\Annotations')
+            \Mockery::mock('zpt\anno\Annotations'),
+            \Mockery::mock('zpt\anno\Annotations')
         );
 
         $def->write('foo', 'bar');
@@ -26,8 +26,8 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     public function testFilters()
     {
         $def = new Definition(
-            $this->getMock('zpt\anno\Annotations'),
-            $this->getMock('zpt\anno\Annotations')
+            \Mockery::mock('zpt\anno\Annotations'),
+            \Mockery::mock('zpt\anno\Annotations')
         );
 
         $filter = function () {};
@@ -43,39 +43,15 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
 
     public function testAnnotations()
     {
-        $classAnnotations = $this->getMock('zpt\anno\Annotations');
+        $classAnnotations = \Mockery::mock('zpt\anno\Annotations');
+        $classAnnotations->shouldReceive('hasAnnotation')->with('does-not-exist')->once()->andReturn(false);
+        $classAnnotations->shouldReceive('hasAnnotation')->with('exist')->once()->andReturn(true);
+        $classAnnotations->shouldReceive('offsetGet')->with('exist')->once()->andReturn('foobar');
 
-        $classAnnotations->expects($this->at(0))
-            ->method('hasAnnotation')
-            ->with('does-not-exist')
-            ->will($this->returnValue(false));
-
-        $classAnnotations->expects($this->at(1))
-            ->method('hasAnnotation')
-            ->with('exist')
-            ->will($this->returnValue(true));
-
-        $classAnnotations->expects($this->once())
-            ->method('offsetGet')
-            ->with('exist')
-            ->will($this->returnValue('foobar'));
-
-        $methodAnnotations = $this->getMock('zpt\anno\Annotations');
-
-        $methodAnnotations->expects($this->at(0))
-            ->method('hasAnnotation')
-            ->with('does-not-exist')
-            ->will($this->returnValue(false));
-
-        $methodAnnotations->expects($this->at(1))
-            ->method('hasAnnotation')
-            ->with('exist')
-            ->will($this->returnValue(true));
-
-        $methodAnnotations->expects($this->once())
-            ->method('offsetGet')
-            ->with('exist')
-            ->will($this->returnValue('foobar'));
+        $methodAnnotations = \Mockery::mock('zpt\anno\Annotations');
+        $methodAnnotations->shouldReceive('hasAnnotation')->with('does-not-exist')->once()->andReturn(false);
+        $methodAnnotations->shouldReceive('hasAnnotation')->with('exist')->once()->andReturn(true);
+        $methodAnnotations->shouldReceive('offsetGet')->with('exist')->once()->andReturn('foobar');
 
         $def = new Definition($classAnnotations, $methodAnnotations);
 

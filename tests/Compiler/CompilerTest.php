@@ -5,17 +5,11 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
 {
     public function testCompile()
     {
-        $classIterator = $this->getMockBuilder('hanneskod\classtools\FilterableClassIterator')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $classIterator->expects($this->any())
-            ->method('filterType')
-            ->will($this->returnValue($classIterator));
-        $classIterator->expects($this->any())
-            ->method('getIterator')
-            ->will($this->returnValue(new \ArrayIterator(array())));
+        $classIterator = \Mockery::mock('hanneskod\classtools\FilterableClassIterator');
+        $classIterator->shouldReceive('filterType->where')->andReturn(new \ArrayIterator(array()));
 
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = \Mockery::mock('Psr\Log\LoggerInterface');
+        $logger->shouldReceive('info')->zeroOrMoreTimes();
 
         $compiler = new Compiler($classIterator, $logger);
 

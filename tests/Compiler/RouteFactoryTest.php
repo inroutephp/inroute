@@ -5,40 +5,17 @@ class RouteFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetIterator()
     {
-        $definition = $this->getMockBuilder('inroute\Compiler\Definition')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $definition = \Mockery::mock('inroute\Compiler\Definition');
+        $definition->shouldReceive('read')->times(4)->andReturn('path', array(), 'cntrl', 'method');
+        $definition->shouldReceive('getPreFilters')->once()->andReturn([]);
+        $definition->shouldReceive('getPostFilters')->once()->andReturn([]);
 
-        $definition->expects($this->exactly(4))
-            ->method('read')
-            ->will($this->onConsecutiveCalls('path', array(), 'cntrl', 'method'));
+        $definitionFactory = \Mockery::mock('inroute\Compiler\DefinitionFactory');
+        $definitionFactory->shouldReceive('getIterator')->once()->andReturn(new \ArrayIterator([$definition]));
 
-        $definition->expects($this->once())
-            ->method('getPreFilters')
-            ->will($this->returnValue(array()));
-
-        $definition->expects($this->once())
-            ->method('getPostFilters')
-            ->will($this->returnValue(array()));
-
-        $definitionFactory = $this->getMockBuilder('inroute\Compiler\DefinitionFactory')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $definitionFactory->expects($this->once())
-            ->method('getIterator')
-            ->will($this->returnValue(new \ArrayIterator(array($definition))));
-
-        $tokenizer = $this->getMock('inroute\Compiler\Tokenizer');
-
-        $tokenizer->expects($this->once())
-            ->method('tokenize')
-            ->with('path')
-            ->will($this->returnValue(array()));
-
-        $tokenizer->expects($this->once())
-            ->method('getRegex')
-            ->will($this->returnValue(new \inroute\Router\Regex));
+        $tokenizer = \Mockery::mock('inroute\Compiler\Tokenizer');
+        $tokenizer->shouldReceive('tokenize')->with('path')->once()->andReturn([]);
+        $tokenizer->shouldReceive('getRegex')->once()->andReturn(new \inroute\Router\Regex);
 
         $routeFactory = new RouteFactory($definitionFactory, $tokenizer);
 

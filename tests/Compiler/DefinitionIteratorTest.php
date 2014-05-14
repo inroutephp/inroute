@@ -5,44 +5,27 @@ class DefinitionIteratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetIterator()
     {
-        $class = $this->getMockBuilder('ReflectionClass')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $constructor = \Mockery::mock('ReflectionMethod');
+        $constructor->shouldReceive('isConstructor')->once()->andReturn(true);
 
-        $class->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('ControllerClassName'));
+        $route = \Mockery::mock('ReflectionMethod');
+        $route->shouldReceive('isConstructor')->once()->andReturn(false);
+        $route->shouldReceive('getName')->once()->andReturn('routeName');
+        $route->shouldReceive('getDocComment')->once();
 
-        $constructor = $this->getMockBuilder('ReflectionMethod')
-            ->setMethods(array('isConstructor'))
-            ->disableOriginalConstructor()
-            ->getMock();
+        $class = \Mockery::mock('ReflectionClass');
+        $class->shouldReceive('getName')->once()->andReturn('ControllerClassName');
+        $class->shouldReceive('getDocComment')->once();
+        $class->shouldReceive('getMethods')->once()->andReturn(array($constructor, $route));
 
-        $constructor->expects($this->once())
-            ->method('isConstructor')
-            ->will($this->returnValue(true));
-
-        $route = $this->getMockBuilder('ReflectionMethod')
-            ->setMethods(array('isConstructor', 'getName', 'getDocComment'))
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $route->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('routeName'));
-
-        $class->expects($this->once())
-            ->method('getMethods')
-            ->will($this->returnValue(array($constructor, $route)));
-
-        $return = iterator_to_array(new DefinitionIterator($class));
+        $result = iterator_to_array(new DefinitionIterator($class));
 
         $this->assertEquals(
-            array(
+            [
                 'controller' => 'ControllerClassName',
                 'controllerMethod' => 'routeName'
-            ),
-            $return[0]->toArray()
+            ],
+            $result[0]->toArray()
         );
     }
 }

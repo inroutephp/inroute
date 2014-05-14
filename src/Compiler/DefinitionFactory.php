@@ -31,7 +31,7 @@ class DefinitionFactory implements IteratorAggregate
      */
     public function __construct(FilterableClassIterator $classIterator, PluginInterface $plugin, LoggerInterface $logger)
     {
-        $this->classIterator = $classIterator->filterType('inroute\ControllerInterface');
+        $this->classIterator = $classIterator->filterType('inroute\ControllerInterface')->where('isInstantiable');
         $this->plugin = $plugin;
         $this->logger = $logger;
     }
@@ -42,15 +42,15 @@ class DefinitionFactory implements IteratorAggregate
     public function getIterator()
     {
         foreach ($this->classIterator as $classname => $reflectedClass) {
-            $this->logger->info("Reading routes from $classname");
+            $this->logger->info("Reading routes from <$classname>");
             /** @var Definition $definition */
             foreach (new DefinitionIterator($reflectedClass) as $definition) {
                 try {
                     $this->plugin->processDefinition($definition);
-                    $this->logger->info("Found route {$definition->read('controllerMethod')}", $definition->toArray());
+                    $this->logger->info("Found route <{$definition->read('controllerMethod')}>.", $definition->toArray());
                     yield $definition;
                 } catch (CompilerSkipRouteException $e) {
-                    $this->logger->debug("Skipped route {$definition->read('controllerMethod')}");
+                    $this->logger->debug("Skipped route <{$definition->read('controllerMethod')}>.");
                 }
             }
         }

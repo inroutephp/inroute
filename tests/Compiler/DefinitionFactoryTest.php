@@ -5,28 +5,18 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetIterator()
     {
-        $classIterator = $this->getMockBuilder('hanneskod\classtools\FilterableClassIterator')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $classIterator->expects($this->once())
-            ->method('filterType')
-            ->with('inroute\ControllerInterface')
-            ->will($this->returnValue($classIterator));
-        $classIterator->expects($this->once())
-            ->method('getIterator')
-            ->will(
-                $this->returnValue(
-                    new \ArrayIterator(
-                        array('Exception' => new \ReflectionClass('Exception'))
-                    )
-                )
-            );
+        $classIterator = \Mockery::mock('hanneskod\classtools\FilterableClassIterator');
+        $classIterator->shouldReceive('filterType->where')->once()->andReturn(
+            new \ArrayIterator(
+                array('Exception' => new \ReflectionClass('Exception'))
+            )
+        );
 
-        $plugin = $this->getMock('inroute\PluginInterface');
-        $plugin->expects($this->atLeastOnce())
-            ->method('processDefinition');
+        $plugin = \Mockery::mock('inroute\PluginInterface');
+        $plugin->shouldReceive('processDefinition')->zeroOrMoreTimes();
 
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = \Mockery::mock('Psr\Log\LoggerInterface');
+        $logger->shouldReceive('info')->zeroOrMoreTimes();
 
         $result = iterator_to_array(
             new DefinitionFactory($classIterator, $plugin, $logger)
@@ -37,29 +27,19 @@ class DefinitionFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCompilerSkipRouteException()
     {
-        $classIterator = $this->getMockBuilder('hanneskod\classtools\FilterableClassIterator')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $classIterator->expects($this->once())
-            ->method('filterType')
-            ->with('inroute\ControllerInterface')
-            ->will($this->returnValue($classIterator));
-        $classIterator->expects($this->once())
-            ->method('getIterator')
-            ->will(
-                $this->returnValue(
-                    new \ArrayIterator(
-                        array('Exception' => new \ReflectionClass('Exception'))
-                    )
-                )
-            );
+        $classIterator = \Mockery::mock('hanneskod\classtools\FilterableClassIterator');
+        $classIterator->shouldReceive('filterType->where')->once()->andReturn(
+            new \ArrayIterator(
+                array('Exception' => new \ReflectionClass('Exception'))
+            )
+        );
 
-        $plugin = $this->getMock('inroute\PluginInterface');
-        $plugin->expects($this->atLeastOnce())
-            ->method('processDefinition')
-            ->will($this->throwException(new \inroute\Exception\CompilerSkipRouteException));
+        $plugin = \Mockery::mock('inroute\PluginInterface');
+        $plugin->shouldReceive('processDefinition')->zeroOrMoreTimes()->andThrow(new \inroute\Exception\CompilerSkipRouteException);
 
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = \Mockery::mock('Psr\Log\LoggerInterface');
+        $logger->shouldReceive('info')->zeroOrMoreTimes();
+        $logger->shouldReceive('debug')->zeroOrMoreTimes();
 
         $this->assertEmpty(
             iterator_to_array(

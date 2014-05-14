@@ -20,16 +20,35 @@ use Psr\Log\LoggerInterface;
  */
 class SettingsManager implements CompileSettingsInterface
 {
-    private $root = '', $plugins = array();
+    /**
+     * @var string Project root path, value from last parsed settings interface is used
+     */
+    private $root = '';
 
+    /**
+     * @var \inroute\PluginInterface[] Array of loaded plugins
+     */
+    private $plugins = array();
+
+    /**
+     * Merge settings from class iterator
+     *
+     * @param FilterableClassIterator $classIterator
+     * @param LoggerInterface         $logger
+     */
     public function __construct(FilterableClassIterator $classIterator, LoggerInterface $logger)
     {
-        foreach ($classIterator->filterType('inroute\CompileSettingsInterface') as $reflectedClass) {
-            $logger->info("Reading build settings from {$reflectedClass->getName()}");
+        $iterator = $classIterator->filterType('inroute\CompileSettingsInterface')->where('isInstantiable');
+        foreach ($iterator as $reflectedClass) {
+            if ($reflectedClass->getConstructor()->getNumberOfParameters() > 0) {
+                $logger->warning("Unable to instantiate <{$reflectedClass->getName()}>, constructor should not take parameters.");
+                continue;
+            }
 
+            $logger->info("Reading build settings from <{$reflectedClass->getName()}>.");
             $settings = $reflectedClass->newInstance(0);
-
             $this->root = $settings->getRootPath();
+            $logger->info("Using project root path <{$this->root}>.");
 
             $this->plugins = array_merge(
                 $this->plugins,
@@ -38,11 +57,21 @@ class SettingsManager implements CompileSettingsInterface
         }
     }
 
+    /**
+     * Get project root path
+     *
+     * @return string
+     */
     public function getRootPath()
     {
         return $this->root;
     }
 
+    /**
+     * Get plugins to load
+     *
+     * @return \inroute\PluginInterface[]
+     */
     public function getPlugins()
     {
         return $this->plugins;

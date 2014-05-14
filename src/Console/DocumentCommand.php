@@ -11,14 +11,13 @@ namespace inroute\Console;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use inroute\InrouteFactory;
 
 /**
- * Build inroute project
+ * Generate swagger documentation for inroute project
  * 
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class BuildCommand extends AbstractCommand
+class DocumentCommand extends AbstractCommand
 {
     /**
      * Configure this command. Called by console Application.
@@ -27,7 +26,7 @@ class BuildCommand extends AbstractCommand
      */
     protected function configure()
     {
-        $this->setName('build')->setDescription('Build inroute project');
+        $this->setName('document')->setDescription('Generate swagger documentation');
         parent::configure();
     }
 
@@ -40,17 +39,7 @@ class BuildCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $factory = new InrouteFactory();
-        $factory->setLogger($this->getLogger($output));
-
         $options = $this->getOptions($input, $output);
-
-        foreach ($options['paths'] as $path) {
-            $factory->addPath($path);
-        }
-
-        $factory->parseComposerJson($options['composer']);
-
-        file_put_contents($options['output'], '<?php ' . $factory->generate());
+        throw new \Exception("Not implemented..");
     }
 }

@@ -10,22 +10,59 @@
 namespace inroute\Settings;
 
 /**
+ * Read pahts from autoload sections of a composer.json file
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class ComposerJsonParser
 {
+    /**
+     * @var string[] Array of paths
+     */
     private $paths = array();
 
-    public function __construct(array $composerData)
+    /**
+     * Create instance for composer.json file
+     *
+     * @param  string $pathToComposerJson
+     * @return ComposerJsonParser
+     */
+    public static function createFromFile($pathToComposerJson)
     {
-        foreach ($composerData['autoload'] as $section) {
-            foreach ($section as $path) {
-                // TODO absolute path needed!!!!!
-                $this->paths[] = $path;
+        return new ComposerJsonParser(
+            (array) json_decode(
+                file_get_contents($pathToComposerJson)
+            ),
+            dirname($pathToComposerJson)
+        );
+    }
+
+    /**
+     * Parse paths from composer data
+     *
+     * @param array  $composerData
+     * @param string $basePath
+     */
+    public function __construct(array $composerData, $basePath)
+    {
+        foreach (['autoload', 'autoload-dev'] as $sectionName) {
+            if (isset($composerData[$sectionName])) { 
+                foreach ($composerData[$sectionName] as $section) {
+                    foreach ($section as $paths) {
+                        foreach ((array)$paths as $path) {
+                            $this->paths[$path] = $basePath . DIRECTORY_SEPARATOR. $path;
+                        }
+                    }
+                }
             }
         }
     }
 
+    /**
+     * Get parsed paths
+     *
+     * @return string[]
+     */
     public function getPaths()
     {
         return $this->paths;

@@ -13,7 +13,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "inroute\\": "src/",
+            "inroute\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "inroute\\example\\": "example/"
         }
     },
@@ -22,10 +26,12 @@
         "hanneskod/classtools": "dev-master@dev",
         "zeptech/annotations": "1.1.*",
         "psr/log": "1.*",
-        "symfony/console": "2.*"
+        "symfony/console": "~2.4",
+        "monolog/monolog": "1.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "*",
+        "mockery/mockery": "*"
     },
     "bin": [
         "bin/inroute"
