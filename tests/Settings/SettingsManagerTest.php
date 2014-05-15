@@ -5,47 +5,49 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testMergingMultipleSettings()
     {
-        $logger = \Mockery::mock('Psr\Log\LoggerInterface');
-        $logger->shouldReceive('info')->zeroOrMoreTimes();
-
-        $settingsA = $mock = \Mockery::mock('inroute\Settings\CompileSettingsInterface');
-        $settingsA->shouldReceive('getRootPath')->once()->andReturn('foopath');
-        $settingsA->shouldReceive('getPlugins')->once()->andReturn(['fooplugin']);
-
-        $settingsB = $mock = \Mockery::mock('inroute\Settings\CompileSettingsInterface');
-        $settingsB->shouldReceive('getRootPath')->once()->andReturn('barpath');
-        $settingsB->shouldReceive('getPlugins')->once()->andReturn(['barplugin']);
-
         $reflectionClass = \Mockery::mock('ReflectionClass');
-        $reflectionClass->shouldReceive('getConstructor->getNumberOfParameters')->twice()->andReturn(0);
-        $reflectionClass->shouldReceive('newInstance')->twice()->andReturn($settingsA, $settingsB);
-        $reflectionClass->shouldReceive('getName')->andReturn('MockedFreflectionClass');
+        $reflectionClass->shouldReceive('getName');
 
         $classIterator = \Mockery::mock('hanneskod\classtools\FilterableClassIterator');
-        $classIterator->shouldReceive('filterType->where')->once()->andReturn(
+        $classIterator->shouldReceive('filterType')->once()->andReturn(
             new \ArrayIterator([$reflectionClass, $reflectionClass])
         );
 
-        $manager = new SettingsManager($classIterator, $logger);
+        $logger = \Mockery::mock('Psr\Log\LoggerInterface');
+        $logger->shouldReceive('info')->atLeast()->times(2);
+
+        $settings = $mock = \Mockery::mock('inroute\Settings\CompileSettingsInterface');
+        $settings->shouldReceive('getRootPath')->twice()->andReturn('barpath');
+        $settings->shouldReceive('getPlugins')->twice()->andReturn(['barplugin']);
+
+        $instantiator = \Mockery::mock('inroute\Settings\Instantiator');
+        $instantiator->shouldReceive('setReflectionClass')->twice()->with($reflectionClass);
+        $instantiator->shouldReceive('isInstantiableWithoutArgs')->twice()->andReturn(true);
+        $instantiator->shouldReceive('instantiate')->twice()->andReturn($settings);
+
+        $manager = new SettingsManager($classIterator, $logger, $instantiator);
 
         $this->assertEquals('barpath', $manager->getRootPath());
-        $this->assertEquals(['fooplugin', 'barplugin'], $manager->getPlugins());
+        $this->assertEquals(['barplugin', 'barplugin'], $manager->getPlugins());
     }
 
     public function testSkipNonInstantiableClass()
     {
-        $logger = \Mockery::mock('Psr\Log\LoggerInterface');
-        $logger->shouldReceive('warning')->once();
-
         $reflectionClass = \Mockery::mock('ReflectionClass');
-        $reflectionClass->shouldReceive('getConstructor->getNumberOfParameters')->once()->andReturn(1);
-        $reflectionClass->shouldReceive('getName')->andReturn('MockedFreflectionClass');
+        $reflectionClass->shouldReceive('getName')->once();
 
         $classIterator = \Mockery::mock('hanneskod\classtools\FilterableClassIterator');
-        $classIterator->shouldReceive('filterType->where')->once()->andReturn(
+        $classIterator->shouldReceive('filterType')->once()->andReturn(
             new \ArrayIterator([$reflectionClass])
         );
 
-        $manager = new SettingsManager($classIterator, $logger);
+        $logger = \Mockery::mock('Psr\Log\LoggerInterface');
+        $logger->shouldReceive('warning')->once();
+
+        $instantiator = \Mockery::mock('inroute\Settings\Instantiator');
+        $instantiator->shouldReceive('setReflectionClass')->once()->with($reflectionClass);
+        $instantiator->shouldReceive('isInstantiableWithoutArgs')->once()->andReturn(false);
+
+        $manager = new SettingsManager($classIterator, $logger, $instantiator);
     }
 }

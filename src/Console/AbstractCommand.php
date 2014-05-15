@@ -73,10 +73,11 @@ abstract class AbstractCommand extends Command
     protected function getOptions(InputInterface $input, OutputInterface $output)
     {
         $outFname = $input->getOption('output');
-        $this->getLogger($output)->info("Using outfile <$outFname>.");
+        $this->getLogger($output)->info("Using outfile <$outFname>");
 
         $composer = $input->getOption('composer-path');
-        if ($input->hasOption('no-composer')) {
+        if ($input->getOption('no-composer')) {
+            $this->getLogger($output)->info("Ignoring composer.json");
             $composer = '';
         }
 

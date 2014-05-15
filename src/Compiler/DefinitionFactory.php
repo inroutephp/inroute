@@ -59,12 +59,12 @@ class DefinitionFactory implements IteratorAggregate
                 try {
                     $this->plugin->processDefinition($definition);
                     $this->logger->info(
-                        "Found route <{$definition->read('controllerMethod')}>.",
+                        "Found route <{$definition->read('controllerMethod')}>",
                         $definition->toArray()
                     );
                     yield $definition;
                 } catch (CompilerSkipRouteException $e) {
-                    $this->logger->debug("Skipped route <{$definition->read('controllerMethod')}>.");
+                    $this->logger->debug("Skipped route <{$definition->read('controllerMethod')}>");
                 }
             }
         }

@@ -53,11 +53,11 @@ class InrouteFactory implements LoggerAwareInterface
     public function parseComposerJson($pathToComposerJson)
     {
         if (!is_readable($pathToComposerJson)) {
-            $this->getLogger()->warning("Unable to parse composer settings from <$pathToComposerJson>.");
+            $this->getLogger()->warning("Unable to parse composer settings from <$pathToComposerJson>");
             return;
         }
 
-        $this->getLogger()->info("Reading paths from <$pathToComposerJson>.");
+        $this->getLogger()->info("Reading paths from <$pathToComposerJson>");
 
         foreach (ComposerJsonParser::createFromFile($pathToComposerJson)->getPaths() as $path) {
             $this->addPath($path);
@@ -74,7 +74,7 @@ class InrouteFactory implements LoggerAwareInterface
     {
         try {
             $this->classIterator->addPath($path);
-            $this->getLogger()->info("Using path <$path>.");
+            $this->getLogger()->info("Using path <$path>");
         } catch (\hanneskod\classtools\Exception\RuntimeException $e) {
             $this->getLogger()->error($e->getMessage());
         }
@@ -122,7 +122,7 @@ class InrouteFactory implements LoggerAwareInterface
     public function getLogger()
     {
         if (!isset($this->logger)) {
-            $this->setLogger(new NullLogger);
+            $this->logger = new NullLogger;
         }
         return $this->logger;
     }
@@ -133,6 +133,7 @@ class InrouteFactory implements LoggerAwareInterface
             Jag måste styra upp det här att filter i classtools förväntas ärva
             FilterableIterator... Det krävs ett interface för att jag ska kunna skriva så...
             faktiskt viktigt!!
+        Flytta över Instantiator till classtools...
 
         //  ** Accept plugin skulle skriva något sånt här **
             // #### FEL FEL FEL jag kan aldrig!! referera till Definition i plugin!!  ####
@@ -180,6 +181,7 @@ class InrouteFactory implements LoggerAwareInterface
             * Core måste läsa rätt från annotation, skriv klart Core samtidigt...
             * Example ska göra allt kul som inroute kan...
                 (Och presentera det med trevlig html...)
+            * Kom ihåg att även uppdatera README.md
         ExampleIntegrationTest
             Bygger på /example och kontrollerar att allt routas som det ska
             Använda så mycket som möjligt av genererad router.php, för code-coverage
@@ -195,14 +197,4 @@ class InrouteFactory implements LoggerAwareInterface
                 //ska göras en gång när testet startas
                 //sen ska denna router användas på alla tänkbara sätt
             ## När detta är klart jag kan stänga issue #30 om DI samt #18 om require-dev ##
-
-        // Kolla hur loggandet fungerar när jag skriver Example...
-            vilken composer.json den läser (DONE InrouteFactory)
-            vilken fil den skriver till (DONE Comment in Command)
-            vilka controllers den hittar (DONE DefinitionFactory)
-            vilka settings den hittar (DONE SettingsManager)
-            vilka plugins den använder (DONE PluginManager)
-            När vi sedan använder en konkret logger (i command eller development) så
-                kan vi välja verbosity level när vi configurerar logger (info eller debug har jag nu..)
-                kan vi välja att ex skicka det loggade till chrome...
      */

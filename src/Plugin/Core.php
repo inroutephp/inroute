@@ -47,8 +47,8 @@ class Core implements PluginInterface
         $definition->write(
             'path',
             $this->rootPath
-            . $definition->getClassAnnotation('controller')
-            . $definition->getMethodAnnotation('route')
+            //. $definition->getClassAnnotation('controller')
+            //. $definition->getMethodAnnotation('route')
         );
 
         $definition->write('httpmethods', array());

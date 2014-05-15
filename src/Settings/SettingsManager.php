@@ -11,6 +11,7 @@ namespace inroute\Settings;
 
 use hanneskod\classtools\FilterableClassIterator;
 use Psr\Log\LoggerInterface;
+use ReflectionClass;
 
 /**
  * Merge settings from multiple CompileSettingsInterface objects
@@ -32,24 +33,24 @@ class SettingsManager implements CompileSettingsInterface
     /**
      * Merge settings from class iterator
      *
-     * @param FilterableClassIterator $classIterator
+     * @param FilterableClassIterator $iterator
      * @param LoggerInterface         $logger
+     * @param Instantiator            $instantiator
      */
-    public function __construct(FilterableClassIterator $classIterator, LoggerInterface $logger)
+    public function __construct(FilterableClassIterator $iterator, LoggerInterface $logger, Instantiator $instantiator)
     {
-        $iterator = $classIterator->filterType('inroute\Settings\CompileSettingsInterface')->where('isInstantiable');
-        foreach ($iterator as $reflectedClass) {
-            if ($reflectedClass->getConstructor()->getNumberOfParameters() > 0) {
-                $logger->warning(
-                    "Unable to instantiate <{$reflectedClass->getName()}>, constructor should not take parameters."
-                );
+        foreach ($iterator->filterType('inroute\Settings\CompileSettingsInterface') as $reflectedClass) {
+            $instantiator->setReflectionClass($reflectedClass);
+
+            if (!$instantiator->isInstantiableWithoutArgs()) {
+                $logger->warning("Unable to instantiate <{$reflectedClass->getName()}>");
                 continue;
             }
 
-            $logger->info("Reading build settings from <{$reflectedClass->getName()}>.");
-            $settings = $reflectedClass->newInstance(0);
+            $logger->info("Reading build settings from <{$reflectedClass->getName()}>");
+            $settings = $instantiator->instantiate();
+
             $this->root = $settings->getRootPath();
-            $logger->info("Using project root path <{$this->root}>.");
 
             $this->plugins = array_merge(
                 $this->plugins,

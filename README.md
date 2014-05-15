@@ -1,4 +1,4 @@
-# inroute [![Build Status](https://travis-ci.org/hanneskod/inroute.svg?branch=master)](https://travis-ci.org/hanneskod/inroute) [![Code Coverage](https://scrutinizer-ci.com/g/hanneskod/inroute/badges/coverage.png?s=236858bb9fdc57144bc0012e11ea0256925e18a6)](https://scrutinizer-ci.com/g/hanneskod/inroute/) [![Dependency Status](https://gemnasium.com/hanneskod/inroute.svg)](https://gemnasium.com/hanneskod/inroute)
+# inroute [![Build Status](https://travis-ci.org/hanneskod/inroute.svg?branch=master)](https://travis-ci.org/hanneskod/inroute) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hanneskod/inroute/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/hanneskod/inroute/?branch=master) [![Dependency Status](https://gemnasium.com/hanneskod/inroute.svg)](https://gemnasium.com/hanneskod/inroute)
 
 
 Generate web router and dispatcher from docblock annotations

@@ -40,7 +40,10 @@ class PluginManager implements PluginInterface
     {
         $this->setLogger($logger);
 
-        $this->registerPlugin(new Core($settings->getRootPath()));
+        $path = $settings->getRootPath();
+        $logger->info("Using project root path <{$path}>");
+
+        $this->registerPlugin(new Core($path));
 
         foreach ($settings->getPlugins() as $plugin) {
             $this->registerPlugin($plugin);

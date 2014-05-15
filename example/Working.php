@@ -1,6 +1,7 @@
 <?php
 namespace inroute\example;
 
+use inroute\Router\ControllerInterface;
 use inroute\Router\Route;
 
 /**
@@ -8,7 +9,7 @@ use inroute\Router\Route;
  * 
  * @controller </root>
  */
-class Working
+class Working implements ControllerInterface
 {
     /**
      * The route annotation tells inroute when to route requests to this method

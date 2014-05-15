@@ -49,7 +49,9 @@ class BuildCommand extends AbstractCommand
             $factory->addPath($path);
         }
 
-        $factory->parseComposerJson($options['composer']);
+        if ($options['composer']) {
+            $factory->parseComposerJson($options['composer']);
+        }
 
         file_put_contents($options['output'], '<?php ' . $factory->generate());
     }

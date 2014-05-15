@@ -14,6 +14,7 @@ use hanneskod\classtools\ClassIterator;
 use Psr\Log\LoggerInterface;
 use inroute\Plugin\PluginManager;
 use inroute\Settings\SettingsManager;
+use inroute\Settings\Instantiator;
 
 /**
  * Compile inroute project
@@ -58,7 +59,8 @@ class Compiler
                     new PluginManager(
                         new SettingsManager(
                             $this->classIterator,
-                            $this->logger
+                            $this->logger,
+                            new Instantiator
                         ),
                         $this->logger
                     ),

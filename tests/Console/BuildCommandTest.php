@@ -19,7 +19,7 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
         $commandTester->execute(
             [
                 '--output' => $targetFileName,
-                '--no-composer',
+                '--no-composer' => true,
                 '--path' => __DIR__ . '/../../example'
             ],
             [
