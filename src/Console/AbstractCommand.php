@@ -13,8 +13,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Monolog\Logger;
-use Monolog\Formatter\LineFormatter;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  * Inroute base command
@@ -24,7 +24,7 @@ use Monolog\Formatter\LineFormatter;
 abstract class AbstractCommand extends Command
 {
     /**
-     * @var Logger Monolog logger
+     * @var LoggerInterface Console logger
      */
     private $logger;
 
@@ -92,21 +92,18 @@ abstract class AbstractCommand extends Command
      * Get system logger
      *
      * @param  OutputInterface $output
-     * @return Logger
+     * @return LoggerInterface
      */
     protected function getLogger(OutputInterface $output)
     {
         if (!isset($this->logger)) {
-            $loglevel = Logger::INFO;
+            $level = LogLevel::INFO;
 
             if (OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity()) {
-                $loglevel = Logger::DEBUG;
+                $level = LogLevel::DEBUG;
             }
 
-            $this->logger = new Logger('console');
-            $handler = new SymfonyConsoleHandler($output, $loglevel);
-            $handler->setFormatter(new LineFormatter("%message%\n"));
-            $this->logger->pushHandler($handler);
+            $this->logger = new Logger($level, $output);
         }
 
         return $this->logger;

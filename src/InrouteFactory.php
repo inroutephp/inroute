@@ -129,6 +129,11 @@ class InrouteFactory implements LoggerAwareInterface
 }
 
     /*
+        Om NextRouteException ska kunna fungera som jag har tänkt så måste det
+            inkluderas i router.php
+            Stoppa flytta det i så fall till Router package
+            vilket också betyder att det bara får ärva det vanliga exception!!
+
         //  ** Accept plugin skulle skriva något sånt här **
             // #### FEL FEL FEL jag kan aldrig!! referera till Definition i plugin!!  ####
                 Definition finns ej tillgängligt när router.php körs.
