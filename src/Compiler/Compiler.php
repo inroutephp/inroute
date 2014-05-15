@@ -11,10 +11,10 @@ namespace inroute\Compiler;
 
 use hanneskod\classtools\FilterableClassIterator;
 use hanneskod\classtools\ClassIterator;
+use hanneskod\classtools\Instantiator;
 use Psr\Log\LoggerInterface;
 use inroute\Plugin\PluginManager;
 use inroute\Settings\SettingsManager;
-use inroute\Settings\Instantiator;
 
 /**
  * Compile inroute project

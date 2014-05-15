@@ -10,8 +10,8 @@
 namespace inroute\Settings;
 
 use hanneskod\classtools\FilterableClassIterator;
+use hanneskod\classtools\Instantiator;
 use Psr\Log\LoggerInterface;
-use ReflectionClass;
 
 /**
  * Merge settings from multiple CompileSettingsInterface objects

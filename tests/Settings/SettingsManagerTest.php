@@ -20,7 +20,7 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $settings->shouldReceive('getRootPath')->twice()->andReturn('barpath');
         $settings->shouldReceive('getPlugins')->twice()->andReturn(['barplugin']);
 
-        $instantiator = \Mockery::mock('inroute\Settings\Instantiator');
+        $instantiator = \Mockery::mock('hanneskod\classtools\Instantiator');
         $instantiator->shouldReceive('setReflectionClass')->twice()->with($reflectionClass);
         $instantiator->shouldReceive('isInstantiableWithoutArgs')->twice()->andReturn(true);
         $instantiator->shouldReceive('instantiate')->twice()->andReturn($settings);
@@ -44,7 +44,7 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $logger = \Mockery::mock('Psr\Log\LoggerInterface');
         $logger->shouldReceive('warning')->once();
 
-        $instantiator = \Mockery::mock('inroute\Settings\Instantiator');
+        $instantiator = \Mockery::mock('hanneskod\classtools\Instantiator');
         $instantiator->shouldReceive('setReflectionClass')->once()->with($reflectionClass);
         $instantiator->shouldReceive('isInstantiableWithoutArgs')->once()->andReturn(false);
 

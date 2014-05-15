@@ -129,12 +129,6 @@ class InrouteFactory implements LoggerAwareInterface
 }
 
     /*
-        Liskov Substitution Principle
-            Jag måste styra upp det här att filter i classtools förväntas ärva
-            FilterableIterator... Det krävs ett interface för att jag ska kunna skriva så...
-            faktiskt viktigt!!
-        Flytta över Instantiator till classtools...
-
         //  ** Accept plugin skulle skriva något sånt här **
             // #### FEL FEL FEL jag kan aldrig!! referera till Definition i plugin!!  ####
                 Definition finns ej tillgängligt när router.php körs.

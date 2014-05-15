@@ -27,9 +27,34 @@ class BuildCommandTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $this->assertTrue(!!file_get_contents($targetFileName));
-        unlink($targetFileName);
+        $this->assertRegExp('/return new Router\(unserialize\(/', file_get_contents($targetFileName));
+        $this->assertRegExp('/Ignoring composer.json/', $commandTester->getDisplay());
 
-        $this->assertTrue(!!$commandTester->getDisplay());
+        unlink($targetFileName);
+    }
+
+    public function testExecuteWithComposer()
+    {
+        $application = new Application();
+        $application->add(new BuildCommand());
+
+        $targetFileName = tempnam(sys_get_temp_dir(), 'inroute');
+
+        $command = $application->find('build');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(
+            [
+                '--output' => $targetFileName,
+                '--composer-path' => __DIR__ . '/../../composer.json'
+            ],
+            [
+                'verbosity' => OutputInterface::VERBOSITY_VERBOSE
+            ]
+        );
+
+        $this->assertRegExp('/return new Router\(unserialize\(/', file_get_contents($targetFileName));
+        $this->assertRegExp('/Reading paths from/', $commandTester->getDisplay());
+
+        unlink($targetFileName);
     }
 }
