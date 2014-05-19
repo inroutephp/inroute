@@ -74,7 +74,8 @@ class CodeGenerator
         $code = "namespace inroute\Router;\n";
 
         foreach ($this->classIterator as $className => $reflectedClass) {
-            $code .= "if (!class_exists('$className')) {\n"
+            $func = $reflectedClass->isInterface() ? 'interface_exists' : 'class_exists';
+            $code .= "if (!$func('$className')) {\n"
                 . new ClassMinimizer($reflectedClass)
                 . "\n}\n";
         }
