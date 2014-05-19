@@ -18,7 +18,7 @@ class RouteFactoryTest extends \PHPUnit_Framework_TestCase
         $definitionFactory = \Mockery::mock('inroute\Compiler\DefinitionFactory');
         $definitionFactory->shouldReceive('getIterator')->once()->andReturn(new \ArrayIterator([$definition]));
 
-        $tokenizer = \Mockery::mock('inroute\Compiler\Tokenizer');
+        $tokenizer = \Mockery::mock('inroute\Compiler\PathTokenizer');
         $tokenizer->shouldReceive('tokenize')->with('returned-path')->once()->andReturn([]);
         $tokenizer->shouldReceive('getRegex')->once()->andReturn(new \inroute\Router\Regex);
 

@@ -17,7 +17,7 @@ use inroute\Router\Segment;
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class Tokenizer
+class PathTokenizer
 {
     /**
      * @var Regex Regular expression to match a segment

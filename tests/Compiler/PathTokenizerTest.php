@@ -1,14 +1,14 @@
 <?php
 namespace inroute\Compiler;
 
-class TokenizerTest extends \PHPUnit_Framework_TestCase
+class PathTokenizerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider pathProvider
      */
     public function testMatchRegex($path, array $valids, array $unvalids)
     {
-        $tokenizer = new Tokenizer;
+        $tokenizer = new PathTokenizer;
         $tokenizer->tokenize($path);
         $regex = $tokenizer->getRegex();
 

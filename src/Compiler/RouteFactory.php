@@ -25,7 +25,7 @@ class RouteFactory implements IteratorAggregate
     private $definitions;
 
     /**
-     * @var Tokenizer Path tokenizer
+     * @var PathTokenizer Path tokenizer
      */
     private $tokenizer;
 
@@ -33,9 +33,9 @@ class RouteFactory implements IteratorAggregate
      * Constructor
      *
      * @param DefinitionFactory $definitions Route definition source
-     * @param Tokenizer         $tokenizer   Tokenizer used when parsing paths
+     * @param PathTokenizer     $tokenizer   Tokenizer used when parsing paths
      */
-    public function __construct(DefinitionFactory $definitions, Tokenizer $tokenizer)
+    public function __construct(DefinitionFactory $definitions, PathTokenizer $tokenizer)
     {
         $this->definitions = $definitions;
         $this->tokenizer = $tokenizer;

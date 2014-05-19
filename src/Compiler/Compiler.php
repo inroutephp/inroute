@@ -66,7 +66,7 @@ class Compiler
                     ),
                     $this->logger
                 ),
-                new Tokenizer
+                new PathTokenizer
             ),
             new FilterableClassIterator(
                 new ClassIterator([__DIR__.'/../Router'])
