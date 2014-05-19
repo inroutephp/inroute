@@ -25,12 +25,12 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEmpty($def->getPreFilters());
-        $preFilter = 'inroute\Router\PreFilterInterface';
+        $preFilter = '\inroute\Router\PreFilterInterface';
         $def->addPreFilter($preFilter);
         $this->assertEquals([$preFilter], $def->getPreFilters());
 
         $this->assertEmpty($def->getPostFilters());
-        $postFilter = 'inroute\Router\PostFilterInterface';
+        $postFilter = '\inroute\Router\PostFilterInterface';
         $def->addPostFilter($postFilter);
         $this->assertEquals([$postFilter], $def->getPostFilters());
     }

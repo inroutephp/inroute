@@ -34,7 +34,7 @@ class Environment
     /**
      * Store data in environment
      *
-     * @param  mixed $key
+     * @param  string $key
      * @param  mixed $value
      * @return void
      */
@@ -46,7 +46,7 @@ class Environment
     /**
      * Read data from environment
      *
-     * @param  mixed $key
+     * @param  string $key
      * @return mixed
      */
     public function get($key)

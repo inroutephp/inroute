@@ -25,17 +25,17 @@ class Definition
     /**
      * @var Annotations Class annotations object
      */
-    private $classAnnotations;
+    private $classAnnot;
 
     /**
      * @var Annotations Method annotations object
      */
-    private $methodAnnotations;
+    private $methodAnnot;
 
     /**
      * @var Environment Route environment
      */
-    private $environment;
+    private $env;
 
     /**
      * @var string[] List of pre filter classnames
@@ -56,9 +56,9 @@ class Definition
      */
     public function __construct(Annotations $classAnnot, Annotations $methodAnnot, Environment $env)
     {
-        $this->classAnnotations = $classAnnot;
-        $this->methodAnnotations = $methodAnnot;
-        $this->environment = $env;
+        $this->classAnnot = $classAnnot;
+        $this->methodAnnot = $methodAnnot;
+        $this->env = $env;
     }
 
     /**
@@ -69,7 +69,7 @@ class Definition
      */
     public function hasClassAnnotation($annotation)
     {
-        return $this->classAnnotations->hasAnnotation($annotation);
+        return $this->classAnnot->hasAnnotation($annotation);
     }
 
     /**
@@ -83,7 +83,7 @@ class Definition
         if (!$this->hasClassAnnotation($annotation)) {
             return '';
         }
-        return $this->classAnnotations->offsetGet($annotation);
+        return $this->classAnnot->offsetGet($annotation);
     }
 
     /**
@@ -94,7 +94,7 @@ class Definition
      */
     public function hasMethodAnnotation($annotation)
     {
-        return $this->methodAnnotations->hasAnnotation($annotation);
+        return $this->methodAnnot->hasAnnotation($annotation);
     }
 
     /**
@@ -108,7 +108,7 @@ class Definition
         if (!$this->hasMethodAnnotation($annotation)) {
             return '';
         }
-        return $this->methodAnnotations->offsetGet($annotation);
+        return $this->methodAnnot->offsetGet($annotation);
     }
 
     /**
@@ -164,7 +164,7 @@ class Definition
      */
     public function getEnvironment()
     {
-        return $this->environment;
+        return $this->env;
     }
 
     /**
