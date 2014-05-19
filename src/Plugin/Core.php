@@ -37,21 +37,18 @@ class Core implements PluginInterface
         $this->rootPath = $rootPath;
     }
 
-    public function processDefinition(Definition $definition)
+    public function processDefinition(Definition $def)
     {
         // TODO validera http metod
         // TODO validera att path finns med...
         // TODO CompilerSkipRouteException
             // om method ej @route
 
-        $definition->write(
-            'path',
-            $this->rootPath
-            //. $definition->getClassAnnotation('controller')
-            //. $definition->getMethodAnnotation('route')
-        );
+        $def->getEnvironment()->set('path', $this->rootPath);
+            //. $def->getClassAnnotation('controller')
+            //. $def->getMethodAnnotation('route')
 
-        $definition->write('httpmethods', array());
+        $def->getEnvironment()->set('http_methods', []);
 
         /*
         // Från RouteTag

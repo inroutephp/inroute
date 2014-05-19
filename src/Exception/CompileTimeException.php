@@ -10,8 +10,10 @@
 namespace inroute\Exception;
 
 /**
+ * Exception thrown if a compilation error occurs
+ * 
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class CompileTimeException extends \Exception implements \inroute\Exception
+class CompileTimeException extends LogicException
 {
 }

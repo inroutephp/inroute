@@ -35,10 +35,10 @@ class RouteFactory implements IteratorAggregate
      * @param DefinitionFactory $definitions Route definition source
      * @param Tokenizer         $tokenizer   Tokenizer used when parsing paths
      */
-    public function __construct(DefinitionFactory $definitions, Tokenizer $tokenizer = null)
+    public function __construct(DefinitionFactory $definitions, Tokenizer $tokenizer)
     {
         $this->definitions = $definitions;
-        $this->tokenizer = $tokenizer ?: new Tokenizer;
+        $this->tokenizer = $tokenizer;
     }
 
     /**
@@ -48,15 +48,14 @@ class RouteFactory implements IteratorAggregate
      */
     public function getIterator()
     {
-        foreach ($this->definitions as $definition) {
+        /** @var Definition $def */
+        foreach ($this->definitions as $def) {
             yield new Route(
-                $this->tokenizer->tokenize($definition->read('path')),
+                $this->tokenizer->tokenize($def->getEnvironment()->get('path')),
                 $this->tokenizer->getRegex(),
-                $definition->read('httpmethods'),
-                $definition->read('controller'),
-                $definition->read('controllerMethod'),
-                $definition->getPreFilters(),
-                $definition->getPostFilters()
+                $def->getEnvironment(),
+                $def->getPreFilters(),
+                $def->getPostFilters()
             );
         }
     }

@@ -10,47 +10,66 @@
 namespace inroute\Router;
 
 /**
- * Base route
+ * The route class
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class Route
 {
+    /**
+     * @var array Path tokens
+     */
     private $tokens;
+
+    /**
+     * @var Regex Regular expression used when generating paths
+     */
     private $regex;
-    private $httpMethods;
-    private $controller;
-    private $controllerMethod;
+
+    /**
+     * @var Environment Route environment
+     */
+    private $env;
+
+    /**
+     * @var string[] List of pre filter classnames
+     */
     private $preFilters;
+
+    /**
+     * @var string[] List of post filter classnames
+     */
     private $postFilters;
+
+    /**
+     * @var string Mathed HTTP method
+     */
     private $methodMatch = '';
+
+    /**
+     * @var string Matched path
+     */
     private $pathMatch = '';
 
     /**
-     * Construct
+     * Constructor
      *
-     * @param array      $tokens           Path tokens used when generating paths
-     * @param Regex      $regex            Regular expression used when matching a path
-     * @param array      $httpMethods      Array of routable http methods
-     * @param string     $controller       Controller class name
-     * @param string     $controllerMethod Controller method name
-     * @param \Closure[] $preFilters       Filters executed pre route
-     * @param \Closure[] $postFilters      Filters executed post route
+     * @param array       $tokens      Path tokens used when generating paths
+     * @param Regex       $regex       Regular expression used when matching a path
+     * @param Environment $env         Route environment
+     * @param string[]    $preFilters  List of pre filter classnames
+     * @param string[]    $postFilters List of post filter classnames
      */
     public function __construct(
         array $tokens,
         Regex $regex,
-        array $httpMethods,
-        $controller,
-        $controllerMethod,
+        Environment $env,
         array $preFilters,
         array $postFilters
     ) {
         $this->tokens = $tokens;
         $this->regex = $regex;
-        $this->httpMethods = $httpMethods;
-        $this->controller = $controller;
-        $this->controllerMethod = $controllerMethod;
+        $this->env = $env;
         $this->preFilters = $preFilters;
         $this->postFilters = $postFilters;
     }
@@ -58,31 +77,49 @@ class Route
     /**
      * Execute route
      *
-     * @param  \Closure $caller
-     * @return mixed    Whatever the defined route returns
-     * @todo   Use Closure->bindTo() instead of sending $this in argument list
+     * @param  callable $instantiator
+     * @return mixed    Whatever the controller returns
      */
-    public function invoke(\Closure $caller)
+    public function execute(callable $instantiator)
     {
-        $args = array(
-            'controller' => $this->controller,
-            'method' => $this->controllerMethod,
-            'route' => $this
+        $this->env->set('route', $this);
+
+        foreach ($this->preFilters as $filtername) {
+            $this->instantiateAndExecute($filtername, 'filter', $this->env, $instantiator);
+        }
+
+        $returnValue = $this->instantiateAndExecute(
+            $this->env->get('controller_name'),
+            $this->env->get('controller_method'),
+            $this->env,
+            $instantiator
         );
 
-        /** @var \Closure $filter */
-        foreach ($this->preFilters as $filter) {
-            $filter($args);
+        foreach ($this->postFilters as $filtername) {
+            $returnValue = $this->instantiateAndExecute($filtername, 'filter', $returnValue, $instantiator);
         }
 
-        $return = $caller($args);
+        return $returnValue;
+    }
 
-        /** @var \Closure $filter */
-        foreach ($this->postFilters as $filter) {
-            $filter($return);
-        }
-
-        return $return;
+    /**
+     * Create instance of $classname and execute $methodname with $arg
+     *
+     * @param  string   $classname
+     * @param  string   $methodname
+     * @param  mixed    $arg
+     * @param  callable $instantiator
+     * @return mixed    Whatever method returns
+     */
+    private function instantiateAndExecute($classname, $methodname, $arg, callable $instantiator)
+    {
+        return call_user_func(
+            [
+                call_user_func($instantiator, $classname),
+                $methodname
+            ],
+            $arg
+        );
     }
 
     /**
@@ -93,7 +130,7 @@ class Route
      */
     public function isMethodMatch($method)
     {
-        if (in_array($method, $this->httpMethods)) {
+        if (in_array($method, (array)$this->env->get('http_methods'))) {
             $this->methodMatch = $method;
             return true;
         }
@@ -124,7 +161,11 @@ class Route
      */
     public function getName()
     {
-        return "{$this->controller}::{$this->controllerMethod}";
+        return sprintf(
+            '%s::%s',
+            $this->env->get('controller_name'),
+            $this->env->get('controller_method')
+        );
     }
 
     /**

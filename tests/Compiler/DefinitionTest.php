@@ -3,43 +3,60 @@ namespace inroute\Compiler;
 
 class DefinitionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testStoredValues()
+    public function testGetEnvironment()
     {
+        $env = \Mockery::mock('inroute\Router\Environment');
+
         $def = new Definition(
             \Mockery::mock('zpt\anno\Annotations'),
-            \Mockery::mock('zpt\anno\Annotations')
+            \Mockery::mock('zpt\anno\Annotations'),
+            $env
         );
 
-        $def->write('foo', 'bar');
-        $this->assertEquals('bar', $def->read('foo'));
-
-        $this->assertEquals(
-            array('foo'=>'bar'),
-            $def->toArray()
-        );
-
-        $this->setExpectedException('inroute\Exception\LogicException');
-        $this->assertFalse($def->exists('does-not-exist'));
-        $def->read('does-not-exist');
+        $this->assertSame($env, $def->getEnvironment());
     }
 
     public function testFilters()
     {
         $def = new Definition(
             \Mockery::mock('zpt\anno\Annotations'),
-            \Mockery::mock('zpt\anno\Annotations')
+            \Mockery::mock('zpt\anno\Annotations'),
+            \Mockery::mock('inroute\Router\Environment')
         );
 
-        $filter = function () {
-        };
-
         $this->assertEmpty($def->getPreFilters());
-        $def->addPreFilter($filter);
-        $this->assertEquals(array($filter), $def->getPreFilters());
+        $preFilter = 'inroute\Router\PreFilterInterface';
+        $def->addPreFilter($preFilter);
+        $this->assertEquals([$preFilter], $def->getPreFilters());
 
         $this->assertEmpty($def->getPostFilters());
-        $def->addPostFilter($filter);
-        $this->assertEquals(array($filter), $def->getPostFilters());
+        $postFilter = 'inroute\Router\PostFilterInterface';
+        $def->addPostFilter($postFilter);
+        $this->assertEquals([$postFilter], $def->getPostFilters());
+    }
+
+    public function testFilterUnvalidIfNotClass()
+    {
+        $def = new Definition(
+            \Mockery::mock('zpt\anno\Annotations'),
+            \Mockery::mock('zpt\anno\Annotations'),
+            \Mockery::mock('inroute\Router\Environment')
+        );
+
+        $this->setExpectedException('inroute\Exception\CompileTimeException');
+        $def->addPreFilter('not-a-valid-class');
+    }
+
+    public function testFilterUnvalidIfInterfaceNotImplemented()
+    {
+        $def = new Definition(
+            \Mockery::mock('zpt\anno\Annotations'),
+            \Mockery::mock('zpt\anno\Annotations'),
+            \Mockery::mock('inroute\Router\Environment')
+        );
+
+        $this->setExpectedException('inroute\Exception\CompileTimeException');
+        $def->addPostFilter('Exception');
     }
 
     public function testAnnotations()
@@ -54,7 +71,11 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         $methodAnnotations->shouldReceive('hasAnnotation')->with('exist')->once()->andReturn(true);
         $methodAnnotations->shouldReceive('offsetGet')->with('exist')->once()->andReturn('foobar');
 
-        $def = new Definition($classAnnotations, $methodAnnotations);
+        $def = new Definition(
+            $classAnnotations,
+            $methodAnnotations,
+            \Mockery::mock('inroute\Router\Environment')
+        );
 
         $this->assertEquals('', $def->getClassAnnotation('does-not-exist'));
         $this->assertEquals('foobar', $def->getClassAnnotation('exist'));

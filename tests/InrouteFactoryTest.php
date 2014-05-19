@@ -51,16 +51,4 @@ class InrouteFactoryTest extends \PHPUnit_Framework_TestCase
 
         $factory->addPath('does-not-exist');
     }
-
-    public function testCreateCompiler()
-    {
-        $factory = new InrouteFactory;
-        $this->assertInstanceOf('inroute\Compiler\Compiler', $factory->createCompiler());
-    }
-
-    public function testGenerateCode()
-    {
-        $factory = new InrouteFactory;
-        $this->assertTrue(!!$factory->generate());
-    }
 }

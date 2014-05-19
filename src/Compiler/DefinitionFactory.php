@@ -22,8 +22,19 @@ use inroute\Exception\CompilerSkipRouteException;
  */
 class DefinitionFactory implements IteratorAggregate
 {
+    /**
+     * @var FilterableClassIterator Classes to search for routes
+     */
     private $classIterator;
+
+    /**
+     * @var PluginInterface Plugin used to process found routes
+     */
     private $plugin;
+
+    /**
+     * @var LoggerInterface Event logger
+     */
     private $logger;
 
     /**
@@ -54,17 +65,14 @@ class DefinitionFactory implements IteratorAggregate
     {
         foreach ($this->classIterator as $classname => $reflectedClass) {
             $this->logger->info("Reading routes from <$classname>");
-            /** @var Definition $definition */
-            foreach (new DefinitionIterator($reflectedClass) as $definition) {
+            /** @var Definition $def */
+            foreach (new DefinitionIterator($reflectedClass) as $def) {
                 try {
-                    $this->plugin->processDefinition($definition);
-                    $this->logger->info(
-                        "Found route <{$definition->read('controllerMethod')}>",
-                        $definition->toArray()
-                    );
-                    yield $definition;
+                    $this->plugin->processDefinition($def);
+                    $this->logger->info("Found route <{$def->getEnvironment()->get('controller_method')}>");
+                    yield $def;
                 } catch (CompilerSkipRouteException $e) {
-                    $this->logger->debug("Skipped route <{$definition->read('controllerMethod')}>");
+                    $this->logger->debug("Skipped route <{$def->getEnvironment()->get('controller_method')}>");
                 }
             }
         }

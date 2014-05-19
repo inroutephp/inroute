@@ -7,13 +7,13 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute;
+namespace inroute\Router;
 
 /**
- * Inroute base exception interface
+ * Throw to transfer control to next executable route (actively skipping current route at runtime)
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-interface Exception
+class NextRouteException extends \Exception
 {
 }

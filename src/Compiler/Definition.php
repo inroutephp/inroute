@@ -10,8 +10,10 @@
 namespace inroute\Compiler;
 
 use zpt\anno\Annotations;
-use Closure;
-use inroute\Exception\LogicException;
+use inroute\Router\Environment;
+use inroute\Exception\CompileTimeException;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Describes an annotated controller method (a route)
@@ -20,22 +22,43 @@ use inroute\Exception\LogicException;
  */
 class Definition
 {
+    /**
+     * @var Annotations Class annotations object
+     */
     private $classAnnotations;
+
+    /**
+     * @var Annotations Method annotations object
+     */
     private $methodAnnotations;
-    private $data = array();
-    private $preFilters = array();
-    private $postFilters = array();
+
+    /**
+     * @var Environment Route environment
+     */
+    private $environment;
+
+    /**
+     * @var string[] List of pre filter classnames
+     */
+    private $preFilters = [];
+
+    /**
+     * @var string[] List of post filter classnames
+     */
+    private $postFilters = [];
 
     /**
      * Constructor
      *
-     * @param Annotations $classAnnotations  Controller class annotations
-     * @param Annotations $methodAnnotations Controller method annotations
+     * @param Annotations $classAnnot  Controller class annotations
+     * @param Annotations $methodAnnot Controller method annotations
+     * @param Environment $env         Route environment
      */
-    public function __construct(Annotations $classAnnotations, Annotations $methodAnnotations)
+    public function __construct(Annotations $classAnnot, Annotations $methodAnnot, Environment $env)
     {
-        $this->classAnnotations = $classAnnotations;
-        $this->methodAnnotations = $methodAnnotations;
+        $this->classAnnotations = $classAnnot;
+        $this->methodAnnotations = $methodAnnot;
+        $this->environment = $env;
     }
 
     /**
@@ -91,18 +114,20 @@ class Definition
     /**
      * Add a pre route filter
      *
-     * @param  Closure $filter
+     * @param  string $classname
      * @return void
+     * @throws CompileTimeException If $classname does not reprsent a valid filter
      */
-    public function addPreFilter(Closure $filter)
+    public function addPreFilter($classname)
     {
-        $this->preFilters[] = $filter;
+        $this->validateFilter($classname, 'inroute\Router\PreFilterInterface');
+        $this->preFilters[] = $classname;
     }
 
     /**
      * Get pre route filters
      *
-     * @return Closure[]
+     * @return string[]
      */
     public function getPreFilters()
     {
@@ -112,18 +137,20 @@ class Definition
     /**
      * Add a post route filter
      *
-     * @param  Closure $filter
+     * @param  string $classname
      * @return void
+     * @throws CompileTimeException If $classname does not reprsent a valid filter
      */
-    public function addPostFilter(Closure $filter)
+    public function addPostFilter($classname)
     {
-        $this->postFilters[] = $filter;
+        $this->validateFilter($classname, 'inroute\Router\PostFilterInterface');
+        $this->postFilters[] = $classname;
     }
 
     /**
      * Get post route filters
      *
-     * @return Closure[]
+     * @return string[]
      */
     public function getPostFilters()
     {
@@ -131,50 +158,32 @@ class Definition
     }
 
     /**
-     * Store definition data
+     * Get route environment
      *
-     * @param  string $key
-     * @param  mixed  $value
+     * @return Environment
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    /**
+     * Validate that $classname represents a valid $interfaceName filter
+     *
+     * @param  string $classname
+     * @param  string $interfaceName
      * @return void
+     * @throws CompileTimeException If $classname does not reprsent a valid filter
      */
-    public function write($key, $value)
+    private function validateFilter($classname, $interfaceName)
     {
-        $this->data[$key] = $value;
-    }
-
-    /**
-     * Check if value is stored
-     *
-     * @param  string $key
-     * @return bool
-     */
-    public function exists($key)
-    {
-        return isset($this->data[$key]);
-    }
-
-    /**
-     * Read definition data
-     *
-     * @param  string         $key
-     * @return mixed          Empty string id data is not set
-     * @throws LogicException If key is not definied
-     */
-    public function read($key)
-    {
-        if ($this->exists($key)) {
-            return $this->data[$key];
+        try {
+            $reflectedClass = new ReflectionClass($classname);
+            if (!$reflectedClass->implementsInterface($interfaceName)) {
+                throw new CompileTimeException("Filter <$classname> must implement <$interfaceName>");
+            }
+        } catch (ReflectionException  $e) {
+            throw new CompileTimeException($e->getMessage(), 0, $e);
         }
-        throw new LogicException("Trying to read undefinied value <$key> from route definition.");
-    }
-
-    /**
-     * Get stored definition data
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return $this->data;
     }
 }

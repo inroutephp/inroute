@@ -7,13 +7,20 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute;
+namespace inroute\Router;
 
 /**
- * Inroute base exception interface
+ * Defines a route post filter
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-interface Exception
+interface PostFilterInterface
 {
+    /**
+     * TODO Lång beskrivning av hur post filter kan fungera här..
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function filter($value);
 }

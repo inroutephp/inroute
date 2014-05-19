@@ -21,11 +21,8 @@ class DefinitionIteratorTest extends \PHPUnit_Framework_TestCase
         $result = iterator_to_array(new DefinitionIterator($class));
 
         $this->assertEquals(
-            [
-                'controller' => 'ControllerClassName',
-                'controllerMethod' => 'routeName'
-            ],
-            $result[0]->toArray()
+            'ControllerClassName',
+            $result[0]->getEnvironment()->get('controller_name')
         );
     }
 }

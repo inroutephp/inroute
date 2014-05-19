@@ -3,89 +3,52 @@ namespace inroute\Router;
 
 class RouteTest extends \PHPUnit_Framework_TestCase
 {
-    public function testInvoke()
+    public function testExecuteRoute()
     {
+        $env = \Mockery::mock('inroute\Router\Environment');
+        $env->shouldReceive('set')->once();
+        $env->shouldReceive('get')->once()->with('controller_name')->andReturn('ControllerClassName');
+        $env->shouldReceive('get')->once()->with('controller_method')->andReturn('cntrlMethod');
+
         $route = new Route(
-            array(),
-            new Regex,
-            array(),
-            'cntrlClass',
-            'cntrlMethod',
-            array(),
-            array()
+            [],
+            \Mockery::mock('inroute\Router\Regex'),
+            $env,
+            ['PreFilterClassName'],
+            ['PostFilterClassName']
         );
 
-        $that = $this;
-        $route->invoke(
-            function (array $args) use ($that) {
-                $that->assertEquals('cntrlClass', $args['controller']);
-                $that->assertEquals('cntrlMethod', $args['method']);
-                $that->assertEquals('cntrlClass::cntrlMethod', $args['route']->getName());
-            }
-        );
-    }
+        // $instance mocks both controller and filters
+        $instance = \Mockery::mock('stdClass');
+        // controller expectation
+        $instance->shouldReceive('cntrlMethod')->once()->with($env)->andReturn('controller-return');
+        // pre-filter expectation
+        $instance->shouldReceive('filter')->once()->with($env);
+        // post-filter expectation
+        $instance->shouldReceive('filter')->once()->with('controller-return')->andReturn('filter-return');
 
-    public function testPreFilters()
-    {
-        $that = $this;
-        $route = new Route(
-            array(),
-            new Regex,
-            array(),
-            'cntrlClass',
-            'cntrlMethod',
-            array(
-                function (array &$args) use ($that) {
-                    $that->assertFalse(isset($args['foo']));
-                    $args['foo'] = 'bar';
-                }
-            ),
-            array()
-        );
-        $route->invoke(
-            function (array $args) use ($that) {
-                $that->assertEquals('bar', $args['foo']);
-            }
-        );
-    }
+        $instantiator = \Mockery::mock('inroute\Router\Instantiator');
+        $instantiator->shouldReceive('__invoke')->with('ControllerClassName')->andReturn($instance);
+        $instantiator->shouldReceive('__invoke')->with('PreFilterClassName')->andReturn($instance);
+        $instantiator->shouldReceive('__invoke')->with('PostFilterClassName')->andReturn($instance);
 
-    public function testPostFilters()
-    {
-        $that = $this;
-        $route = new Route(
-            array(),
-            new Regex,
-            array(),
-            'cntrlClass',
-            'cntrlMethod',
-            array(),
-            array(
-                function (&$return) use ($that) {
-                    $that->assertEquals('returned-from-route', $return);
-                    $return .= '-altered-in-filter';
-                },
-                function ($return) use ($that) {
-                    $that->assertEquals('returned-from-route-altered-in-filter', $return);
-                }
-            )
-        );
-        $route->invoke(
-            function (array $args) {
-                return 'returned-from-route';
-            }
+        $this->assertEquals(
+            'filter-return',
+            $route->execute($instantiator)
         );
     }
 
     public function testIsMethodMatch()
     {
+        $env = \Mockery::mock('inroute\Router\Environment');
+        $env->shouldReceive('get')->twice()->with('http_methods')->andReturn(['GET']);
+
         $route = new Route(
-            array(),
-            new Regex,
-            array('GET'),
-            '',
-            '',
-            array(),
-            array()
+            [],
+            \Mockery::mock('inroute\Router\Regex'),
+            $env,
+            [],
+            []
         );
 
         $this->assertEquals('', $route->getMethod());
@@ -98,13 +61,11 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testIsPathMatch()
     {
         $route = new Route(
-            array(),
+            [],
             new Regex('/path/(?<id>\d+)'),
-            array(),
-            '',
-            '',
-            array(),
-            array()
+            \Mockery::mock('inroute\Router\Environment'),
+            [],
+            []
         );
 
         $this->assertEquals('', $route->getPath());
@@ -128,18 +89,33 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     new Regex('\d+')
                 )
             ),
-            new Regex,
-            array(),
-            '',
-            '',
-            array(),
-            array()
+            \Mockery::mock('inroute\Router\Regex'),
+            \Mockery::mock('inroute\Router\Environment'),
+            [],
+            []
         );
 
         $this->assertEquals('/path/123', $route->generate(array('id' => '123')));
 
         // Generate with param id missing
         $this->setExpectedException('RuntimeException');
-        $route->generate(array());
+        $route->generate([]);
+    }
+
+    public function testGetName()
+    {
+        $env = \Mockery::mock('inroute\Router\Environment');
+        $env->shouldReceive('get')->once()->with('controller_name')->andReturn('name');
+        $env->shouldReceive('get')->once()->with('controller_method')->andReturn('method');
+
+        $route = new Route(
+            [],
+            \Mockery::mock('inroute\Router\Regex'),
+            $env,
+            [],
+            []
+        );
+
+        $this->assertEquals('name::method', $route->getName());
     }
 }

@@ -5,25 +5,24 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testProcessDefinition()
     {
-        $definition = $this->getMockBuilder('inroute\Compiler\Definition')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $env = \Mockery::mock('inroute\Compiler\Environment');
+        $env->shouldReceive('set')->atLeast()->times(1);
 
-        $plugin = $this->getMock('inroute\Plugin\PluginInterface');
-        $plugin->expects($this->exactly(2))
-            ->method('processDefinition')
-            ->with($definition);
+        $def = \Mockery::mock('inroute\Compiler\Definition');
+        $def->shouldReceive('getEnvironment')->andReturn($env);
 
-        $settings = $this->getMock('inroute\Settings\CompileSettingsInterface');
-        $settings->expects($this->once())->method('getRootPath');
-        $settings->expects($this->once())
-            ->method('getPlugins')
-            ->will($this->returnValue(array($plugin, $plugin)));
+        $logger = \Mockery::mock('Psr\Log\LoggerInterface');
+        $logger->shouldReceive('info')->atLeast()->times(1);
 
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
-        $logger->expects($this->atLeastOnce())->method('info');
+        $plugin = \Mockery::mock('inroute\Plugin\PluginInterface');
+        $plugin->shouldReceive('processDefinition')->times(2)->with($def);
+        $plugin->shouldReceive('setLogger')->times(2)->with($logger);
+
+        $settings = \Mockery::mock('inroute\Settings\CompileSettingsInterface');
+        $settings->shouldReceive('getRootPath')->once();
+        $settings->shouldReceive('getPlugins')->once()->andReturn([$plugin, $plugin]);
 
         $manager = new PluginManager($settings, $logger);
-        $manager->processDefinition($definition);
+        $manager->processDefinition($def);
     }
 }

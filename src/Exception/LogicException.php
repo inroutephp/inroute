@@ -10,6 +10,8 @@
 namespace inroute\Exception;
 
 /**
+ * Represents an error in the program logic, should lead directly to a fix
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class LogicException extends \LogicException implements \inroute\Exception

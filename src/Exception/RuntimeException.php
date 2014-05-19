@@ -10,6 +10,8 @@
 namespace inroute\Exception;
 
 /**
+ * Exception thrown if an error which can only be found on runtime occurs
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class RuntimeException extends \RuntimeException implements \inroute\Exception

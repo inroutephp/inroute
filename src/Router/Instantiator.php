@@ -7,13 +7,23 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute;
+namespace inroute\Router;
 
 /**
- * Inroute base exception interface
+ * Default class instantiator
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-interface Exception
+class Instantiator
 {
+    /**
+     * Create instance of $classname
+     *
+     * @param  string $classname
+     * @return mixed  Created instance
+     */
+    public function __invoke($classname)
+    {
+        return new $classname;
+    }
 }

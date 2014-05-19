@@ -12,6 +12,7 @@ namespace inroute\Compiler;
 use IteratorAggregate;
 use ReflectionClass;
 use zpt\anno\Annotations;
+use inroute\Router\Environment;
 
 /**
  * Iterate over route descriptions found in one controller class
@@ -52,11 +53,14 @@ class DefinitionIterator implements IteratorAggregate
 
             $definition = new Definition(
                 $classAnnotations,
-                new Annotations($method)
+                new Annotations($method),
+                new Environment(
+                    [
+                        'controller_name' => $this->class->getName(),
+                        'controller_method' => $method->getName()
+                    ]
+                )
             );
-
-            $definition->write('controller', $this->class->getName());
-            $definition->write('controllerMethod', $method->getName());
 
             yield $definition;
         }
