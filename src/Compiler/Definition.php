@@ -120,7 +120,7 @@ class Definition
      */
     public function addPreFilter($classname)
     {
-        $this->validateFilter($classname, 'inroute\Router\PreFilterInterface');
+        $this->validateFilter($classname, '\inroute\Router\PreFilterInterface');
         $this->preFilters[] = $classname;
     }
 
@@ -143,7 +143,7 @@ class Definition
      */
     public function addPostFilter($classname)
     {
-        $this->validateFilter($classname, 'inroute\Router\PostFilterInterface');
+        $this->validateFilter($classname, '\inroute\Router\PostFilterInterface');
         $this->postFilters[] = $classname;
     }
 
