@@ -1,8 +1,8 @@
 <?php
 namespace inroute\example;
 
-use inroute\Router\ControllerInterface;
-use inroute\Router\Route;
+use inroute\Runtime\ControllerInterface;
+use inroute\Runtime\Route;
 
 /**
  * The @controller annotation tells inroute that this class should be scanned

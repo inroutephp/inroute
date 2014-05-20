@@ -10,11 +10,11 @@
 namespace inroute\Settings;
 
 /**
- * Read pahts from autoload sections of a composer.json file
+ * Wrapper around composer.json files
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class ComposerJsonParser
+class ComposerWrapper
 {
     /**
      * @var string[] Array of paths
@@ -25,11 +25,11 @@ class ComposerJsonParser
      * Create instance for composer.json file
      *
      * @param  string $pathToComposerJson
-     * @return ComposerJsonParser
+     * @return ComposerWrapper
      */
     public static function createFromFile($pathToComposerJson)
     {
-        return new ComposerJsonParser(
+        return new ComposerWrapper(
             (array) json_decode(
                 file_get_contents($pathToComposerJson)
             ),
@@ -38,7 +38,7 @@ class ComposerJsonParser
     }
 
     /**
-     * Parse paths from composer data
+     * Parse paths from autoload sections of composer data
      *
      * @param array  $composerData
      * @param string $basePath

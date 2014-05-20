@@ -7,14 +7,14 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Router;
+namespace inroute\Runtime;
 
 /**
  * A segment is a named regular expression subpart of a path
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class Segment
+class PathSegment
 {
     /**
      * @var string Name of segment

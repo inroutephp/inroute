@@ -7,32 +7,23 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Settings;
+namespace inroute\Runtime;
 
 /**
- * Default compile time settings
+ * Default class instantiator
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-trait DefaultCompileSettingsTrait
+class Instantiator
 {
     /**
-     * Get path to prepend to all routes
+     * Create instance of $classname
      *
-     * @return string
+     * @param  string $classname
+     * @return mixed  Created instance
      */
-    public function getRootPath()
+    public function __invoke($classname)
     {
-        return '';
-    }
-
-    /**
-     * Get array of plugin objects to load att compile time
-     *
-     * @return \inroute\Plugin\PluginInterface[]
-     */
-    public function getPlugins()
-    {
-        return [];
+        return new $classname;
     }
 }

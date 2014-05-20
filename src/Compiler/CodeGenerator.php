@@ -71,7 +71,7 @@ class CodeGenerator
      */
     private function generateStaticCode()
     {
-        $code = "namespace inroute\Router;\n";
+        $code = "namespace inroute\Runtime;\n";
 
         foreach ($this->classIterator as $className => $reflectedClass) {
             $func = $reflectedClass->isInterface() ? 'interface_exists' : 'class_exists';

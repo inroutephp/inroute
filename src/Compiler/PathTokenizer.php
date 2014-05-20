@@ -9,8 +9,8 @@
 
 namespace inroute\Compiler;
 
-use inroute\Router\Regex;
-use inroute\Router\Segment;
+use inroute\Runtime\Regex;
+use inroute\Runtime\PathSegment;
 
 /**
  * Split a path into tokens (segments and regular strings)
@@ -51,7 +51,7 @@ class PathTokenizer
 
         foreach (explode('/', $path) as $token) {
             if ($this->segmentRegex->match($token)) {
-                $this->tokens[] = new Segment(
+                $this->tokens[] = new PathSegment(
                     $this->segmentRegex->name,
                     new Regex($this->segmentRegex->regex)
                 );

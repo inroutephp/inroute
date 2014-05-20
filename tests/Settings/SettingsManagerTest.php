@@ -16,7 +16,7 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $logger = \Mockery::mock('Psr\Log\LoggerInterface');
         $logger->shouldReceive('info')->atLeast()->times(2);
 
-        $settings = $mock = \Mockery::mock('inroute\Settings\CompileSettingsInterface');
+        $settings = $mock = \Mockery::mock('inroute\Settings\SettingsInterface');
         $settings->shouldReceive('getRootPath')->twice()->andReturn('barpath');
         $settings->shouldReceive('getPlugins')->twice()->andReturn(['barplugin']);
 

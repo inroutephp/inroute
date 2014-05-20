@@ -27,5 +27,5 @@ interface PluginInterface extends LoggerAwareInterface
      * @return void
      * @throws CompilerSkipRouteException If definition should be ignored
      */
-    public function processDefinition(Definition $definition);
+    public function processRouteDefinition(Definition $definition);
 }

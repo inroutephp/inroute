@@ -37,7 +37,7 @@ class Core implements PluginInterface
         $this->rootPath = $rootPath;
     }
 
-    public function processDefinition(Definition $def)
+    public function processRouteDefinition(Definition $def)
     {
         // TODO validera http metod
         // TODO validera att path finns med...

@@ -50,7 +50,7 @@ class DefinitionFactory implements IteratorAggregate
         LoggerInterface $logger
     ) {
         $this->classIterator = $classIterator
-            ->filterType('inroute\Router\ControllerInterface')
+            ->filterType('\inroute\Runtime\ControllerInterface')
             ->where('isInstantiable');
         $this->plugin = $plugin;
         $this->logger = $logger;
@@ -68,7 +68,7 @@ class DefinitionFactory implements IteratorAggregate
             /** @var Definition $def */
             foreach (new DefinitionIterator($reflectedClass) as $def) {
                 try {
-                    $this->plugin->processDefinition($def);
+                    $this->plugin->processRouteDefinition($def);
                     $this->logger->info("Found route <{$def->getEnvironment()->get('controller_method')}>");
                     yield $def;
                 } catch (CompilerSkipRouteException $e) {

@@ -1,7 +1,7 @@
 <?php
 namespace inroute\example;
 
-use inroute\Router\PostFilterInterface;
+use inroute\Runtime\PostFilterInterface;
 
 class HtmlFilter implements PostFilterInterface
 {

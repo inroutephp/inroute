@@ -1,13 +1,13 @@
 <?php
 namespace inroute\Compiler;
 
-use inroute\Router\Environment;
+use inroute\Runtime\Environment;
 
 class RouteFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetIterator()
     {
-        $env = \Mockery::mock('inroute\Router\Environment');
+        $env = \Mockery::mock('inroute\Runtime\Environment');
         $env->shouldReceive('get')->once()->with('path')->andReturn('returned-path');
 
         $definition = \Mockery::mock('inroute\Compiler\Definition');
@@ -20,11 +20,11 @@ class RouteFactoryTest extends \PHPUnit_Framework_TestCase
 
         $tokenizer = \Mockery::mock('inroute\Compiler\PathTokenizer');
         $tokenizer->shouldReceive('tokenize')->with('returned-path')->once()->andReturn([]);
-        $tokenizer->shouldReceive('getRegex')->once()->andReturn(new \inroute\Router\Regex);
+        $tokenizer->shouldReceive('getRegex')->once()->andReturn(new \inroute\Runtime\Regex);
 
         $routeFactory = new RouteFactory($definitionFactory, $tokenizer);
 
         $result = iterator_to_array($routeFactory);
-        $this->assertInstanceOf('inroute\Router\Route', $result[0]);
+        $this->assertInstanceOf('inroute\Runtime\Route', $result[0]);
     }
 }

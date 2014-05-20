@@ -7,7 +7,7 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Router;
+namespace inroute\Runtime;
 
 /**
  * Inroute controllers must implement the controller interface

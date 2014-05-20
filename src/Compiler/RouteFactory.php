@@ -10,7 +10,7 @@
 namespace inroute\Compiler;
 
 use IteratorAggregate;
-use inroute\Router\Route;
+use inroute\Runtime\Route;
 
 /**
  * Create Routes from Definition

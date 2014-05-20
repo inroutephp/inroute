@@ -5,7 +5,7 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetEnvironment()
     {
-        $env = \Mockery::mock('inroute\Router\Environment');
+        $env = \Mockery::mock('inroute\Runtime\Environment');
 
         $def = new Definition(
             \Mockery::mock('zpt\anno\Annotations'),
@@ -21,16 +21,16 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         $def = new Definition(
             \Mockery::mock('zpt\anno\Annotations'),
             \Mockery::mock('zpt\anno\Annotations'),
-            \Mockery::mock('inroute\Router\Environment')
+            \Mockery::mock('inroute\Runtime\Environment')
         );
 
         $this->assertEmpty($def->getPreFilters());
-        $preFilter = '\inroute\Router\PreFilterInterface';
+        $preFilter = '\inroute\Runtime\PreFilterInterface';
         $def->addPreFilter($preFilter);
         $this->assertEquals([$preFilter], $def->getPreFilters());
 
         $this->assertEmpty($def->getPostFilters());
-        $postFilter = '\inroute\Router\PostFilterInterface';
+        $postFilter = '\inroute\Runtime\PostFilterInterface';
         $def->addPostFilter($postFilter);
         $this->assertEquals([$postFilter], $def->getPostFilters());
     }
@@ -40,10 +40,10 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         $def = new Definition(
             \Mockery::mock('zpt\anno\Annotations'),
             \Mockery::mock('zpt\anno\Annotations'),
-            \Mockery::mock('inroute\Router\Environment')
+            \Mockery::mock('inroute\Runtime\Environment')
         );
 
-        $this->setExpectedException('inroute\Exception\CompileTimeException');
+        $this->setExpectedException('inroute\Exception\CompilerException');
         $def->addPreFilter('not-a-valid-class');
     }
 
@@ -52,10 +52,10 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         $def = new Definition(
             \Mockery::mock('zpt\anno\Annotations'),
             \Mockery::mock('zpt\anno\Annotations'),
-            \Mockery::mock('inroute\Router\Environment')
+            \Mockery::mock('inroute\Runtime\Environment')
         );
 
-        $this->setExpectedException('inroute\Exception\CompileTimeException');
+        $this->setExpectedException('inroute\Exception\CompilerException');
         $def->addPostFilter('Exception');
     }
 
@@ -74,7 +74,7 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         $def = new Definition(
             $classAnnotations,
             $methodAnnotations,
-            \Mockery::mock('inroute\Router\Environment')
+            \Mockery::mock('inroute\Runtime\Environment')
         );
 
         $this->assertEquals('', $def->getClassAnnotation('does-not-exist'));

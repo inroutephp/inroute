@@ -9,7 +9,7 @@
 
 namespace inroute\Plugin;
 
-use inroute\Settings\CompileSettingsInterface;
+use inroute\Settings\SettingsInterface;
 use inroute\Compiler\Definition;
 use Psr\Log\LoggerInterface;
 
@@ -33,10 +33,10 @@ class PluginManager implements PluginInterface
     /**
      * Constructor
      *
-     * @param CompileSettingsInterface $settings
-     * @param LoggerInterface $logger
+     * @param SettingsInterface $settings
+     * @param LoggerInterface   $logger
      */
-    public function __construct(CompileSettingsInterface $settings, LoggerInterface $logger)
+    public function __construct(SettingsInterface $settings, LoggerInterface $logger)
     {
         $this->setLogger($logger);
 
@@ -69,10 +69,10 @@ class PluginManager implements PluginInterface
      * @param  Definition $definition
      * @return void
      */
-    public function processDefinition(Definition $definition)
+    public function processRouteDefinition(Definition $definition)
     {
         foreach ($this->plugins as $plugin) {
-            $plugin->processDefinition($definition);
+            $plugin->processRouteDefinition($definition);
         }
     }
 

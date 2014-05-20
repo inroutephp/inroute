@@ -10,13 +10,13 @@
 namespace inroute\Compiler;
 
 use zpt\anno\Annotations;
-use inroute\Router\Environment;
-use inroute\Exception\CompileTimeException;
+use inroute\Runtime\Environment;
+use inroute\Exception\CompilerException;
 use ReflectionClass;
 use ReflectionException;
 
 /**
- * Describes an annotated controller method (a route)
+ * Route definition (encapsulates an annotated controller method)
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
@@ -116,11 +116,11 @@ class Definition
      *
      * @param  string $classname
      * @return void
-     * @throws CompileTimeException If $classname does not reprsent a valid filter
+     * @throws CompilerException If $classname does not reprsent a valid filter
      */
     public function addPreFilter($classname)
     {
-        $this->validateFilter($classname, '\inroute\Router\PreFilterInterface');
+        $this->validateFilter($classname, '\inroute\Runtime\PreFilterInterface');
         $this->preFilters[] = $classname;
     }
 
@@ -139,11 +139,11 @@ class Definition
      *
      * @param  string $classname
      * @return void
-     * @throws CompileTimeException If $classname does not reprsent a valid filter
+     * @throws CompilerException If $classname does not reprsent a valid filter
      */
     public function addPostFilter($classname)
     {
-        $this->validateFilter($classname, '\inroute\Router\PostFilterInterface');
+        $this->validateFilter($classname, '\inroute\Runtime\PostFilterInterface');
         $this->postFilters[] = $classname;
     }
 
@@ -173,17 +173,17 @@ class Definition
      * @param  string $classname
      * @param  string $interfaceName
      * @return void
-     * @throws CompileTimeException If $classname does not reprsent a valid filter
+     * @throws CompilerException If $classname does not reprsent a valid filter
      */
     private function validateFilter($classname, $interfaceName)
     {
         try {
             $reflectedClass = new ReflectionClass($classname);
             if (!$reflectedClass->implementsInterface($interfaceName)) {
-                throw new CompileTimeException("Filter <$classname> must implement <$interfaceName>");
+                throw new CompilerException("Filter <$classname> must implement <$interfaceName>");
             }
         } catch (ReflectionException  $e) {
-            throw new CompileTimeException($e->getMessage(), 0, $e);
+            throw new CompilerException($e->getMessage(), 0, $e);
         }
     }
 }

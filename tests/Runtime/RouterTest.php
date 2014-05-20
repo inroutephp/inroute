@@ -1,5 +1,5 @@
 <?php
-namespace inroute\Router;
+namespace inroute\Runtime;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {

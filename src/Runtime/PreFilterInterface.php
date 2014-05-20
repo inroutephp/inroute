@@ -7,13 +7,20 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Router;
+namespace inroute\Runtime;
 
 /**
- * Throw to transfer control to next executable route (actively skipping current route at runtime)
+ * Defines a route pre filter
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class NextRouteException extends \Exception
+interface PreFilterInterface
 {
+    /**
+     * TODO Lång beskrivning av hur pre filter kan fungera här..
+     *
+     * @param  Environment $env
+     * @return void
+     */
+    public function filter(Environment $env);
 }

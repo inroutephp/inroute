@@ -69,7 +69,7 @@ class Compiler
                 new PathTokenizer
             ),
             new FilterableClassIterator(
-                new ClassIterator([__DIR__.'/../Router'])
+                new ClassIterator([__DIR__.'/../Runtime'])
             )
         );
     }

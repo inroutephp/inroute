@@ -7,20 +7,26 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Router;
+namespace inroute\Settings;
 
 /**
- * Defines a route post filter
+ * Defines compile time settings for inroute project
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-interface PostFilterInterface
+interface SettingsInterface
 {
     /**
-     * TODO Lång beskrivning av hur post filter kan fungera här..
+     * Get path to prepend to all routes
      *
-     * @param  mixed $value
-     * @return mixed
+     * @return string
      */
-    public function filter($value);
+    public function getRootPath();
+
+    /**
+     * Get array of plugin objects to load att compile time
+     *
+     * @return \inroute\Plugin\PluginInterface[]
+     */
+    public function getPlugins();
 }

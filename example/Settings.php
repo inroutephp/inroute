@@ -1,9 +1,9 @@
 <?php
 namespace inroute\example;
 
-use inroute\Settings\CompileSettingsInterface;
+use inroute\Settings\SettingsInterface;
 
-class Settings implements CompileSettingsInterface
+class Settings implements SettingsInterface
 {
     public function getRootPath()
     {

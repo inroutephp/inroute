@@ -12,7 +12,7 @@ namespace inroute\Compiler;
 use IteratorAggregate;
 use ReflectionClass;
 use zpt\anno\Annotations;
-use inroute\Router\Environment;
+use inroute\Runtime\Environment;
 
 /**
  * Iterate over route descriptions found in one controller class

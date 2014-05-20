@@ -7,20 +7,13 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Router;
+namespace inroute\Exception;
 
 /**
- * Defines a route pre filter
- *
+ * Exception thrown if a compilation error occurs
+ * 
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-interface PreFilterInterface
+class CompilerException extends LogicException
 {
-    /**
-     * TODO Lång beskrivning av hur pre filter kan fungera här..
-     *
-     * @param  Environment $env
-     * @return void
-     */
-    public function filter(Environment $env);
 }

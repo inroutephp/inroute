@@ -3,9 +3,9 @@ namespace inroute\Plugin;
 
 class PluginManagerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testProcessDefinition()
+    public function testProcessRouteDefinition()
     {
-        $env = \Mockery::mock('inroute\Compiler\Environment');
+        $env = \Mockery::mock('inroute\Runtime\Environment');
         $env->shouldReceive('set')->atLeast()->times(1);
 
         $def = \Mockery::mock('inroute\Compiler\Definition');
@@ -15,14 +15,14 @@ class PluginManagerTest extends \PHPUnit_Framework_TestCase
         $logger->shouldReceive('info')->atLeast()->times(1);
 
         $plugin = \Mockery::mock('inroute\Plugin\PluginInterface');
-        $plugin->shouldReceive('processDefinition')->times(2)->with($def);
+        $plugin->shouldReceive('processRouteDefinition')->times(2)->with($def);
         $plugin->shouldReceive('setLogger')->times(2)->with($logger);
 
-        $settings = \Mockery::mock('inroute\Settings\CompileSettingsInterface');
+        $settings = \Mockery::mock('inroute\Settings\SettingsInterface');
         $settings->shouldReceive('getRootPath')->once();
         $settings->shouldReceive('getPlugins')->once()->andReturn([$plugin, $plugin]);
 
         $manager = new PluginManager($settings, $logger);
-        $manager->processDefinition($def);
+        $manager->processRouteDefinition($def);
     }
 }

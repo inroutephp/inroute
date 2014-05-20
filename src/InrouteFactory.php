@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\NullLogger;
 use inroute\Compiler\Compiler;
-use inroute\Settings\ComposerJsonParser;
+use inroute\Settings\ComposerWrapper;
 use hanneskod\classtools\ClassIterator;
 use hanneskod\classtools\FilterableClassIterator;
 
@@ -59,7 +59,7 @@ class InrouteFactory implements LoggerAwareInterface
 
         $this->getLogger()->info("Reading paths from <$pathToComposerJson>");
 
-        foreach (ComposerJsonParser::createFromFile($pathToComposerJson)->getPaths() as $path) {
+        foreach (ComposerWrapper::createFromFile($pathToComposerJson)->getPaths() as $path) {
             $this->addPath($path);
         }
     }

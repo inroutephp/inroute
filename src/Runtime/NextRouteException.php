@@ -7,13 +7,13 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Exception;
+namespace inroute\Runtime;
 
 /**
- * Exception thrown if an error which can only be found on runtime occurs
+ * Throw to transfer control to next executable route (actively skipping current route at runtime)
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class RuntimeException extends \RuntimeException implements \inroute\Exception
+class NextRouteException extends \Exception
 {
 }

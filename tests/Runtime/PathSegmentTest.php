@@ -1,11 +1,11 @@
 <?php
-namespace inroute\Router;
+namespace inroute\Runtime;
 
-class SegmentTest extends \PHPUnit_Framework_TestCase
+class PathSegmentTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetters()
     {
-        $segment = new Segment(
+        $segment = new PathSegment(
             'foobar',
             new Regex('.+')
         );
@@ -15,7 +15,7 @@ class SegmentTest extends \PHPUnit_Framework_TestCase
 
     public function testSubstitute()
     {
-        $segment = new Segment(
+        $segment = new PathSegment(
             '',
             new Regex('\d+')
         );

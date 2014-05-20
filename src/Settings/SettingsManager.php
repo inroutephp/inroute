@@ -14,11 +14,11 @@ use hanneskod\classtools\Instantiator;
 use Psr\Log\LoggerInterface;
 
 /**
- * Merge settings from multiple CompileSettingsInterface objects
+ * Merge settings from multiple SettingsInterface objects
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class SettingsManager implements CompileSettingsInterface
+class SettingsManager implements SettingsInterface
 {
     /**
      * @var string Project root path, value from last parsed settings interface is used
@@ -39,7 +39,7 @@ class SettingsManager implements CompileSettingsInterface
      */
     public function __construct(FilterableClassIterator $iterator, LoggerInterface $logger, Instantiator $instantiator)
     {
-        foreach ($iterator->filterType('inroute\Settings\CompileSettingsInterface') as $reflectedClass) {
+        foreach ($iterator->filterType('inroute\Settings\SettingsInterface') as $reflectedClass) {
             $instantiator->setReflectionClass($reflectedClass);
 
             if (!$instantiator->isInstantiableWithoutArgs()) {

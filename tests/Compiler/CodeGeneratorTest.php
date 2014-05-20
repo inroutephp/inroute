@@ -18,7 +18,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
         $generator = new CodeGenerator($factory, $classIterator);
 
         $this->assertRegExp(
-            '/namespace inroute\\\Router;/',
+            '/namespace inroute\\\Runtime;/',
             (string)$generator
         );
     }

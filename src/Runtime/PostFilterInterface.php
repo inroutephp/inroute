@@ -7,13 +7,20 @@
  * http://www.wtfpl.net/ for more details.
  */
 
-namespace inroute\Exception;
+namespace inroute\Runtime;
 
 /**
- * Exception thrown if a compilation error occurs
- * 
+ * Defines a route post filter
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
-class CompileTimeException extends LogicException
+interface PostFilterInterface
 {
+    /**
+     * TODO Lång beskrivning av hur post filter kan fungera här..
+     *
+     * @param  mixed $value
+     * @return mixed
+     */
+    public function filter($value);
 }
