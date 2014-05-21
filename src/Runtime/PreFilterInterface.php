@@ -17,10 +17,20 @@ namespace inroute\Runtime;
 interface PreFilterInterface
 {
     /**
-     * TODO Lång beskrivning av hur pre filter kan fungera här..
+     * Filter environment before controller is executed
+     *
+     * Pre filters must implement the PreFilterInterface and are executed at
+     * runtime in the order they are registered.
+     * 
+     * The return value of a pre filter is discarded, instead the filter should
+     * alter the contents of the route environment.
+     *
+     * If the filter concludes that control should be passed to next executable
+     * route a NextRouteException can be thrown.
      *
      * @param  Environment $env
      * @return void
+     * @throws NextRouteException If Control should be passed to next route
      */
     public function filter(Environment $env);
 }

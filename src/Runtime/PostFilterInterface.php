@@ -17,10 +17,21 @@ namespace inroute\Runtime;
 interface PostFilterInterface
 {
     /**
-     * TODO Lång beskrivning av hur post filter kan fungera här..
+     * Filter the controller return value
      *
-     * @param  mixed $value
+     * Post filters must implement the PostFilterInterface and are executed at
+     * runtime in the order they are registered.
+     *
+     * A post filter is called with the return value of the controller as
+     * argument, and its return value is treated as a replacement for the
+     * controllers return value.
+     *
+     * If the filter concludes that control should be passed to next executable
+     * route a NextRouteException can be thrown.
+     *
+     * @param  mixed $returnValue
      * @return mixed
+     * @throws NextRouteException If Control should be passed to next route
      */
-    public function filter($value);
+    public function filter($returnValue);
 }

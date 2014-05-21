@@ -17,7 +17,11 @@ namespace inroute\Runtime;
 class Instantiator
 {
     /**
-     * Create instance of $classname
+     * Create instance of $classname using the new operator
+     *
+     * Pass an instantiator a runtime to enable dependency injection. The
+     * instantiator must be a callable, take a string classname  as sole
+     * argument and return the created object.
      *
      * @param  string $classname
      * @return mixed  Created instance

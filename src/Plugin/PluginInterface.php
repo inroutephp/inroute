@@ -23,6 +23,13 @@ interface PluginInterface extends LoggerAwareInterface
     /**
      * Edit a route definition
      *
+     * At compile time each found route definition is processed be registered
+     * plugins. Plugins can read annotations from the controller, alter the
+     * definition of the route and register pre and post filters.
+     *
+     * If a plugin concludes that this route should not be included in the
+     * router a CompilerSkipRouteException can be thrown.
+     *
      * @param  Definition $definition
      * @return void
      * @throws CompilerSkipRouteException If definition should be ignored

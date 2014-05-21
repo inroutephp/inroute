@@ -12,6 +12,14 @@ namespace inroute\Settings;
 /**
  * Defines compile time settings for inroute project
  *
+ * The purpose of the settings interface is the let each inroute build produce
+ * the same results, regardless if the build was executed through the command
+ * line interface, or in pure php.
+ *
+ * Implement the SettingsInterface and place the class in the same directory
+ * structure as your controllers. The inroute compiler will read all
+ * implementations found in the defined paths.
+ *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 interface SettingsInterface

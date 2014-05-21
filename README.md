@@ -14,24 +14,32 @@ boring and error-prone.
 Inroute tries to fix this by handling dependency injection and routing directly
 in the controller classes using annotations (actually docblock style tags).
 
-Inroute is a code generator. It scans your source tree for classes marked with
-tha @controller tag. It handles fetching dependencies from your DI-container using
-the @param tag. And it sets up all routes based on @route tags. From this it
-generates a router and a dispatcher. When done all you have to do is to bootstrap
-your application auto-loading and dispatch.
+Inroute is a code generator. It scans your source tree for classes marked that
+implements the [ControllerInterface](src/Runtime/ControllerInterface.php). And
+it sets up all routes based on @route tags. From this it generates a router and
+a dispatcher. When done all you have to do is to bootstrap your application
+auto-loading and dispatch.
 
-    $app = include 'generated_application.php';
-    echo $app->dispatch($url, $_SERVER);
+```php
+$router = require 'router.php';
+echo $router->dispatch($url, $_SERVER);
+```
+
+Alter the behaviour of the application
+--------------------------------------
+[SettingsInterface](src/Settings/SettingsInterface.php)
+[Instantiator](src/Runtime/Instantiator.php)
+
+
+Plugins
+-------
+[PluginInterface](src/Plugin/PluginInterface.php)
+[PreFilterInterface](src/Runtime/PreFilterInterface.php)
+[PostFilterInterface](src/Runtime/PostFilterInterface.php)
 
 
 Annotations
 -----------
-
-### @controller
-
-All controller classes that should be processed must use the @controller tag.
-Optionally you may specify a root path for all controller routes. Se the example
-controller below, or the example app in the source tree.
 
 ### @route
 
@@ -88,30 +96,29 @@ A short example
 
 ### A controller
 
-    use inroute\Router\Route;
+```php
+use inroute\Runtime\Environment;
+use inroute\Runtime\ControllerInterface;
 
+class Controller implements ControllerInterface
+{
     /**
-     * @controller
+     * @route GET </foo/{:name}>
      */
-    class Controller
+    public function foo(Environment $env)
     {
-        /**
-         * @route GET </foo/{:name}>
-         */
-        public function foo(Route $route)
-        {
-            return $route->name;
-        }
-
-        /**
-         * @route POST </bar/{:name}>
-         */
-        public function bar(Route $route)
-        {
-            var_dump($route);
-        }
+        return $env->get('route')->name;
     }
 
+    /**
+     * @route POST </bar/{:name}>
+     */
+    public function bar(Environment $env)
+    {
+        var_dump($env);
+    }
+}
+```
 
 Installation using [composer](http://getcomposer.org/)
 ------------------------------------------------------
@@ -126,24 +133,22 @@ Compiling your project
 ----------------------
 Compile your project using
 
-    $ vendor/bin/inroute build [sourcedir] --loader=[loader] > [target]
+    $ php vendor/bin/inroute build
 
-Where sourcedir is the base directory of your application source tree, loader is
-your composer class loader (vendor/autoload.php) and target is the name of the
-generated file.
+This will read source paths from your `composer.json` and output the generated
+router to `router.php`. For more information on how to use the command line
+utility try
 
-For more information on how to use the command line utility
-
-    $ vendor/bin/inroute --help
+    $ php vendor/bin/inroute help build
 
 
 The example app
 ---------------
 The inroute source includes an example application. Build the application using
 
-    $ example/build
+    $ php bin/inroute build --no-composer -p example -o example/router.php
 
-The actual application can be found under [example/Application](example/Application).
+The actual application can be found under [example](example).
 View the sources for some explanatory comments.
 
 ### Running the app in your browser
@@ -152,9 +157,8 @@ The example directory contains three different dispatchers:
 
 * [development.php](example/development.php) builds the application on every
   page reload. Use this style of dispatch during development.
-* [composer.php](example/composer.php) dispatches the application using the
-  composer autoloader. This style of usage requires inroute to be installed as a
-  composer dependancy.
+* [production.php](example/production.php) dispatches the application using the
+  generated router.
 
 Point your browser to either one of these files to view the output.
 
