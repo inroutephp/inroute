@@ -17,7 +17,7 @@ namespace inroute\Runtime;
 interface PreFilterInterface
 {
     /**
-     * Filter environment before controller is executed
+     * Filter environment before route is executed
      *
      * Pre filters must implement the PreFilterInterface and are executed at
      * runtime in the order they are registered.

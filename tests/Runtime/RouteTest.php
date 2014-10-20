@@ -7,8 +7,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $env = \Mockery::mock('inroute\Runtime\Environment');
         $env->shouldReceive('set')->once();
-        $env->shouldReceive('get')->once()->with('controller_name')->andReturn('ControllerClassName');
-        $env->shouldReceive('get')->once()->with('controller_method')->andReturn('cntrlMethod');
+        $env->shouldReceive('get')->once()->with('controller_name')->andReturn('RouteClassName');
+        $env->shouldReceive('get')->once()->with('controller_method')->andReturn('RouteMethod');
 
         $route = new Route(
             [],
@@ -18,17 +18,17 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             ['PostFilterClassName']
         );
 
-        // $instance mocks both controller and filters
+        // $instance mocks both route and filters
         $instance = \Mockery::mock('stdClass');
-        // controller expectation
-        $instance->shouldReceive('cntrlMethod')->once()->with($env)->andReturn('controller-return');
+        // route expectation
+        $instance->shouldReceive('RouteMethod')->once()->with($env)->andReturn('route-return');
         // pre-filter expectation
         $instance->shouldReceive('filter')->once()->with($env);
         // post-filter expectation
-        $instance->shouldReceive('filter')->once()->with('controller-return')->andReturn('filter-return');
+        $instance->shouldReceive('filter')->once()->with('route-return')->andReturn('filter-return');
 
         $instantiator = \Mockery::mock('inroute\Runtime\Instantiator');
-        $instantiator->shouldReceive('__invoke')->with('ControllerClassName')->andReturn($instance);
+        $instantiator->shouldReceive('__invoke')->with('RouteClassName')->andReturn($instance);
         $instantiator->shouldReceive('__invoke')->with('PreFilterClassName')->andReturn($instance);
         $instantiator->shouldReceive('__invoke')->with('PostFilterClassName')->andReturn($instance);
 

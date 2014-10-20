@@ -17,14 +17,13 @@ namespace inroute\Runtime;
 interface PostFilterInterface
 {
     /**
-     * Filter the controller return value
+     * Filter the route return value
      *
      * Post filters must implement the PostFilterInterface and are executed at
      * runtime in the order they are registered.
      *
-     * A post filter is called with the return value of the controller as
-     * argument, and its return value is treated as a replacement for the
-     * controllers return value.
+     * A post filter is called with the return value of the route as
+     * argument, and its return value is treated as a replacement.
      *
      * If the filter concludes that control should be passed to next executable
      * route a NextRouteException can be thrown.

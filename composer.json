@@ -1,6 +1,6 @@
 {
     "name": "hanneskod/inroute",
-    "description": "Generate web router and controller dispatcher from docblock annotations",
+    "description": "Generate web router and dispatcher from docblock annotations",
     "keywords": ["Annotations", "Router", "Code generator"],
     "homepage": "https://github.com/hanneskod/inroute",
     "type": "library",
@@ -23,14 +23,13 @@
     },
     "require": {
         "php": ">=5.5",
-        "hanneskod/classtools": "dev-master@dev",
+        "hanneskod/classtools": "dev-master#2be9c06ee966e89770258dd01878b329180ff847",
         "zeptech/annotations": "1.1.*",
         "psr/log": "1.*",
         "symfony/console": "~2.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "mockery/mockery": "*"
+        "mockery/mockery": "~0.9.0"
     },
     "bin": [
         "bin/inroute"

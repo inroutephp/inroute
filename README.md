@@ -1,24 +1,17 @@
-# inroute [![Build Status](https://travis-ci.org/hanneskod/inroute.svg?branch=master)](https://travis-ci.org/hanneskod/inroute) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hanneskod/inroute/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/hanneskod/inroute/?branch=master) [![Dependency Status](https://gemnasium.com/hanneskod/inroute.svg)](https://gemnasium.com/hanneskod/inroute)
+# inroute
 
+[![Packagist Version](https://img.shields.io/packagist/v/hanneskod/inroute.svg?style=flat-square)](https://packagist.org/packages/hanneskod/inroute)
+[![Build Status](https://img.shields.io/travis/hanneskod/inroute/master.svg?style=flat-square)](https://travis-ci.org/hanneskod/inroute)
+[![Quality Score](https://img.shields.io/scrutinizer/g/hanneskod/inroute.svg?style=flat-square)](https://scrutinizer-ci.com/g/hanneskod/inroute)
+[![Dependency Status](https://img.shields.io/gemnasium/hanneskod/inroute.svg?style=flat-square)](https://gemnasium.com/hanneskod/inroute)
 
-Generate web router and dispatcher from docblock annotations
+Generate web router and dispatcher from docblock annotations.
 
-When building web-apps a constantly see myself repeating the same pattern.
-I define some controller classes that have various dependencies. I write a
-DI-container to facilitate instantiating my controllers. I use some router
-package and write a file defining all my routes and point them to my controllers.
-And lastly I write some kind of dispatch logic where I perform routing, get my
-controller objects from the container and execute the controller. All of this is
-boring and error-prone.
-
-Inroute tries to fix this by handling dependency injection and routing directly
-in the controller classes using annotations (actually docblock style tags).
-
-Inroute is a code generator. It scans your source tree for classes marked that
-implements the [ControllerInterface](src/Runtime/ControllerInterface.php). And
-it sets up all routes based on @route tags. From this it generates a router and
-a dispatcher. When done all you have to do is to bootstrap your application
-auto-loading and dispatch.
+Inroute is a code generator. It scans your source tree for classes that
+implements the [Routable](src/Runtime/Routable.php) interface. And
+it sets up all routes based on @route annotations. From this it generates a
+router and a dispatcher. When done all you have to do is to bootstrap your
+application auto-loading and dispatch.
 
 ```php
 $router = require 'router.php';
@@ -27,15 +20,15 @@ echo $router->dispatch($url, $_SERVER);
 
 Alter the behaviour of the application
 --------------------------------------
-[SettingsInterface](src/Settings/SettingsInterface.php)
-[Instantiator](src/Runtime/Instantiator.php)
+* [SettingsInterface](src/Settings/SettingsInterface.php)
+* [Instantiator](src/Runtime/Instantiator.php)
 
 
 Plugins
 -------
-[PluginInterface](src/Plugin/PluginInterface.php)
-[PreFilterInterface](src/Runtime/PreFilterInterface.php)
-[PostFilterInterface](src/Runtime/PostFilterInterface.php)
+* [PluginInterface](src/Plugin/PluginInterface.php)
+* [PreFilterInterface](src/Runtime/PreFilterInterface.php)
+* [PostFilterInterface](src/Runtime/PostFilterInterface.php)
 
 
 Annotations
@@ -43,7 +36,7 @@ Annotations
 
 ### @route
 
-Controller methods that should be routable use the @route tag. The syntax is
+Methods that should be routable use the @route tag. The syntax is
 
     @route METHOD </path>
 
@@ -52,7 +45,7 @@ route parameters like this
 
     @route GET </path/{:name}>
 
-Route multiple HTTP-methods to the same controller by listing methods separated
+Route multiple HTTP-methods to the same method by listing methods separated
 by commas (but without spaces!).
 
     @route POST,PUT </path/{:name}>
@@ -94,13 +87,13 @@ Or to generate urls from the current or other definied routes.
 A short example
 ---------------
 
-### A controller
+### A route
 
 ```php
 use inroute\Runtime\Environment;
-use inroute\Runtime\ControllerInterface;
+use inroute\Runtime\Routable;
 
-class Controller implements ControllerInterface
+class MyRoutableClass implements Routable
 {
     /**
      * @route GET </foo/{:name}>
@@ -119,14 +112,6 @@ class Controller implements ControllerInterface
     }
 }
 ```
-
-Installation using [composer](http://getcomposer.org/)
-------------------------------------------------------
-To your `composer.json` add
-
-    "require-dev": {
-        "hanneskod/inroute": "dev-master@dev",
-    }
 
 
 Compiling your project
@@ -161,12 +146,3 @@ The example directory contains three different dispatchers:
   generated router.
 
 Point your browser to either one of these files to view the output.
-
-
-Testing using [phpunit](http://phpunit.de/)
--------------------------------------------
-The unis tests requires that dependencies are installed using composer.
-
-    $ curl -sS https://getcomposer.org/installer | php
-    $ php composer.phar install --dev
-    $ vendor/bin/phpunit

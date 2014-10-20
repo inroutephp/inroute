@@ -16,7 +16,7 @@ use inroute\Plugin\PluginInterface;
 use inroute\Exception\CompilerSkipRouteException;
 
 /**
- * Create route definitions from controller classes
+ * Create route definitions from routable classes
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
@@ -50,7 +50,7 @@ class DefinitionFactory implements IteratorAggregate
         LoggerInterface $logger
     ) {
         $this->classIterator = $classIterator
-            ->filterType('\inroute\Runtime\ControllerInterface')
+            ->filterType('\inroute\Runtime\Routable')
             ->where('isInstantiable');
         $this->plugin = $plugin;
         $this->logger = $logger;

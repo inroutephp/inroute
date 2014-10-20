@@ -78,7 +78,7 @@ class Route
      * Execute route
      *
      * @param  callable $instantiator
-     * @return mixed    Whatever the controller returns
+     * @return mixed    Whatever the route returns
      */
     public function execute(callable $instantiator)
     {

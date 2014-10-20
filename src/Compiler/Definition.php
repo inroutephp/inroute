@@ -16,7 +16,7 @@ use ReflectionClass;
 use ReflectionException;
 
 /**
- * Route definition (encapsulates an annotated controller method)
+ * Route definition (encapsulates an annotated route method)
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
@@ -50,8 +50,8 @@ class Definition
     /**
      * Constructor
      *
-     * @param Annotations $classAnnot  Controller class annotations
-     * @param Annotations $methodAnnot Controller method annotations
+     * @param Annotations $classAnnot  Class annotations
+     * @param Annotations $methodAnnot Method annotations
      * @param Environment $env         Route environment
      */
     public function __construct(Annotations $classAnnot, Annotations $methodAnnot, Environment $env)
@@ -62,7 +62,7 @@ class Definition
     }
 
     /**
-     * Check if controller class contains annotation
+     * Check if class contains annotation
      *
      * @param  string  $annotation
      * @return boolean
@@ -73,7 +73,7 @@ class Definition
     }
 
     /**
-     * Read controller class annotation
+     * Read class annotation
      *
      * @param  string $annotation
      * @return mixed  Empty string if annotation does not exist
@@ -87,7 +87,7 @@ class Definition
     }
 
     /**
-     * Check if controller method contains annotation
+     * Check if method contains annotation
      *
      * @param  string  $annotation
      * @return boolean
@@ -98,7 +98,7 @@ class Definition
     }
 
     /**
-     * Read controller method annotation
+     * Read method annotation
      *
      * @param  string $annotation
      * @return mixed  Empty string if annotation does not exist

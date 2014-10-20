@@ -15,21 +15,21 @@ use zpt\anno\Annotations;
 use inroute\Runtime\Environment;
 
 /**
- * Iterate over route descriptions found in one controller class
+ * Iterate over route descriptions found in one routable class
  *
  * @author Hannes Forsgård <hannes.forsgard@fripost.org>
  */
 class DefinitionIterator implements IteratorAggregate
 {
     /**
-     * @var ReflectionClass Controller class
+     * @var ReflectionClass Routable class
      */
     private $class;
 
     /**
      * Constructor
      *
-     * @param ReflectionClass $class Reflected controller class
+     * @param ReflectionClass $class Reflected routable class
      */
     public function __construct(ReflectionClass $class)
     {

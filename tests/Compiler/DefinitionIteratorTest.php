@@ -14,14 +14,14 @@ class DefinitionIteratorTest extends \PHPUnit_Framework_TestCase
         $route->shouldReceive('getDocComment')->once();
 
         $class = \Mockery::mock('ReflectionClass');
-        $class->shouldReceive('getName')->once()->andReturn('ControllerClassName');
+        $class->shouldReceive('getName')->once()->andReturn('ClassName');
         $class->shouldReceive('getDocComment')->once();
         $class->shouldReceive('getMethods')->once()->andReturn(array($constructor, $route));
 
         $result = iterator_to_array(new DefinitionIterator($class));
 
         $this->assertEquals(
-            'ControllerClassName',
+            'ClassName',
             $result[0]->getEnvironment()->get('controller_name')
         );
     }
