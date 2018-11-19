@@ -1,9 +1,8 @@
-# inroute
+# ![Inroute](res/logo.png "Inroute")
 
-[![Packagist Version](https://img.shields.io/packagist/v/hanneskod/inroute.svg?style=flat-square)](https://packagist.org/packages/hanneskod/inroute)
-[![Build Status](https://img.shields.io/travis/hanneskod/inroute/master.svg?style=flat-square)](https://travis-ci.org/hanneskod/inroute)
-[![Quality Score](https://img.shields.io/scrutinizer/g/hanneskod/inroute.svg?style=flat-square)](https://scrutinizer-ci.com/g/hanneskod/inroute)
-[![Dependency Status](https://img.shields.io/gemnasium/hanneskod/inroute.svg?style=flat-square)](https://gemnasium.com/hanneskod/inroute)
+[![Packagist Version](https://img.shields.io/packagist/v/inroutephp/inroute.svg?style=flat-square)](https://packagist.org/packages/inroutephp/inroute)
+[![Build Status](https://img.shields.io/travis/inroutephp/inroute/master.svg?style=flat-square)](https://travis-ci.org/inroutephp/inroute)
+[![Quality Score](https://img.shields.io/scrutinizer/g/inroutephp/inroute.svg?style=flat-square)](https://scrutinizer-ci.com/g/inroutephp/inroute)
 
 Generate web router and dispatcher from docblock annotations.
 
