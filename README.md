@@ -4,144 +4,248 @@
 [![Build Status](https://img.shields.io/travis/inroutephp/inroute/master.svg?style=flat-square)](https://travis-ci.org/inroutephp/inroute)
 [![Quality Score](https://img.shields.io/scrutinizer/g/inroutephp/inroute.svg?style=flat-square)](https://scrutinizer-ci.com/g/inroutephp/inroute)
 
-Generate web router and dispatcher from docblock annotations.
+Generate http routing and dispatching middleware from docblock annotations.
 
-Inroute is a code generator. It scans your source tree for classes that
-implements the [Routable](src/Runtime/Routable.php) interface. And
-it sets up all routes based on @route annotations. From this it generates a
-router and a dispatcher. When done all you have to do is to bootstrap your
-application auto-loading and dispatch.
+Inroute is a code generator. It scans your source tree for annotated routes and
+generates a [PSR-15](https://www.php-fig.org/psr/psr-15/) compliant http routing
+middleware. In addition all routes have a middleware pipeline of their own,
+making it easy to add behaviour at compile time based on cutom annotations.
 
-```php
-$router = require 'router.php';
-echo $router->dispatch($url, $_SERVER);
+* See the [example-app](https://github.com/inroutephp/example-app) for a
+  complete example.
+* See [console](https://github.com/inroutephp/console) for a compiler tool for
+  the command line.
+
+## Installation
+
+```shell
+composer require inroutephp/inroute:^1.0@beta
 ```
 
-Alter the behaviour of the application
---------------------------------------
-* [SettingsInterface](src/Settings/SettingsInterface.php)
-* [Instantiator](src/Runtime/Instantiator.php)
+## Table of contents
 
+1. [Writing routes](#writing routes)
+1. [Compiling](#compiling)
+1. [Dispatching](#dispatching)
+1. [Generating route paths](#generating-route-paths)
+1. [Creating custom annotations](#creating-custom-annotations)
+1. [Processing routes using compiler passes](#processing-routes-using-compiler-passes)
+1. [Handling dependencies with a DI container](#handling-dependencies-with-a-di-container)
 
-Plugins
--------
-* [PluginInterface](src/Plugin/PluginInterface.php)
-* [PreFilterInterface](src/Runtime/PreFilterInterface.php)
-* [PostFilterInterface](src/Runtime/PostFilterInterface.php)
+## Writing routes
 
+Routes are annotated using a simple `@Route` annotation, are called with
+a [PSR-7](https://www.php-fig.org/psr/psr-7/) request object and inroute
+[environment](src/Runtime\EnvironmentInterface.php) and are expected to
+return a PSR-7 response.
 
-Annotations
------------
-
-### @route
-
-Methods that should be routable use the @route tag. The syntax is
-
-    @route METHOD </path>
-
-Where METHOD is the desired HTTP-method and path is the route path. You can add
-route parameters like this
-
-    @route GET </path/{:name}>
-
-Route multiple HTTP-methods to the same method by listing methods separated
-by commas (but without spaces!).
-
-    @route POST,PUT </path/{:name}>
-
-And acces the parameter from the generated route object
-
-    $name = $route->getValue('name');
-
-#### Using regular expressions when defining params
-
-You may use regular expression subpatterns when defining parameters.
-
-    @route GET </path/{:name:(pattern)}>
-
-Where name is the name of the parameter and pattern is the matching subpattern.
-
-For example you can definie a path that takes a numeric id parameter:
-
-    @route GET </object/{:id:(\d+)}>
-
-
-The Route object
-----------------
-For each request a Route object is created. You may access it to read path
-parameters.
-
-    $name = $route->getValue('name');
-
-Or to generate urls from the current or other definied routes.
-
-    // Generate this path using the current path parameters
-    $path = $route->generate();
-
-    // Generate any path using custom parameters
-    $path = $route->generate('routeName', array('name' => 'foobar'));
-
-
-
-A short example
----------------
-
-### A route
-
+<!-- @example UserController -->
 ```php
-use inroute\Runtime\Environment;
-use inroute\Runtime\Routable;
+use inroutephp\inroute\Annotation\Route;
+use inroutephp\inroute\Runtime\EnvironmentInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\Response\TextResponse;
 
-class MyRoutableClass implements Routable
+class UserController
 {
     /**
-     * @route GET </foo/{:name}>
+     * @Route(
+     *     method="GET",
+     *     path="/users/{name}",
+     *     name="getUser",
+     *     attributes={
+     *         "custom-attribute": "value"
+     *     }
+     * )
      */
-    public function foo(Environment $env)
+    public function getUser(ServerRequestInterface $request, EnvironmentInterface $environment): ResponseInterface
     {
-        return $env->get('route')->name;
-    }
+        return new TextResponse(
+            // the name attribute from the request path
+            $request->getAttribute('name')
 
-    /**
-     * @route POST </bar/{:name}>
-     */
-    public function bar(Environment $env)
-    {
-        var_dump($env);
+            // the custom route attribute
+            . $environment->getRoute()->getAttribute('custom-attribute')
+        );
     }
 }
 ```
 
+* The `method` and `path` values are self explanatory.
+* A route `name` is optional, and defaults to `class:method` (in the example
+  `UserController:getUser`).
+* `Attributes` are custom values that can be accessed at runtime through the
+  environment as seen above.
+* Note that the use of zend diactoros as a psr-7 response implementation is
+  used in this example, you may of courseuse  another psr-7 implementation.
 
-Compiling your project
-----------------------
-Compile your project using
+## Compiling
 
-    $ php vendor/bin/inroute build
+The recommended way of building a project is by using the
+[console](https://github.com/inroutephp/console) build tool. Compiling from
+pure php involves setting up the compiler something like the following.
 
-This will read source paths from your `composer.json` and output the generated
-router to `router.php`. For more information on how to use the command line
-utility try
+<!--
+    @example Router
+    @include UserController
+-->
+```php
+use inroutephp\inroute\Annotation\LoaderBootstrap;
+use inroutephp\inroute\Annotation\RouteCompilerPass;
+use inroutephp\inroute\Annotation\RouteFactory;
+use inroutephp\inroute\Aura\CodeGenerator;
+use inroutephp\inroute\Compiler\Factory;
+use inroutephp\inroute\Settings\ArraySettings;
 
-    $ php vendor/bin/inroute help build
+$settings = new ArraySettings([
+    'bootstrap' => LoaderBootstrap::CLASS,
+    'core_compiler_passes' => [RouteCompilerPass::CLASS],
+    'router_namespace' => 'example',
+    'router_classname' => 'HttpRouter',
+]);
 
+$compiler = (new Factory($settings))->createCompiler();
 
-The example app
----------------
-The inroute source includes an example application. Build the application using
+$routes = $compiler->compile((new RouteFactory)->createRoutesFrom(UserController::CLASS));
 
-    $ php bin/inroute build --no-composer -p example -o example/router.php
+$code = (new CodeGenerator)->generateRouterCode($settings, $routes);
 
-The actual application can be found under [example](example).
-View the sources for some explanatory comments.
+eval($code);
 
-### Running the app in your browser
+$router = new example\HttpRouter;
+```
 
-The example directory contains three different dispatchers:
+### Creating OpenApi apps
 
-* [development.php](example/development.php) builds the application on every
-  page reload. Use this style of dispatch during development.
-* [production.php](example/production.php) dispatches the application using the
-  generated router.
+Instead of using the `@Route` annotation inroute is able to build OpenApi
+projects annotated with [swagger-php](https://github.com/zircote/swagger-php)
+annotations. To build OpenApi apps replace `RouteCompilerPass` above with
+`inroutephp\inroute\OpenApi\OpenApiCompilerPass`.
 
-Point your browser to either one of these files to view the output.
+## Dispatching
+
+The generated router is a [PSR-15](https://www.php-fig.org/psr/psr-15/)
+compliant middleware. To dispatch you need to supply an implementation of
+[PSR-7](https://www.php-fig.org/psr/psr-7/) for request and response objects
+and some response emitting functionality (of course you should also use a
+complete middleware pipeline for maximum power).
+
+In this simple example we use
+
+* [zend-diactoros](https://github.com/zendframework/zend-diactoros) as PSR-15
+  implementation and
+* [zend-httphandlerrunner](https://github.com/zendframework/zend-httphandlerrunner)
+  for emitting responses.
+* [middleman](https://github.com/mindplay-dk/middleman) for dispatching the
+  middleware pipeline.
+
+<!--
+    @example Dispatching
+    @include Router
+    @expectOutput foovalue
+-->
+```php
+use Zend\Diactoros\ServerRequestFactory;
+use mindplay\middleman\Dispatcher;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+
+// fakeing a GET request
+$request = (new ServerRequestFactory)->createServerRequest('GET', '/users/foo');
+
+// creating and dispatching a simple middleware pipeline
+$response = (new Dispatcher([$router]))->dispatch($request);
+
+// emitting the response
+(new SapiEmitter)->emit($response);
+```
+
+## Generating route paths
+
+```php
+function getUser(ServerRequestInterface $request, EnvironmentInterface $environment): ResponseInterface
+{
+    return new TextResponse(
+        $environment->getUrlGenerator()->generateUrl('getUser', ['name' => 'myUserName'])
+    );
+}
+```
+
+## Creating custom annotations
+
+Inroute use [doctrine](https://github.com/doctrine/annotations) to read
+annotations. Creating custom annotations is as easy as
+
+```php
+namespace MyNamespace;
+
+/** @Annotation */
+class MyAnnotation
+{
+    public $value;
+}
+```
+
+And you may then annotate your controller methods
+
+```php
+use MyNamespace\MyAnnotation;
+
+class Controller
+{
+    /**
+     * @MyAnnotation(value="foobar")
+     */
+    public function route()
+    {
+    }
+}
+```
+
+## Processing routes using compiler passes
+
+Custom annotations are most useful pared with custom compiler passes
+
+```php
+use inroutephp\inroute\Compiler\CompilerPassInterface;
+use inroutephp\inroute\Runtime\RouteInterface;
+use MyNamespace\MyAnnotation;
+
+class MyCompilerPass implements CompilerPassInterface
+{
+    public function processRoute(RouteInterface $route): RouteInterface
+    {
+        if ($route->hasAnnotation(MyAnnotation::CLASS)) {
+            return $route->withMiddleware(SomeCoolMiddleware::CLASS);
+        }
+
+        return $route;
+    }
+}
+```
+
+Each route has a middleware pipeline of its own. In the example above all
+routes annotated with `MyAnnotation` will be wrapped in `SomeCoolMiddleware`.
+This makes it easy to add custom behaviour to routes at compile time based
+on annotations.
+
+## Handling dependencies with a DI container
+
+You may have noted that in the example above `SomeCoolMiddleware` was passed
+not as an instantiated object but as a class name. The actual object is created
+at runtime using a [PSR-11](https://www.php-fig.org/psr/psr-11/) dependency
+injection container. The same is true for controller classes.
+
+Create you container as part of your dispatching logic and pass it to the router
+using the `setContainer()` method.
+
+<!-- @ignore -->
+```php
+$container = /* your custom setup */;
+
+$router = new example\HttpRouter;
+
+$router->setContainer($container);
+
+// continue dispatch...
+```

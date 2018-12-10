@@ -1,228 +1,316 @@
 <?php
-/**
- * This program is free software. It comes without any warranty, to
- * the extent permitted by applicable law. You can redistribute it
- * and/or modify it under the terms of the Do What The Fuck You Want
- * To Public License, Version 2, as published by Sam Hocevar. See
- * http://www.wtfpl.net/ for more details.
- */
 
-namespace inroute\Runtime;
+declare(strict_types = 1);
 
-/**
- * The route class
- *
- * @author Hannes Forsgård <hannes.forsgard@fripost.org>
- */
-class Route
+namespace inroutephp\inroute\Runtime;
+
+use inroutephp\inroute\Annotation\AnnotatedInterface;
+use inroutephp\inroute\Exception\LogicException;
+
+final class Route implements RouteInterface
 {
     /**
-     * @var array Path tokens
+     * @var AnnotatedInterface
      */
-    private $tokens;
+    private $annotations;
 
     /**
-     * @var Regex Regular expression used when generating paths
+     * @var string
      */
-    private $regex;
+    private $name = '';
 
     /**
-     * @var Environment Route environment
+     * @var bool
      */
-    private $env;
+    private $routable = false;
 
     /**
-     * @var string[] List of pre filter classnames
+     * @var string[]
      */
-    private $preFilters;
+    private $httpMethods = [];
 
     /**
-     * @var string[] List of post filter classnames
+     * @var string
      */
-    private $postFilters;
+    private $path = '';
 
     /**
-     * @var string Mathed HTTP method
+     * @var string[]
      */
-    private $methodMatch = '';
+    private $pathTokens = [];
 
     /**
-     * @var string Matched path
+     * @var string[]
      */
-    private $pathMatch = '';
+    private $pathDefaults = [];
 
     /**
-     * Constructor
-     *
-     * @param array       $tokens      Path tokens used when generating paths
-     * @param Regex       $regex       Regular expression used when matching a path
-     * @param Environment $env         Route environment
-     * @param string[]    $preFilters  List of pre filter classnames
-     * @param string[]    $postFilters List of post filter classnames
+     * @var array
      */
-    public function __construct(
-        array $tokens,
-        Regex $regex,
-        Environment $env,
-        array $preFilters,
-        array $postFilters
-    ) {
-        $this->tokens = $tokens;
-        $this->regex = $regex;
-        $this->env = $env;
-        $this->preFilters = $preFilters;
-        $this->postFilters = $postFilters;
-    }
+    private $attributes = [];
 
     /**
-     * Execute route
-     *
-     * @param  callable $instantiator
-     * @return mixed    Whatever the route returns
+     * @var string
      */
-    public function execute(callable $instantiator)
+    private $serviceId = '';
+
+    /**
+     * @var string
+     */
+    private $serviceMethod = '';
+
+    /**
+     * @var string[]
+     */
+    private $middlewareServiceIds = [];
+
+    public function __construct(string $serviceId, string $serviceMethod, AnnotatedInterface $annotations)
     {
-        $this->env->set('route', $this);
-
-        foreach ($this->preFilters as $filtername) {
-            $this->instantiateAndExecute($filtername, 'filter', $this->env, $instantiator);
+        if ($serviceId) {
+            $this->name = $serviceId;
+            $this->serviceId = $serviceId;
         }
 
-        $returnValue = $this->instantiateAndExecute(
-            $this->env->get('controller_name'),
-            $this->env->get('controller_method'),
-            $this->env,
-            $instantiator
-        );
-
-        foreach ($this->postFilters as $filtername) {
-            $returnValue = $this->instantiateAndExecute($filtername, 'filter', $returnValue, $instantiator);
+        if ($serviceMethod) {
+            $this->name .= ":$serviceMethod";
+            $this->serviceMethod = $serviceMethod;
         }
 
-        return $returnValue;
+        $this->annotations = $annotations;
     }
 
-    /**
-     * Create instance of $classname and execute $methodname with $arg
-     *
-     * @param  string   $classname
-     * @param  string   $methodname
-     * @param  mixed    $arg
-     * @param  callable $instantiator
-     * @return mixed    Whatever method returns
-     */
-    private function instantiateAndExecute($classname, $methodname, $arg, callable $instantiator)
+    public function __sleep(): array
     {
-        return call_user_func(
-            [
-                call_user_func($instantiator, $classname),
-                $methodname
-            ],
-            $arg
-        );
+        return [
+            'name',
+            'routable',
+            'httpMethods',
+            'path',
+            'pathTokens',
+            'pathDefaults',
+            'attributes',
+            'serviceId',
+            'serviceMethod',
+            'middlewareServiceIds',
+        ];
     }
 
-    /**
-     * Check if route matches HTTP method
-     *
-     * @param  string  $method
-     * @return boolean
-     */
-    public function isMethodMatch($method)
+    public function getName(): string
     {
-        if (in_array($method, (array)$this->env->get('http_methods'))) {
-            $this->methodMatch = $method;
-            return true;
-        }
-        $this->methodMatch = '';
-        return false;
+        return $this->name;
     }
 
-    /**
-     * Check if route matches path
-     *
-     * @param  string  $path
-     * @return boolean
-     */
-    public function isPathMatch($path)
+    public function withName(string $name): RouteInterface
     {
-        if ($this->regex->match($path)) {
-            $this->pathMatch = $path;
-            return true;
-        }
-        $this->pathMatch = '';
-        return false;
+        $new = clone $this;
+        $new->setName($name);
+        return $new;
     }
 
-    /**
-     * Get route name
-     *
-     * @return string
-     */
-    public function getName()
+    private function setName(string $name): void
     {
-        return sprintf(
-            '%s::%s',
-            $this->env->get('controller_name'),
-            $this->env->get('controller_method')
-        );
+        $this->name = $name;
     }
 
-    /**
-     * Get mathcing HTTP method
-     *
-     * @return string
-     */
-    public function getMethod()
+    public function isRoutable(): bool
     {
-        return $this->methodMatch;
+        return $this->routable;
     }
 
-    /**
-     * Get matching request path
-     *
-     * @return string
-     */
-    public function getPath()
+    public function withRoutable(bool $routable): RouteInterface
     {
-        return $this->pathMatch;
+        $new = clone $this;
+        $new->setRoutable($routable);
+        return $new;
     }
 
-    /**
-     * Get matched path parameter
-     *
-     * @param  string $key parameter name
-     * @return string
-     */
-    public function __get($key)
+    private function setRoutable(bool $routable): void
     {
-        return $this->regex->$key;
+        $this->routable = $routable;
     }
 
-    /**
-     * Generate path using parameters
-     *
-     * @param  array  $params List of named parameters
-     * @return string
-     * @throws \RuntimeException If any parameter is missing
-     */
-    public function generate(array $params)
+    public function getHttpMethods(): array
     {
-        $parts = array();
+        return array_values($this->httpMethods);
+    }
 
-        foreach ($this->tokens as $token) {
-            if (is_string($token)) {
-                $parts[] = $token;
-                continue;
-            }
+    public function withHttpMethod(string $httpMethod): RouteInterface
+    {
+        $new = clone $this;
+        $new->setHttpMethods(array_merge($this->httpMethods, [strtoupper($httpMethod)]));
+        return $new;
+    }
 
-            if (!isset($params[$token->getName()])) {
-                throw new \RuntimeException("Parameter <{$token->getName()}> missing.");
-            }
+    public function withoutHttpMethod(string $httpMethod): RouteInterface
+    {
+        $new = clone $this;
 
-            $parts[] = $token->substitute($params[$token->getName()]);
+        $id = array_search(strtoupper($httpMethod), $this->httpMethods);
+
+        if (false !== $id) {
+            $newHttpMethods = $this->httpMethods;
+            unset($newHttpMethods[$id]);
+            $new->setHttpMethods($newHttpMethods);
         }
 
-        return implode('/', $parts);
+        return $new;
+    }
+
+    private function setHttpMethods(array $httpMethods): void
+    {
+        $this->httpMethods = array_change_key_case($httpMethods, CASE_UPPER);
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    public function withPath(string $path): RouteInterface
+    {
+        $new = clone $this;
+        $new->setPath($path);
+        return $new;
+    }
+
+    private function setPath(string $path): void
+    {
+        $this->path = $path;
+    }
+
+    public function getPathTokens(): array
+    {
+        return $this->pathTokens;
+    }
+
+    public function getPathDefaults(): array
+    {
+        return $this->pathDefaults;
+    }
+
+    public function withPathToken(string $token, string $regexp, string $default = ''): RouteInterface
+    {
+        $new = clone $this;
+        $new->setPathToken($token, $regexp, $default);
+        return $new;
+    }
+
+    private function setPathToken(string $token, string $regexp, string $default): void
+    {
+        if ($regexp) {
+            $this->pathTokens[$token] = $regexp;
+        }
+
+        if ($default) {
+            $this->pathDefaults[$token] = $default;
+        }
+    }
+
+    private function setPathTokensAndDefaults(array $tokens, array $defaults): void
+    {
+        $this->pathTokens = $tokens;
+        $this->pathDefaults = $defaults;
+    }
+
+    public function hasAttribute(string $name): bool
+    {
+        return isset($this->attributes[$name]);
+    }
+
+    public function getAttribute(string $name)
+    {
+        return $this->attributes[$name] ?? null;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    public function withAttribute(string $name, $value): RouteInterface
+    {
+        $new = clone $this;
+        $new->setAttribute($name, $value);
+        return $new;
+    }
+
+    private function setAttribute(string $name, $value): void
+    {
+        $this->attributes[$name] = $value;
+    }
+
+    public function getServiceId(): string
+    {
+        return $this->serviceId;
+    }
+
+    public function withServiceId(string $serviceId): RouteInterface
+    {
+        $new = clone $this;
+        $new->setServiceId($serviceId);
+        return $new;
+    }
+
+    private function setServiceId(string $serviceId): void
+    {
+        $this->serviceId = $serviceId;
+    }
+
+    public function getServiceMethod(): string
+    {
+        return $this->serviceMethod;
+    }
+
+    public function withServiceMethod(string $serviceMethod): RouteInterface
+    {
+        $new = clone $this;
+        $new->setServiceMethod($serviceMethod);
+        return $new;
+    }
+
+    private function setServiceMethod(string $serviceMethod): void
+    {
+        $this->serviceMethod = $serviceMethod;
+    }
+
+    public function getMiddlewareServiceIds(): array
+    {
+        return $this->middlewareServiceIds;
+    }
+
+    public function withMiddleware(string $serviceId): RouteInterface
+    {
+        $new = clone $this;
+        $new->setMiddlewareServiceIds(array_merge($this->middlewareServiceIds, [$serviceId]));
+        return $new;
+    }
+
+    private function setMiddlewareServiceIds(array $serviceIds): void
+    {
+        $this->middlewareServiceIds = $serviceIds;
+    }
+
+    public function hasAnnotation(string $annotationId): bool
+    {
+        return $this->getWrappedAnnotations()->hasAnnotation($annotationId);
+    }
+
+    public function getAnnotation(string $annotationId)
+    {
+        return $this->getWrappedAnnotations()->getAnnotation($annotationId);
+    }
+
+    public function getAnnotations(string $annotationId = ''): array
+    {
+        return $this->getWrappedAnnotations()->getAnnotations($annotationId);
+    }
+
+    private function getWrappedAnnotations(): AnnotatedInterface
+    {
+        if (!isset($this->annotations)) {
+            throw new LogicException('Unserialized route does not contain annotations');
+        }
+
+        return $this->annotations;
     }
 }

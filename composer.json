@@ -1,10 +1,10 @@
 {
-    "name": "hanneskod/inroute",
-    "description": "Generate web router and dispatcher from docblock annotations",
-    "keywords": ["Annotations", "Router", "Code generator"],
-    "homepage": "https://github.com/hanneskod/inroute",
+    "name": "inroutephp/inroute",
+    "description": "Generate http routing and dispatching middleware from docblock annotations",
+    "keywords": ["annotations", "web-router", "middleware", "psr-15", "openapi"],
+    "homepage": "https://github.com/inroutephp/inroute",
     "type": "library",
-    "license": "WTFPL",
+    "license": "Unlicense",
     "authors": [
         {
             "name": "Hannes Forsgård",
@@ -13,25 +13,26 @@
     ],
     "autoload": {
         "psr-4": {
-            "inroute\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "inroute\\example\\": "example/"
+            "inroutephp\\inroute\\": "src/"
         }
     },
     "require": {
-        "php": ">=5.5",
-        "hanneskod/classtools": "dev-master#2be9c06ee966e89770258dd01878b329180ff847",
-        "zeptech/annotations": "1.1.*",
-        "psr/log": "1.*",
-        "symfony/console": "~2.4"
+        "php": "^7.1",
+        "psr/container": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "mindplay/middleman": "^3.0",
+        "aura/router": "^3.0",
+        "doctrine/annotations": "^1.6",
+        "symfony/var-exporter": "^4.2"
     },
     "require-dev": {
-        "mockery/mockery": "~0.9.0"
+        "zircote/swagger-php": "^3.0",
+        "zendframework/zend-diactoros": "^2.0",
+        "zendframework/zend-httphandlerrunner": "^1.0"
     },
-    "bin": [
-        "bin/inroute"
-    ]
+    "suggest": {
+        "zircote/swagger-php:3": "For building openapi apps"
+    }
 }

@@ -1,16 +1,15 @@
 language: php
 
 php:
-    - hhvm
-    - 5.6
-    - 5.5
-
-matrix:
-    allow_failures:
-        - php: hhvm
+    - 7.3
+    - 7.2
+    - 7.1
 
 install:
-    - composer install --dev --prefer-source
+    - composer install
+    - composer global require chh/bob:^1@alpha
+    - export PATH=$PATH:$HOME/.composer/vendor/bin/
+    - bob install_dev_tools
 
 script:
-    - phpunit
+    - phpspec run

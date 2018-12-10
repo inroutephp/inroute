@@ -1,71 +1,34 @@
 <?php
-/**
- * This program is free software. It comes without any warranty, to
- * the extent permitted by applicable law. You can redistribute it
- * and/or modify it under the terms of the Do What The Fuck You Want
- * To Public License, Version 2, as published by Sam Hocevar. See
- * http://www.wtfpl.net/ for more details.
- */
 
-namespace inroute\Runtime;
+declare(strict_types = 1);
 
-/**
- * Defines a route environment
- *
- * @author Hannes Forsgård <hannes.forsgard@fripost.org>
- */
-class Environment
+namespace inroutephp\inroute\Runtime;
+
+final class Environment implements EnvironmentInterface
 {
     /**
-     * @var array Loaded data
+     * @var RouteInterface
      */
-    private $data;
+    private $route;
 
     /**
-     * Store required values at construct
-     *
-     * @param array $data
+     * @var UrlGeneratorInterface
      */
-    public function __construct(array $data = array())
+    private $urlGenerator;
+
+    public function __construct(RouteInterface $route, UrlGeneratorInterface $urlGenerator)
     {
-        $this->data = array_change_key_case($data, CASE_LOWER);
+        $this->route = $route;
+        $this->urlGenerator = $urlGenerator;
     }
 
-    /**
-     * Store data in environment
-     *
-     * @param  string $key
-     * @param  mixed $value
-     * @return void
-     */
-    public function set($key, $value)
+    public function getRoute(): RouteInterface
     {
-        $this->data[strtolower($key)] = $value;
+        return $this->route;
     }
 
-    /**
-     * Read data from environment
-     *
-     * @param  string $key
-     * @return mixed
-     */
-    public function get($key)
+    public function getUrlGenerator(): UrlGeneratorInterface
     {
-        $key = strtolower($key);
-        if (isset($this->data[$key])) {
-            return $this->data[$key];
-        }
-
-        return '';
-    }
-
-    /**
-     * Get an array representation of environment
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return $this->data;
+        return $this->urlGenerator;
     }
 }

@@ -1,0 +1,6 @@
+suites:
+    inroute:
+        namespace: inroutephp\inroute
+        psr4_prefix: inroutephp\inroute
+
+formatter.name: dot
