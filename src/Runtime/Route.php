@@ -35,16 +35,6 @@ final class Route implements RouteInterface
     private $path = '';
 
     /**
-     * @var string[]
-     */
-    private $pathTokens = [];
-
-    /**
-     * @var string[]
-     */
-    private $pathDefaults = [];
-
-    /**
      * @var array
      */
     private $attributes = [];
@@ -86,8 +76,6 @@ final class Route implements RouteInterface
             'routable',
             'httpMethods',
             'path',
-            'pathTokens',
-            'pathDefaults',
             'attributes',
             'serviceId',
             'serviceMethod',
@@ -176,40 +164,6 @@ final class Route implements RouteInterface
     private function setPath(string $path): void
     {
         $this->path = $path;
-    }
-
-    public function getPathTokens(): array
-    {
-        return $this->pathTokens;
-    }
-
-    public function getPathDefaults(): array
-    {
-        return $this->pathDefaults;
-    }
-
-    public function withPathToken(string $token, string $regexp, string $default = ''): RouteInterface
-    {
-        $new = clone $this;
-        $new->setPathToken($token, $regexp, $default);
-        return $new;
-    }
-
-    private function setPathToken(string $token, string $regexp, string $default): void
-    {
-        if ($regexp) {
-            $this->pathTokens[$token] = $regexp;
-        }
-
-        if ($default) {
-            $this->pathDefaults[$token] = $default;
-        }
-    }
-
-    private function setPathTokensAndDefaults(array $tokens, array $defaults): void
-    {
-        $this->pathTokens = $tokens;
-        $this->pathDefaults = $defaults;
     }
 
     public function hasAttribute(string $name): bool

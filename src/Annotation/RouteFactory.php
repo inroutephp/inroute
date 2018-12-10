@@ -6,7 +6,7 @@ namespace inroutephp\inroute\Annotation;
 
 use inroutephp\inroute\Compiler\RouteCollectionInterface;
 use inroutephp\inroute\Compiler\RouteCollection;
-use inroutephp\inroute\Runtime\Route;
+use inroutephp\inroute\Runtime\Route as RouteObject;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 final class RouteFactory
@@ -40,7 +40,7 @@ final class RouteFactory
                 continue;
             }
 
-            $routes[] = new Route(
+            $routes[] = new RouteObject(
                 $classReflector->getName(),
                 $methodReflector->getName(),
                 new AnnotatedObject($this->reader->getMethodAnnotations($methodReflector))

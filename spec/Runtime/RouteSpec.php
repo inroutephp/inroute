@@ -93,19 +93,6 @@ class RouteSpec extends ObjectBehavior
         });
     }
 
-    function it_defaults_to_empty_path_tokens()
-    {
-        $this->getPathTokens()->shouldReturn([]);
-        $this->getPathDefaults()->shouldReturn([]);
-    }
-
-    function it_can_set_path_token()
-    {
-        $this->withPathToken('foo', 'bar', 'baz')->shouldReturnRouteThat(function (Route $route) {
-            return $route->getPathTokens() == ['foo' => 'bar'] && $route->getPathDefaults() == ['foo' => 'baz'];
-        });
-    }
-
     function it_can_check_attibute()
     {
         $this->hasAttribute('foo')->shouldReturn(false);

@@ -58,25 +58,6 @@ interface RouteInterface extends AnnotatedInterface
     public function withPath(string $path): RouteInterface;
 
     /**
-     * Get set of path token regular expressions
-     *
-     * @return string[]
-     */
-    public function getPathTokens(): array;
-
-    /**
-     * Get set of path token default values
-     *
-     * @return string[]
-     */
-    public function getPathDefaults(): array;
-
-    /**
-     * Create a new route with path token
-     */
-    public function withPathToken(string $token, string $regexp, string $default = ''): RouteInterface;
-
-    /**
      * Check if route has attribute
      */
     public function hasAttribute(string $name): bool;

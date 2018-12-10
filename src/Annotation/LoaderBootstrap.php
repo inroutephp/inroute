@@ -15,8 +15,6 @@ final class LoaderBootstrap implements BootstrapInterface
 {
     public function bootstrap(SettingsInterface $settings): void
     {
-        AnnotationRegistry::registerLoader(function (string $classname): bool {
-            return class_exists($classname);
-        });
+        AnnotationRegistry::registerLoader('class_exists');
     }
 }

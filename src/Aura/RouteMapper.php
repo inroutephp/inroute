@@ -24,8 +24,6 @@ final class RouteMapper
         $this->map
             ->route($route->getName(), $route->getPath(), $route)
             ->allows($route->getHttpMethods())
-            ->tokens($route->getPathTokens())
-            ->defaults($route->getPathDefaults())
             ->extras($route->getAttributes())
         ;
     }

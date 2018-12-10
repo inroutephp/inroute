@@ -28,15 +28,11 @@ class RouteMapperSpec extends ObjectBehavior
         $route->getName()->willReturn('name');
         $route->getPath()->willReturn('path');
         $route->getHttpMethods()->willReturn(['METHOD']);
-        $route->getPathTokens()->willReturn(['tokens']);
-        $route->getPathDefaults()->willReturn(['defaults']);
         $route->getAttributes()->willReturn(['attributes']);
 
         $map->route('name', 'path', $route)->willReturn($auraRoute)->shouldBeCalled();
 
         $auraRoute->allows(['METHOD'])->willReturn($auraRoute)->shouldBeCalled();
-        $auraRoute->tokens(['tokens'])->willReturn($auraRoute)->shouldBeCalled();
-        $auraRoute->defaults(['defaults'])->willReturn($auraRoute)->shouldBeCalled();
         $auraRoute->extras(['attributes'])->willReturn($auraRoute)->shouldBeCalled();
 
         $this->mapRoute($route);

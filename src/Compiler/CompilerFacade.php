@@ -73,7 +73,7 @@ final class CompilerFacade
             );
 
             foreach ($classFinder as $classname) {
-                $collections[] = $routeFactory->createRoutesFrom($classname);
+                $collections[] = $routeFactory->createRoutesFrom((string)$classname);
             }
         }
 
