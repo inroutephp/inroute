@@ -5,7 +5,7 @@ namespace Bob\BuildConfig;
 task('default', ['test', 'phpstan', 'sniff']);
 
 desc('Run all tests');
-task('test', ['phpspec' /*, 'behat' */, 'examples']);
+task('test', ['phpspec' , 'behat', 'examples']);
 
 desc('Run phpspec unit tests');
 task('phpspec', function() {

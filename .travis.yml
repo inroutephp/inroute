@@ -8,8 +8,9 @@ php:
 install:
     - composer install
     - composer global require chh/bob:^1@alpha
-    - export PATH=$PATH:$HOME/.composer/vendor/bin/
+    - export PATH=$PATH:$COMPOSER_BIN_DIR
     - bob install_dev_tools
 
 script:
     - phpspec run
+    - behat

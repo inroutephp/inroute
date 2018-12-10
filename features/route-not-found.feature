@@ -4,25 +4,69 @@ Feature: Handle route not found situations
   I need to handle route not found situations
 
   Scenario: I catch route not found exception
-    Given an empty router
-    And an empty container
-    When I request "/foo"
+    When I request "GET" "/foo"
     Then a "RouteNotFoundException" exception is thrown
 
   Scenario: I generate a route not found response using a response factory
-    Given an empty router
-    And a container like:
+    Given a container with services:
     """
     [
-        'Psr\\Http\\Message\\ResponseFactoryInterface' => function () {
-            return new class implements \\Psr\\Http\\Message\\ResponseFactoryInterface {
-                public function createResponse(int $code = 200, string $phrase = ''): \\Psr\\Http\\Message\\ResponseInterface
-                {
-                    return (new \\Zend\\Diactoros\\Response)->withStatus($code);
-                }
-            };
-        },
+        ResponseFactoryInterface::CLASS => new class implements ResponseFactoryInterface {
+            public function createResponse(int $code = 200, string $phrase = ''): ResponseInterface
+            {
+                return (new \Zend\Diactoros\Response)->withStatus($code);
+            }
+        }
     ]
     """
-    When I request "/foo"
-    Then a "404" response is returned
+    When I request "GET" "/foo"
+    Then the response code is "404"
+
+  Scenario: I catch route method not allowed exception
+    Given a controller "PostController1":
+    """
+    class PostController1
+    {
+        /**
+         * @\inroutephp\inroute\Annotation\Route(
+         *     method="POST",
+         *     path="/foo"
+         * )
+         */
+        function foo()
+        {
+        }
+    }
+    """
+    When I request "GET" "/foo"
+    Then a "MethodNotAllowedException" exception is thrown
+
+  Scenario: I generate a method not allowed response using a response factory
+    Given a container with services:
+    """
+    [
+        ResponseFactoryInterface::CLASS => new class implements ResponseFactoryInterface {
+            public function createResponse(int $code = 200, string $phrase = ''): ResponseInterface
+            {
+                return (new \Zend\Diactoros\Response)->withStatus($code);
+            }
+        }
+    ]
+    """
+    And a controller "PostController2":
+    """
+    class PostController2
+    {
+        /**
+         * @\inroutephp\inroute\Annotation\Route(
+         *     method="POST",
+         *     path="/foo"
+         * )
+         */
+        function foo()
+        {
+        }
+    }
+    """
+    When I request "GET" "/foo"
+    Then the response code is "405"

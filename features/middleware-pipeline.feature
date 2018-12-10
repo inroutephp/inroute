@@ -4,43 +4,49 @@ Feature: Handle middleware pipeline for route
   I need to handle middleware pipelines
 
   Scenario: I dispatch middleware pipeline
-    Given a router like:
+    Given a controller "ActionController":
     """
-    return new class implements \\Psr\\Http\\Server\\MiddlewareInterface {
-        use AuraHttpRouterTrait;
-
-        protected function loadAuraRoutes(Map $map): void
+    class ActionController
+    {
+        /**
+         * @\inroutephp\inroute\Annotation\Route(
+         *     method="GET",
+         *     path="/action"
+         * )
+         */
+        function action()
         {
-            AuraRoute::__set_state([
-                'name' => 'foo',
-                'path' => '/foo',
-                'serviceId' => 'controller',
-                'serviceMethod' => 'action',
-                'middlewareServiceIds' => ['middleware']
-            ])->writeTo($map);
         }
     }
     """
-    And a container like:
+    And a middleware "Middleware":
     """
-    [
-        'controller' => function () {
-            return new class {
-                public function action()
-                {
-                    return (new \\Zend\\Diactoros\\Response);
-                }
-            };
-        },
-        'middleware' => function () {
-            return new class implements \\Psr\\Http\\Server\\MiddlewareInterface {
-                public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-                {
-                    return $handler->handle($request)->withStatus(300);
-                }
-            }
+    use Psr\Http\Server\MiddlewareInterface;
+    use Psr\Http\Server\RequestHandlerInterface;
+    use Psr\Http\Message\ResponseInterface;
+    use Psr\Http\Message\ServerRequestInterface;
+    use Zend\Diactoros\Response\TextResponse;
+
+    class Middleware implements MiddlewareInterface
+    {
+        public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+        {
+            return new TextResponse('MIDDLEWARE');
         }
-    ]
+    }
     """
-    When I request "/foo"
-    Then a "300" response is returned
+    And a compiler pass "CompilerPass":
+    """
+    use inroutephp\inroute\Compiler\CompilerPassInterface;
+    use inroutephp\inroute\Runtime\RouteInterface;
+
+    class CompilerPass implements CompilerPassInterface
+    {
+        public function processRoute(RouteInterface $route): RouteInterface
+        {
+            return $route->withMiddleware(Middleware::CLASS);
+        }
+    }
+    """
+    When I request "GET" "/action"
+    Then the response body is "MIDDLEWARE"

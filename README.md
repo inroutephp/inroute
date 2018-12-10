@@ -113,23 +113,24 @@ $router = new example\HttpRouter;
 Possible settings include
 
 * `container`: The classname of a compile time container, specify if needed.
-* `bootstrap`: Classname of compile bootstrap, default should normaly be fine.
+* `bootstrap`: Classname of compile bootstrap, default should normally be fine.
 * `source_dir`: Directory to scan for annotated routes.
-* `source_prefix`: Psr-4 namespace prefix to use when searching for source classes.
+* `source_prefix`: psr-4 namespace prefix to use when searching for source classes.
 * `controllers`: Array of controller classnames, use instead of or togheter with
    directory scanning.
-* `core_compiler_passes`: Array of core compiler passes.
+* `core_compiler_passes`: Array of core compiler passes, default should normally be fine.
 * `compiler_passes`: Array of custom compiler passes.
-* `code_generator`: The code generator to use, default should normaly be fine.
+* `code_generator`: The code generator to use, default should normally be fine.
 * `router_namespace`: The namespace of the generated router (defaults to no namespace).
 * `router_classname`: The classname of the generated router (defaults to `HttpRouter`).
 
 ### OpenApi
 
-Instead of using the `@Route` annotation inroute is able to build OpenApi
+Instead of using the `@Route` annotation inroute is able to build openapi
 projects annotated with [swagger-php](https://github.com/zircote/swagger-php)
-annotations. To build OpenApi apps replace set the `core_compiler_passes` setting
-to `['inroutephp\inroute\OpenApi\OpenApiCompilerPass']`.
+annotations.
+
+Set the `core_compiler_passes` setting to `['inroutephp\inroute\OpenApi\OpenApiCompilerPass']`.
 
 ## Dispatching
 
@@ -181,8 +182,8 @@ function getUser(ServerRequestInterface $request, EnvironmentInterface $environm
 
 ## Creating custom annotations
 
-Inroute use [doctrine](https://github.com/doctrine/annotations) to read
-annotations. Creating custom annotations is as easy as
+Inroute uses [doctrine](https://github.com/doctrine/annotations) to read
+annotations. Creating custom annotations is as easy as:
 
 ```php
 namespace MyNamespace;
@@ -194,7 +195,7 @@ class MyAnnotation
 }
 ```
 
-And you may then annotate your controller methods
+And to annotate your controller methods:
 
 ```php
 use MyNamespace\MyAnnotation;
@@ -212,7 +213,7 @@ class Controller
 
 ## Processing routes using compiler passes
 
-Custom annotations are most useful pared with custom compiler passes
+Custom annotations are most useful pared with custom compiler passes.
 
 ```php
 use inroutephp\inroute\Compiler\CompilerPassInterface;
