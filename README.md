@@ -9,7 +9,7 @@ Generate http routing and dispatching middleware from docblock annotations.
 Inroute is a code generator. It scans your source tree for annotated routes and
 generates a [PSR-15](https://www.php-fig.org/psr/psr-15/) compliant http routing
 middleware. In addition all routes have a middleware pipeline of their own,
-making it easy to add behaviour at compile time based on cutom annotations.
+making it easy to add behaviour at compile time based on custom annotations.
 
 * See the [example-app](https://github.com/inroutephp/example-app) for a
   complete example.
@@ -24,7 +24,7 @@ composer require inroutephp/inroute:^1.0@beta
 
 ## Table of contents
 
-1. [Writing routes](#writing routes)
+1. [Writing routes](#writing-routes)
 1. [Compiling](#compiling)
 1. [Dispatching](#dispatching)
 1. [Generating route paths](#generating-route-paths)
@@ -59,7 +59,7 @@ class UserController
      *     }
      * )
      */
-    public function getUser(ServerRequestInterface $request, EnvironmentInterface $environment): ResponseInterface
+    function getUser(ServerRequestInterface $request, EnvironmentInterface $environment): ResponseInterface
     {
         return new TextResponse(
             // the name attribute from the request path
@@ -78,7 +78,7 @@ class UserController
 * `Attributes` are custom values that can be accessed at runtime through the
   environment as seen above.
 * Note that the use of zend diactoros as a psr-7 response implementation is
-  used in this example, you may of courseuse  another psr-7 implementation.
+  used in this example, you may of course use  another psr-7 implementation.
 
 ## Compiling
 
@@ -116,7 +116,7 @@ eval($code);
 $router = new example\HttpRouter;
 ```
 
-### Creating OpenApi apps
+### OpenApi
 
 Instead of using the `@Route` annotation inroute is able to build OpenApi
 projects annotated with [swagger-php](https://github.com/zircote/swagger-php)
@@ -233,8 +233,8 @@ on annotations.
 
 You may have noted that in the example above `SomeCoolMiddleware` was passed
 not as an instantiated object but as a class name. The actual object is created
-at runtime using a [PSR-11](https://www.php-fig.org/psr/psr-11/) dependency
-injection container. The same is true for controller classes.
+at runtime using a [PSR-11](https://www.php-fig.org/psr/psr-11/) compliant
+dependency injection container. The same is true for controller classes.
 
 Create you container as part of your dispatching logic and pass it to the router
 using the `setContainer()` method.
