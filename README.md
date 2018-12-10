@@ -55,7 +55,8 @@ class UserController
      *     path="/users/{name}",
      *     name="getUser",
      *     attributes={
-     *         "custom-attribute": "value"
+     *         "key": "value",
+     *         "name": "overwritten by path value"
      *     }
      * )
      */
@@ -66,7 +67,7 @@ class UserController
             $request->getAttribute('name')
 
             // the custom route attribute
-            . $environment->getRoute()->getAttribute('custom-attribute')
+            . $request->getAttribute('key')
         );
     }
 }
@@ -76,7 +77,7 @@ class UserController
 * A route `name` is optional, and defaults to `class:method` (in the example
   `UserController:getUser`).
 * `Attributes` are custom values that can be accessed at runtime through the
-  environment as seen above.
+  request object.
 * Note that the use of zend diactoros as a psr-7 response implementation is
   used in this example, you may of course use  another psr-7 implementation.
 
@@ -91,37 +92,44 @@ pure php involves setting up the compiler something like the following.
     @include UserController
 -->
 ```php
-use inroutephp\inroute\Annotation\LoaderBootstrap;
-use inroutephp\inroute\Annotation\RouteCompilerPass;
-use inroutephp\inroute\Annotation\RouteFactory;
-use inroutephp\inroute\Aura\CodeGenerator;
-use inroutephp\inroute\Compiler\Factory;
+use inroutephp\inroute\Compiler\CompilerFacade;
 use inroutephp\inroute\Settings\ArraySettings;
 
 $settings = new ArraySettings([
-    'bootstrap' => LoaderBootstrap::CLASS,
-    'core_compiler_passes' => [RouteCompilerPass::CLASS],
+    'controllers' => [UserController::CLASS],
     'router_namespace' => 'example',
     'router_classname' => 'HttpRouter',
 ]);
 
-$compiler = (new Factory($settings))->createCompiler();
+$facade = new CompilerFacade;
 
-$routes = $compiler->compile((new RouteFactory)->createRoutesFrom(UserController::CLASS));
-
-$code = (new CodeGenerator)->generateRouterCode($settings, $routes);
+$code = $facade->compileProject($settings);
 
 eval($code);
 
 $router = new example\HttpRouter;
 ```
 
+Possible settings include
+
+* `container`: The classname of a compile time container, specify if needed.
+* `bootstrap`: Classname of compile bootstrap, default should normaly be fine.
+* `source_dir`: Directory to scan for annotated routes.
+* `source_prefix`: Psr-4 namespace prefix to use when searching for source classes.
+* `controllers`: Array of controller classnames, use instead of or togheter with
+   directory scanning.
+* `core_compiler_passes`: Array of core compiler passes.
+* `compiler_passes`: Array of custom compiler passes.
+* `code_generator`: The code generator to use, default should normaly be fine.
+* `router_namespace`: The namespace of the generated router (defaults to no namespace).
+* `router_classname`: The classname of the generated router (defaults to `HttpRouter`).
+
 ### OpenApi
 
 Instead of using the `@Route` annotation inroute is able to build OpenApi
 projects annotated with [swagger-php](https://github.com/zircote/swagger-php)
-annotations. To build OpenApi apps replace `RouteCompilerPass` above with
-`inroutephp\inroute\OpenApi\OpenApiCompilerPass`.
+annotations. To build OpenApi apps replace set the `core_compiler_passes` setting
+to `['inroutephp\inroute\OpenApi\OpenApiCompilerPass']`.
 
 ## Dispatching
 
@@ -216,7 +224,9 @@ class MyCompilerPass implements CompilerPassInterface
     public function processRoute(RouteInterface $route): RouteInterface
     {
         if ($route->hasAnnotation(MyAnnotation::CLASS)) {
-            return $route->withMiddleware(SomeCoolMiddleware::CLASS);
+            return $route
+                ->withAttribute('cool-attribute', $route->getAnnotation(MyAnnotation::CLASS)->value)
+                ->withMiddleware(SomeCoolMiddleware::CLASS);
         }
 
         return $route;
@@ -228,6 +238,9 @@ Each route has a middleware pipeline of its own. In the example above all
 routes annotated with `MyAnnotation` will be wrapped in `SomeCoolMiddleware`.
 This makes it easy to add custom behaviour to routes at compile time based
 on annotations.
+
+The attribute `cool-attribute` can be accessed in middlewares using
+`$request->getAttribute('cool-attribute')`.
 
 ## Handling dependencies with a DI container
 

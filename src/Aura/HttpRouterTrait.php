@@ -54,7 +54,7 @@ trait HttpRouterTrait
             if ($failedRoute && $failedRoute->failedRule == 'Aura\Router\Rule\Allows') {
                 if ($this->container->has(ResponseFactoryInterface::CLASS)) {
                     return $this->container->get(ResponseFactoryInterface::CLASS)
-                        ->createResponse('405')
+                        ->createResponse(405)
                         ->withHeader('Allow', implode(', ', $failedRoute->allows));
                 }
 
@@ -62,18 +62,22 @@ trait HttpRouterTrait
             }
 
             if ($this->container->has(ResponseFactoryInterface::CLASS)) {
-                return $this->container->get(ResponseFactoryInterface::CLASS)->createResponse('404');
+                return $this->container->get(ResponseFactoryInterface::CLASS)->createResponse(404);
             }
 
             throw new RouteNotFoundException($request);
         }
 
-        foreach ($match->attributes as $name => $val) {
+        /** @var RouteInterface $route */
+        $route = $match->handler;
+
+        foreach ($route->getAttributes() as $name => $val) {
             $request = $request->withAttribute($name, $val);
         }
 
-        /** @var RouteInterface $route */
-        $route = $match->handler;
+        foreach ($match->attributes as $name => $val) {
+            $request = $request->withAttribute($name, $val);
+        }
 
         $middlewares = $route->getMiddlewareServiceIds();
 
