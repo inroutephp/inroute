@@ -21,15 +21,15 @@ final class CompilerFacade
         'bootstrap' => LoaderBootstrap::CLASS,
         'source_dir' => '',
         'source_prefix' => '',
-        'controllers' => [],
+        'source_classes' => [],
         'core_compiler_passes' => [RouteCompilerPass::CLASS],
         'compiler_passes' => [],
         'code_generator' => CodeGenerator::CLASS,
-        'router_namespace' => '',
-        'router_classname' => 'HttpRouter',
+        'target_namespace' => '',
+        'target_classname' => 'HttpRouter',
     ];
 
-    public function compileProject(SettingsInterface $settings): string
+    public function compileProject(SettingsInterface $settings, RouteCollectionInterface &$routes = null): string
     {
         $settings = new ManagedSettings($settings, new ArraySettings(self::DEFAULT_SETTINGS));
 
@@ -62,7 +62,7 @@ final class CompilerFacade
         /** @var RouteCollectionInterface[] */
         $collections = [];
 
-        foreach ((array)$settings->getSetting('controllers') as $classname) {
+        foreach ((array)$settings->getSetting('source_classes') as $classname) {
             $collections[] = $routeFactory->createRoutesFrom($classname);
         }
 

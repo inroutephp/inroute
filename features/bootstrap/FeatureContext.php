@@ -92,15 +92,15 @@ class FeatureContext implements Context
         eval(
             (new CompilerFacade)->compileProject(new ArraySettings([
                 'bootstrap' => 'inroutephp\inroute\Annotation\LoaderBootstrap',
-                'controllers' => $this->controllerClasses,
+                'source_classes' => $this->controllerClasses,
                 'core_compiler_passes' => [
                     'inroutephp\inroute\Annotation\RouteCompilerPass'
                 ],
                 'compiler_passes' => $this->compilerPasses,
                 'container' => $this->containerClass,
                 'code_generator' => 'inroutephp\inroute\Aura\CodeGenerator',
-                'router_namespace' => '',
-                'router_classname' => $routerClass,
+                'target_namespace' => '',
+                'target_classname' => $routerClass,
             ]))
         );
 

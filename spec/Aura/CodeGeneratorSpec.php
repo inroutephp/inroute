@@ -31,8 +31,8 @@ class CodeGeneratorSpec extends ObjectBehavior
         ContainerInterface $container,
         AnnotatedInterface $annotations
     ) {
-        $settings->getSetting('router_namespace')->willReturn('spec\\inroutephp\\inroute\\Aura');
-        $settings->getSetting('router_classname')->willReturn('HttpRouter');
+        $settings->getSetting('target_namespace')->willReturn('spec\\inroutephp\\inroute\\Aura');
+        $settings->getSetting('target_classname')->willReturn('HttpRouter');
 
         $code = $this->generateRouterCode(
             $settings,

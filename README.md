@@ -96,9 +96,9 @@ use inroutephp\inroute\Compiler\CompilerFacade;
 use inroutephp\inroute\Settings\ArraySettings;
 
 $settings = new ArraySettings([
-    'controllers' => [UserController::CLASS],
-    'router_namespace' => 'example',
-    'router_classname' => 'HttpRouter',
+    'source_classes' => [UserController::CLASS],
+    'target_namespace' => 'example',
+    'target_classname' => 'HttpRouter',
 ]);
 
 $facade = new CompilerFacade;
@@ -115,14 +115,14 @@ Possible settings include
 * `container`: The classname of a compile time container, specify if needed.
 * `bootstrap`: Classname of compile bootstrap, default should normally be fine.
 * `source_dir`: Directory to scan for annotated routes.
-* `source_prefix`: psr-4 namespace prefix to use when searching for source classes.
-* `controllers`: Array of controller classnames, use instead of or togheter with
+* `source_prefix`: psr-4 namespace prefix to use when scanning directory.
+* `source_classes`: Array of controller classnames, use instead of or togheter with
    directory scanning.
 * `core_compiler_passes`: Array of core compiler passes, default should normally be fine.
 * `compiler_passes`: Array of custom compiler passes.
 * `code_generator`: The code generator to use, default should normally be fine.
-* `router_namespace`: The namespace of the generated router (defaults to no namespace).
-* `router_classname`: The classname of the generated router (defaults to `HttpRouter`).
+* `target_namespace`: The namespace of the generated router (defaults to no namespace).
+* `target_classname`: The classname of the generated router (defaults to `HttpRouter`).
 
 ### OpenApi
 
