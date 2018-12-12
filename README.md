@@ -96,9 +96,9 @@ use inroutephp\inroute\Compiler\CompilerFacade;
 use inroutephp\inroute\Settings\ArraySettings;
 
 $settings = new ArraySettings([
-    'source_classes' => [UserController::CLASS],
-    'target_namespace' => 'example',
-    'target_classname' => 'HttpRouter',
+    'source-classes' => [UserController::CLASS],
+    'target-namespace' => 'example',
+    'target-classname' => 'HttpRouter',
 ]);
 
 $facade = new CompilerFacade;
@@ -114,15 +114,15 @@ Possible settings include
 
 * `container`: The classname of a compile time container, specify if needed.
 * `bootstrap`: Classname of compile bootstrap, default should normally be fine.
-* `source_dir`: Directory to scan for annotated routes.
-* `source_prefix`: psr-4 namespace prefix to use when scanning directory.
-* `source_classes`: Array of controller classnames, use instead of or togheter with
+* `source-dir`: Directory to scan for annotated routes.
+* `source-prefix`: psr-4 namespace prefix to use when scanning directory.
+* `source-classes`: Array of source classnames, use instead of or togheter with
    directory scanning.
-* `core_compiler_passes`: Array of core compiler passes, default should normally be fine.
-* `compiler_passes`: Array of custom compiler passes.
-* `code_generator`: The code generator to use, default should normally be fine.
-* `target_namespace`: The namespace of the generated router (defaults to no namespace).
-* `target_classname`: The classname of the generated router (defaults to `HttpRouter`).
+* `core-compiler-passes`: Array of core compiler passes, default should normally be fine.
+* `compiler-passes`: Array of custom compiler passes.
+* `code-generator`: The code generator to use, default should normally be fine.
+* `target-namespace`: The namespace of the generated router (defaults to no namespace).
+* `target-classname`: The classname of the generated router (defaults to `HttpRouter`).
 
 ### OpenApi
 
@@ -130,7 +130,7 @@ Instead of using the `@Route` annotation inroute is able to build openapi
 projects annotated with [swagger-php](https://github.com/zircote/swagger-php)
 annotations.
 
-Set the `core_compiler_passes` setting to `['inroutephp\inroute\OpenApi\OpenApiCompilerPass']`.
+Set the `core-compiler-passes` setting to `['inroutephp\inroute\OpenApi\OpenApiCompilerPass']`.
 
 ## Dispatching
 

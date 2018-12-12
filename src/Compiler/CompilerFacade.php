@@ -19,14 +19,14 @@ final class CompilerFacade
 {
     private const DEFAULT_SETTINGS = [
         'bootstrap' => LoaderBootstrap::CLASS,
-        'source_dir' => '',
-        'source_prefix' => '',
-        'source_classes' => [],
-        'core_compiler_passes' => [RouteCompilerPass::CLASS],
-        'compiler_passes' => [],
-        'code_generator' => CodeGenerator::CLASS,
-        'target_namespace' => '',
-        'target_classname' => 'HttpRouter',
+        'source-dir' => '',
+        'source-prefix' => '',
+        'source-classes' => [],
+        'core-compiler-passes' => [RouteCompilerPass::CLASS],
+        'compiler-passes' => [],
+        'code-generator' => CodeGenerator::CLASS,
+        'target-namespace' => '',
+        'target-classname' => 'HttpRouter',
     ];
 
     public function compileProject(SettingsInterface $settings, RouteCollectionInterface &$routes = null): string
@@ -62,14 +62,14 @@ final class CompilerFacade
         /** @var RouteCollectionInterface[] */
         $collections = [];
 
-        foreach ((array)$settings->getSetting('source_classes') as $classname) {
+        foreach ((array)$settings->getSetting('source-classes') as $classname) {
             $collections[] = $routeFactory->createRoutesFrom($classname);
         }
 
-        if ($settings->getSetting('source_dir')) {
+        if ($settings->getSetting('source-dir')) {
             $classFinder = new Psr4ClassFinder(
-                $settings->getSetting('source_dir'),
-                $settings->getSetting('source_prefix')
+                $settings->getSetting('source-dir'),
+                $settings->getSetting('source-prefix')
             );
 
             foreach ($classFinder as $classname) {
@@ -79,7 +79,7 @@ final class CompilerFacade
 
         $compiler = new Compiler;
 
-        foreach (['core_compiler_passes', 'compiler_passes'] as $settingName) {
+        foreach (['core-compiler-passes', 'compiler-passes'] as $settingName) {
             foreach ((array)$settings->getSetting($settingName) as $serviceName) {
                 $compilerPass = $container->get($serviceName);
 
@@ -93,11 +93,11 @@ final class CompilerFacade
 
         $routes = $compiler->compile(...$collections);
 
-        $generator = $container->get($settings->getSetting('code_generator'));
+        $generator = $container->get($settings->getSetting('code-generator'));
 
         if (!$generator instanceof CodeGeneratorInterface) {
             throw new LogicException(
-                "Service '{$settings->getSetting('code_generator')}' must implement CodeGeneratorInterface"
+                "Service '{$settings->getSetting('code-generator')}' must implement CodeGeneratorInterface"
             );
         }
 
