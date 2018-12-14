@@ -9,5 +9,5 @@ namespace inroutephp\inroute\Annotations;
  * */
 class POST extends Route
 {
-    public $method = 'GET';
+    public $method = 'POST';
 }

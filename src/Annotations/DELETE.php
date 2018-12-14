@@ -9,5 +9,5 @@ namespace inroutephp\inroute\Annotations;
  * */
 class DELETE extends Route
 {
-    public $method = 'GET';
+    public $method = 'DELETE';
 }

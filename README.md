@@ -277,7 +277,9 @@ annotations. Creating custom annotations is as easy as
 ```php
 namespace MyNamespace;
 
-/** @Annotation */
+/**
+ * @Annotation
+ */
 class MyAnnotation
 {
     public $value;
@@ -292,6 +294,9 @@ namespace MyNamespace;
 
 use inroutephp\inroute\Annotations\Pipe;
 
+/**
+ * @Annotation
+ */
 class AdminRequired extends Pipe
 {
     public $middlewares = ['AuthMiddleware', 'RequireUserGroupMiddleware'];

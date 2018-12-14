@@ -12,12 +12,12 @@ final class PipeCompilerPass implements CompilerPassInterface
 {
     public function processRoute(RouteInterface $route): RouteInterface
     {
-        if ($annotation = $route->getAnnotation(Pipe::CLASS)) {
-            foreach ((array)$annotation->middlewares as $middleware) {
+        foreach ($route->getAnnotations(Pipe::CLASS) as $pipe) {
+            foreach ((array)$pipe->middlewares as $middleware) {
                 $route = $route->withMiddleware($middleware);
             }
 
-            foreach ((array)$annotation->attributes as $key => $value) {
+            foreach ((array)$pipe->attributes as $key => $value) {
                 $route = $route->withAttribute($key, $value);
             }
         }

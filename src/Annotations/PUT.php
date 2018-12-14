@@ -9,5 +9,5 @@ namespace inroutephp\inroute\Annotations;
  * */
 class PUT extends Route
 {
-    public $method = 'GET';
+    public $method = 'PUT';
 }

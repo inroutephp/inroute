@@ -9,5 +9,5 @@ namespace inroutephp\inroute\Annotations;
  * */
 class HEAD extends Route
 {
-    public $method = 'GET';
+    public $method = 'HEAD';
 }

@@ -38,7 +38,7 @@ class RouteCompilerPassSpec extends ObjectBehavior
         $route->withName('name')->willReturn($route)->shouldBeCalled();
         $route->withAttribute('key', 'value')->willReturn($route)->shouldBeCalled();
 
-        $route->getAnnotation(Route::CLASS)->willReturn($annotation)->shouldBeCalled();
+        $route->getAnnotations(Route::CLASS)->willReturn([$annotation])->shouldBeCalled();
 
         $this->processRoute($route)->shouldReturn($route);
     }

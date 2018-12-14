@@ -33,7 +33,7 @@ class PipeCompilerPassSpec extends ObjectBehavior
         $route->withMiddleware('middleware')->willReturn($route)->shouldBeCalled();
         $route->withAttribute('key', 'value')->willReturn($route)->shouldBeCalled();
 
-        $route->getAnnotation(Pipe::CLASS)->willReturn($annotation)->shouldBeCalled();
+        $route->getAnnotations(Pipe::CLASS)->willReturn([$annotation])->shouldBeCalled();
 
         $this->processRoute($route)->shouldReturn($route);
     }
