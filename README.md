@@ -35,8 +35,8 @@ composer require inroutephp/inroute:^1.0@beta
 
 ## Writing routes
 
-Routes are annotated using a doctrine annotations, are called with
-a [PSR-7](https://www.php-fig.org/psr/psr-7/) request object and inroute
+Routes are annotated using annotations, are called with a
+[PSR-7](https://www.php-fig.org/psr/psr-7/) request object and inroute
 [environment](src/Runtime\EnvironmentInterface.php) and are expected to
 return a PSR-7 response.
 
@@ -64,8 +64,10 @@ class UserController
      *     }
      * )
      */
-    function getUser(ServerRequestInterface $request, EnvironmentInterface $environment): ResponseInterface
-    {
+    function getUser(
+        ServerRequestInterface $request,
+        EnvironmentInterface $environment
+    ): ResponseInterface {
         return new TextResponse(
             // the name attribute from the request path
             $request->getAttribute('name')
@@ -89,11 +91,9 @@ class UserController
 
 Each route has a [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware
 pipeline of its own. Adding a middleware to a route can be done using the
-`@Pipe` annotation.
-
-In the following example the `pipedAction` route is piped through the
-`AppendingMiddleware` and the text `::Middleware` is appended to the route
-response.
+`@Pipe` annotation. In the following example the `pipedAction` route is piped
+through the `AppendingMiddleware` and the text `::Middleware` is appended to the
+route response.
 
 <!--
     @example PipedController
@@ -108,8 +108,10 @@ class PipedController
      * @GET(path="/piped")
      * @Pipe(middlewares={"AppendingMiddleware"})
      */
-    function pipedAction(ServerRequestInterface $request, EnvironmentInterface $environment): ResponseInterface
-    {
+    function pipedAction(
+        ServerRequestInterface $request,
+        EnvironmentInterface $environment
+    ): ResponseInterface {
         return new TextResponse('Controller');
     }
 }
@@ -119,8 +121,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class AppendingMiddleware implements MiddlewareInterface
 {
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-    {
+    public function process(
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
         $response = $handler->handle($request);
 
         return new TextResponse(
@@ -216,7 +220,7 @@ use Zend\Diactoros\ServerRequestFactory;
 use mindplay\middleman\Dispatcher;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
-// create a simple middleware pipeline for the entire appilcation
+// create a simple middleware pipeline for the entire application
 $dispatcher = new Dispatcher([$router]);
 
 // create a psr-7 compliant response emitter
@@ -235,7 +239,7 @@ $response = $dispatcher->dispatch($request);
 $emitter->emit($response);
 ```
 
-Or to send to piped example from above:
+Or to send to piped example from above
 
 <!--
     @example DispatchingPipedRoute
@@ -268,7 +272,7 @@ function getUser(ServerRequestInterface $request, EnvironmentInterface $environm
 ## Creating custom annotations
 
 Inroute uses [doctrine](https://github.com/doctrine/annotations) to read
-annotations. Creating custom annotations is as easy as:
+annotations. Creating custom annotations is as easy as
 
 ```php
 namespace MyNamespace;
@@ -283,12 +287,9 @@ class MyAnnotation
 To create annotations that automatically pipes a route through a middleware use
 something like the following.
 
-> NOTE that you need to supply the `AuthMiddleware` to authenticate a user and
-> the `RequireUserGroupMiddleware` to check user priviliges for this example to
-> function as expected. See below on how to inject a dependency container to
-> create that can deliver these middlewares.
-
 ```php
+namespace MyNamespace;
+
 use inroutephp\inroute\Annotations\Pipe;
 
 class AdminRequired extends Pipe
@@ -298,18 +299,24 @@ class AdminRequired extends Pipe
 }
 ```
 
-And to annotate your controller methods:
+> Note that you need to supply the `AuthMiddleware` to authenticate a user and
+> the `RequireUserGroupMiddleware` to check user priviliges for this example to
+> function as expected. See below on how to inject a dependency container that
+> can deliver these middlewares.
+
+And to annotate your controller methods
 
 ```php
 use MyNamespace\MyAnnotation;
+use MyNamespace\AdminRequired;
 
-class Controller
+class MyController
 {
     /**
      * @MyAnnotation(value="foobar")
      * @AdminRequired
      */
-    public function route()
+    public function aRouteThatIsOnlyOpenToAdminUsers()
     {
     }
 }
