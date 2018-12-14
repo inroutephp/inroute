@@ -91,14 +91,9 @@ class FeatureContext implements Context
 
         eval(
             (new CompilerFacade)->compileProject(new ArraySettings([
-                'bootstrap' => 'inroutephp\inroute\Compiler\Doctrine\Bootstrap',
                 'source-classes' => $this->controllerClasses,
-                'core-compiler-passes' => [
-                    'inroutephp\inroute\Compiler\Dsl\RouteCompilerPass'
-                ],
                 'compiler-passes' => $this->compilerPasses,
                 'container' => $this->containerClass,
-                'code-generator' => 'inroutephp\inroute\Compiler\Aura\CodeGenerator',
                 'target-namespace' => '',
                 'target-classname' => $routerClass,
             ]))
@@ -124,6 +119,10 @@ class FeatureContext implements Context
      */
     public function theResponseBodyIs($expected)
     {
+        if (isset($this->exception)) {
+            throw $this->exception;
+        }
+
         $body = $this->response->getBody()->getContents();
         if ($body != $expected) {
             throw new \Exception(sprintf(

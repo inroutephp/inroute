@@ -6,7 +6,6 @@ namespace inroutephp\inroute\Annotations;
 
 /**
  * @Annotation
- * @Target({"METHOD"})
  * */
 class Route
 {
@@ -30,5 +29,5 @@ class Route
     /**
      * @var array
      */
-    public $attributes;
+    public $attributes = [];
 }

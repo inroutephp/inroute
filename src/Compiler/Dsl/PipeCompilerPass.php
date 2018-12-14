@@ -4,22 +4,17 @@ declare(strict_types = 1);
 
 namespace inroutephp\inroute\Compiler\Dsl;
 
-use inroutephp\inroute\Annotations\Route;
+use inroutephp\inroute\Annotations\Pipe;
 use inroutephp\inroute\Compiler\CompilerPassInterface;
 use inroutephp\inroute\Runtime\RouteInterface;
 
-final class RouteCompilerPass implements CompilerPassInterface
+final class PipeCompilerPass implements CompilerPassInterface
 {
     public function processRoute(RouteInterface $route): RouteInterface
     {
-        if ($annotation = $route->getAnnotation(Route::CLASS)) {
-            $route = $route
-                ->withRoutable(true)
-                ->withHttpMethod($annotation->method)
-                ->withPath($annotation->path);
-
-            if ($annotation->name) {
-                $route = $route->withName($annotation->name);
+        if ($annotation = $route->getAnnotation(Pipe::CLASS)) {
+            foreach ((array)$annotation->middlewares as $middleware) {
+                $route = $route->withMiddleware($middleware);
             }
 
             foreach ((array)$annotation->attributes as $key => $value) {

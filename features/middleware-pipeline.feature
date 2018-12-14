@@ -3,16 +3,14 @@ Feature: Handle middleware pipeline for route
   As a user
   I need to handle middleware pipelines
 
-  Scenario: I dispatch middleware pipeline
+  Scenario: I dispatch a middleware pipeline
     Given a controller "ActionController":
     """
     class ActionController
     {
         /**
-         * @\inroutephp\inroute\Annotations\Route(
-         *     method="GET",
-         *     path="/action"
-         * )
+         * @\inroutephp\inroute\Annotations\GET(path="/action")
+         * @\inroutephp\inroute\Annotations\Pipe(middlewares="Middleware")
          */
         function action()
         {
@@ -35,18 +33,47 @@ Feature: Handle middleware pipeline for route
         }
     }
     """
-    And a compiler pass "CompilerPass":
-    """
-    use inroutephp\inroute\Compiler\CompilerPassInterface;
-    use inroutephp\inroute\Runtime\RouteInterface;
+    When I request "GET" "/action"
+    Then the response body is "MIDDLEWARE"
 
-    class CompilerPass implements CompilerPassInterface
+  Scenario: I dispatch middleware using a custom annotation
+    Given a controller "CustomAnnotationController":
+    """
+    /**
+     * @Annotation
+     */
+    class CustomAnnotation extends inroutephp\inroute\Annotations\Pipe
     {
-        public function processRoute(RouteInterface $route): RouteInterface
+        public $middlewares = ['CustomAnnotationMiddleware'];
+        public $attributes = ['custom_attribute' => 'ATTRIBUTE'];
+    }
+
+    class CustomAnnotationController
+    {
+        /**
+         * @\inroutephp\inroute\Annotations\GET(path="/action")
+         * @CustomAnnotation
+         */
+        function action()
         {
-            return $route->withMiddleware(Middleware::CLASS);
+        }
+    }
+    """
+    And a middleware "CustomAnnotationMiddleware":
+    """
+    use Psr\Http\Server\MiddlewareInterface;
+    use Psr\Http\Server\RequestHandlerInterface;
+    use Psr\Http\Message\ResponseInterface;
+    use Psr\Http\Message\ServerRequestInterface;
+    use Zend\Diactoros\Response\TextResponse;
+
+    class CustomAnnotationMiddleware implements MiddlewareInterface
+    {
+        public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+        {
+            return new TextResponse($request->getAttribute('custom_attribute'));
         }
     }
     """
     When I request "GET" "/action"
-    Then the response body is "MIDDLEWARE"
+    Then the response body is "ATTRIBUTE"

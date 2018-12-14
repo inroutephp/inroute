@@ -25,6 +25,7 @@ composer require inroutephp/inroute:^1.0@beta
 ## Table of contents
 
 1. [Writing routes](#writing-routes)
+1. [Piping a route through a middleware](#piping-a-route-through-a-middleware)
 1. [Compiling](#compiling)
 1. [Dispatching](#dispatching)
 1. [Generating route paths](#generating-route-paths)
@@ -34,25 +35,28 @@ composer require inroutephp/inroute:^1.0@beta
 
 ## Writing routes
 
-Routes are annotated using a simple `@Route` annotation, are called with
+Routes are annotated using a doctrine annotations, are called with
 a [PSR-7](https://www.php-fig.org/psr/psr-7/) request object and inroute
 [environment](src/Runtime\EnvironmentInterface.php) and are expected to
 return a PSR-7 response.
 
 <!-- @example UserController -->
 ```php
-use inroutephp\inroute\Annotations\Route;
+use inroutephp\inroute\Annotations\BasePath;
+use inroutephp\inroute\Annotations\GET;
 use inroutephp\inroute\Runtime\EnvironmentInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response\TextResponse;
 
+/**
+ * @BasePath(path="/users")
+ */
 class UserController
 {
     /**
-     * @Route(
-     *     method="GET",
-     *     path="/users/{name}",
+     * @GET(
+     *     path="/{name}",
      *     name="getUser",
      *     attributes={
      *         "key": "value",
@@ -81,6 +85,51 @@ class UserController
 * Note that the use of zend diactoros as a psr-7 response implementation is
   used in this example, you may of course use  another psr-7 implementation.
 
+## Piping a route through a middleware
+
+Each route has a [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware
+pipeline of its own. Adding a middleware to a route can be done using the
+`@Pipe` annotation.
+
+In the following example the `pipedAction` route is piped through the
+`AppendingMiddleware` and the text `::Middleware` is appended to the route
+response.
+
+<!--
+    @example PipedController
+    @include UserController
+-->
+```php
+use inroutephp\inroute\Annotations\Pipe;
+
+class PipedController
+{
+    /**
+     * @GET(path="/piped")
+     * @Pipe(middlewares={"AppendingMiddleware"})
+     */
+    function pipedAction(ServerRequestInterface $request, EnvironmentInterface $environment): ResponseInterface
+    {
+        return new TextResponse('Controller');
+    }
+}
+
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+
+class AppendingMiddleware implements MiddlewareInterface
+{
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $response = $handler->handle($request);
+
+        return new TextResponse(
+            $response->getBody()->getContents() . "::Middleware"
+        );
+    }
+}
+```
+
 ## Compiling
 
 The recommended way of building a project is by using the
@@ -89,14 +138,17 @@ pure php involves setting up the compiler something like the following.
 
 <!--
     @example Router
-    @include UserController
+    @include PipedController
 -->
 ```php
 use inroutephp\inroute\Compiler\CompilerFacade;
 use inroutephp\inroute\Compiler\Settings\ArraySettings;
 
 $settings = new ArraySettings([
-    'source-classes' => [UserController::CLASS],
+    'source-classes' => [
+        UserController::CLASS,
+        PipedController::CLASS,
+    ],
     'target-namespace' => 'example',
     'target-classname' => 'HttpRouter',
 ]);
@@ -128,7 +180,10 @@ Possible settings include
 
 ### OpenApi
 
-Instead of using the `@Route` annotation inroute is able to build openapi
+> Please note that reading openapi annotations is still very rudimentary. Please
+> open an issue if you have suggestions on more values that should be parsed.
+
+Instead of using the built in annotations inroute is also able to build openapi
 projects annotated with [swagger-php](https://github.com/zircote/swagger-php)
 annotations.
 
@@ -161,14 +216,42 @@ use Zend\Diactoros\ServerRequestFactory;
 use mindplay\middleman\Dispatcher;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
+// create a simple middleware pipeline for the entire appilcation
+$dispatcher = new Dispatcher([$router]);
+
+// create a psr-7 compliant response emitter
+$emitter = new SapiEmitter;
+
 // fakeing a GET request
 $request = (new ServerRequestFactory)->createServerRequest('GET', '/users/foo');
 
-// creating and dispatching a simple middleware pipeline
-$response = (new Dispatcher([$router]))->dispatch($request);
+// in the real worl you would of course use
+// $request = ServerRequestFactory::fromGlobals();
 
-// emitting the response
-(new SapiEmitter)->emit($response);
+// create the response
+$response = $dispatcher->dispatch($request);
+
+// send it
+$emitter->emit($response);
+```
+
+Or to send to piped example from above:
+
+<!--
+    @example DispatchingPipedRoute
+    @include Router
+    @expectOutput Controller::Middleware
+-->
+```php
+use Zend\Diactoros\ServerRequestFactory;
+use mindplay\middleman\Dispatcher;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+
+(new SapiEmitter)->emit(
+    (new Dispatcher([$router]))->dispatch(
+        (new ServerRequestFactory)->createServerRequest('GET', '/piped')
+    )
+);
 ```
 
 ## Generating route paths
@@ -197,6 +280,24 @@ class MyAnnotation
 }
 ```
 
+To create annotations that automatically pipes a route through a middleware use
+something like the following.
+
+> NOTE that you need to supply the `AuthMiddleware` to authenticate a user and
+> the `RequireUserGroupMiddleware` to check user priviliges for this example to
+> function as expected. See below on how to inject a dependency container to
+> create that can deliver these middlewares.
+
+```php
+use inroutephp\inroute\Annotations\Pipe;
+
+class AdminRequired extends Pipe
+{
+    public $middlewares = ['AuthMiddleware', 'RequireUserGroupMiddleware'];
+    public $attributes = ['required_user_group' => 'admin'];
+}
+```
+
 And to annotate your controller methods:
 
 ```php
@@ -206,6 +307,7 @@ class Controller
 {
     /**
      * @MyAnnotation(value="foobar")
+     * @AdminRequired
      */
     public function route()
     {
