@@ -41,7 +41,7 @@ return a PSR-7 response.
 
 <!-- @example UserController -->
 ```php
-use inroutephp\inroute\Annotation\Route;
+use inroutephp\inroute\Annotations\Route;
 use inroutephp\inroute\Runtime\EnvironmentInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -93,7 +93,7 @@ pure php involves setting up the compiler something like the following.
 -->
 ```php
 use inroutephp\inroute\Compiler\CompilerFacade;
-use inroutephp\inroute\Settings\ArraySettings;
+use inroutephp\inroute\Compiler\Settings\ArraySettings;
 
 $settings = new ArraySettings([
     'source-classes' => [UserController::CLASS],

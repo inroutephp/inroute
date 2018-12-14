@@ -2,7 +2,7 @@
 
 namespace inroutephp\inroute\Compiler;
 
-use inroutephp\inroute\Settings\SettingsInterface;
+use inroutephp\inroute\Compiler\Settings\SettingsInterface;
 
 interface BootstrapInterface
 {

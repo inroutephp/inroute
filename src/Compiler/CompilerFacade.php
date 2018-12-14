@@ -4,21 +4,21 @@ declare(strict_types = 1);
 
 namespace inroutephp\inroute\Compiler;
 
-use inroutephp\inroute\Annotation\LoaderBootstrap;
-use inroutephp\inroute\Annotation\RouteCompilerPass;
-use inroutephp\inroute\Annotation\RouteFactory;
-use inroutephp\inroute\Aura\CodeGenerator;
+use inroutephp\inroute\Compiler\Aura\CodeGenerator;
+use inroutephp\inroute\Compiler\Doctrine\Bootstrap;
+use inroutephp\inroute\Compiler\Doctrine\RouteFactory;
+use inroutephp\inroute\Compiler\Dsl\RouteCompilerPass;
+use inroutephp\inroute\Compiler\Settings\ArraySettings;
+use inroutephp\inroute\Compiler\Settings\ManagedSettings;
+use inroutephp\inroute\Compiler\Settings\SettingsInterface;
 use inroutephp\inroute\Runtime\NaiveContainer;
-use inroutephp\inroute\Settings\ArraySettings;
-use inroutephp\inroute\Settings\ManagedSettings;
-use inroutephp\inroute\Settings\SettingsInterface;
-use inroutephp\inroute\Exception\LogicException;
+use inroutephp\inroute\Compiler\Exception\CompilerException;
 use Psr\Container\ContainerInterface;
 
 final class CompilerFacade
 {
     private const DEFAULT_SETTINGS = [
-        'bootstrap' => LoaderBootstrap::CLASS,
+        'bootstrap' => Bootstrap::CLASS,
         'source-dir' => '',
         'source-prefix' => '',
         'source-classes' => [],
@@ -39,7 +39,7 @@ final class CompilerFacade
             $container = $container->get($settings->getSetting('container'));
 
             if (!$container instanceof ContainerInterface) {
-                throw new LogicException(
+                throw new CompilerException(
                     "Service '{$settings->getSetting('container')}' must implement ContainerInterface"
                 );
             }
@@ -49,7 +49,7 @@ final class CompilerFacade
             $bootstrap = $container->get($settings->getSetting('bootstrap'));
 
             if (!$bootstrap instanceof BootstrapInterface) {
-                throw new LogicException(
+                throw new CompilerException(
                     "Service '{$settings->getSetting('bootstrap')}' must implement BootstrapInterface"
                 );
             }
@@ -84,7 +84,7 @@ final class CompilerFacade
                 $compilerPass = $container->get($serviceName);
 
                 if (!$compilerPass instanceof CompilerPassInterface) {
-                    throw new LogicException("Service '$serviceName' must implement CompilerPassInterface");
+                    throw new CompilerException("Service '$serviceName' must implement CompilerPassInterface");
                 }
 
                 $compiler->addCompilerPass($compilerPass);
@@ -96,7 +96,7 @@ final class CompilerFacade
         $generator = $container->get($settings->getSetting('code-generator'));
 
         if (!$generator instanceof CodeGeneratorInterface) {
-            throw new LogicException(
+            throw new CompilerException(
                 "Service '{$settings->getSetting('code-generator')}' must implement CodeGeneratorInterface"
             );
         }

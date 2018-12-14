@@ -1,7 +1,7 @@
 <?php
 
 use inroutephp\inroute\Compiler\CompilerFacade;
-use inroutephp\inroute\Settings\ArraySettings;
+use inroutephp\inroute\Compiler\Settings\ArraySettings;
 use Psr\Http\Message\ResponseInterface;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
@@ -91,14 +91,14 @@ class FeatureContext implements Context
 
         eval(
             (new CompilerFacade)->compileProject(new ArraySettings([
-                'bootstrap' => 'inroutephp\inroute\Annotation\LoaderBootstrap',
+                'bootstrap' => 'inroutephp\inroute\Compiler\Doctrine\Bootstrap',
                 'source-classes' => $this->controllerClasses,
                 'core-compiler-passes' => [
-                    'inroutephp\inroute\Annotation\RouteCompilerPass'
+                    'inroutephp\inroute\Compiler\Dsl\RouteCompilerPass'
                 ],
                 'compiler-passes' => $this->compilerPasses,
                 'container' => $this->containerClass,
-                'code-generator' => 'inroutephp\inroute\Aura\CodeGenerator',
+                'code-generator' => 'inroutephp\inroute\Compiler\Aura\CodeGenerator',
                 'target-namespace' => '',
                 'target-classname' => $routerClass,
             ]))
@@ -153,7 +153,7 @@ class FeatureContext implements Context
      */
     public function aExceptionIsThrown($classname)
     {
-        $classname = "inroutephp\inroute\Exception\\$classname";
+        $classname = "inroutephp\inroute\Runtime\Exception\\$classname";
 
         if (!$this->exception instanceof $classname) {
             throw new \Exception(sprintf(

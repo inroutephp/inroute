@@ -2,9 +2,7 @@
 
 namespace inroutephp\inroute\Runtime;
 
-use inroutephp\inroute\Annotation\AnnotatedInterface;
-
-interface RouteInterface extends AnnotatedInterface
+interface RouteInterface
 {
     /**
      * Get name of this route
@@ -113,4 +111,19 @@ interface RouteInterface extends AnnotatedInterface
      * Create a new route with piped in middleware with service id
      */
     public function withMiddleware(string $serviceId): RouteInterface;
+
+    /**
+     * Check if annotation is present
+     */
+    public function hasAnnotation(string $annotationId): bool;
+
+    /**
+     * Get first instance of annotation id
+     */
+    public function getAnnotation(string $annotationId);
+
+    /**
+     * Get set of annotations, possibly filtered by id
+     */
+    public function getAnnotations(string $annotationId = ''): array;
 }

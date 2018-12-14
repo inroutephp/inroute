@@ -5,16 +5,14 @@ declare(strict_types = 1);
 namespace spec\inroutephp\inroute\Runtime;
 
 use inroutephp\inroute\Runtime\Route;
-use inroutephp\inroute\Annotation\AnnotatedInterface;
-use inroutephp\inroute\Exception\LogicException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class RouteSpec extends ObjectBehavior
 {
-    function let(AnnotatedInterface $annotations)
+    function let()
     {
-        $this->beConstructedWith('', '', $annotations);
+        $this->beConstructedWith('', '', []);
     }
 
     function it_is_initializable()
@@ -22,27 +20,43 @@ class RouteSpec extends ObjectBehavior
         $this->shouldHaveType(Route::CLASS);
     }
 
-    function it_can_have_annotation($annotations)
+    function it_can_have_annotation()
     {
-        $annotations->hasAnnotation('foo')->willReturn(true)->shouldBeCalled();
-        $this->hasAnnotation('foo')->shouldReturn(true);
+        $this->beConstructedWith('', '', [new \RuntimeException]);
+        $this->hasAnnotation(\RuntimeException::CLASS)->shouldReturn(true);
+        $this->hasAnnotation(\LogicException::CLASS)->shouldReturn(false);
     }
 
-    function it_contains_annotation($annotations)
+    function it_can_get_annotation()
     {
-        $annotations->getAnnotation('foo')->willReturn('bar')->shouldBeCalled();
-        $this->getAnnotation('foo')->shouldReturn('bar');
+        $annot = new \RuntimeException;
+        $this->beConstructedWith('', '', [$annot]);
+        $this->getAnnotation(\RuntimeException::CLASS)->shouldReturn($annot);
     }
 
-    function it_contains_annotations($annotations)
+    function it_returns_null_on_unknown_annotation()
     {
-        $annotations->getAnnotations('foo')->willReturn(['bar'])->shouldBeCalled();
-        $this->getAnnotations('foo')->shouldReturn(['bar']);
+        $this->beConstructedWith('', '', []);
+        $this->getAnnotation(\RuntimeException::CLASS)->shouldReturn(null);
     }
 
-    function it_has_a_default_name($annotations)
+    function it_can_get_all_annotations()
     {
-        $this->beConstructedWith('service', 'method', $annotations);
+        $annot = new \RuntimeException;
+        $this->beConstructedWith('', '', [$annot, $annot]);
+        $this->getAnnotations()->shouldReturn([$annot, $annot]);
+    }
+
+    function it_can_get_some_annotations()
+    {
+        $annot = new \RuntimeException;
+        $this->beConstructedWith('', '', [$annot, new \LogicException]);
+        $this->getAnnotations(\RuntimeException::CLASS)->shouldReturn([$annot]);
+    }
+
+    function it_has_a_default_name()
+    {
+        $this->beConstructedWith('service', 'method', []);
         $this->getName()->shouldReturn('service:method');
     }
 
@@ -107,9 +121,9 @@ class RouteSpec extends ObjectBehavior
         });
     }
 
-    function it_defaults_to_service_id($annotations)
+    function it_defaults_to_service_id()
     {
-        $this->beConstructedWith('foo', '', $annotations);
+        $this->beConstructedWith('foo', '', []);
         $this->getServiceId()->shouldReturn('foo');
     }
 
@@ -120,9 +134,9 @@ class RouteSpec extends ObjectBehavior
         });
     }
 
-    function it_defaults_to_service_method($annotations)
+    function it_defaults_to_service_method()
     {
-        $this->beConstructedWith('', 'foo', $annotations);
+        $this->beConstructedWith('', 'foo', []);
         $this->getServiceMethod()->shouldReturn('foo');
     }
 

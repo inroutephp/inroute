@@ -9,7 +9,7 @@ Feature: Handle middleware pipeline for route
     class ActionController
     {
         /**
-         * @\inroutephp\inroute\Annotation\Route(
+         * @\inroutephp\inroute\Annotations\Route(
          *     method="GET",
          *     path="/action"
          * )

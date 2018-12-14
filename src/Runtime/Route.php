@@ -4,13 +4,10 @@ declare(strict_types = 1);
 
 namespace inroutephp\inroute\Runtime;
 
-use inroutephp\inroute\Annotation\AnnotatedInterface;
-use inroutephp\inroute\Exception\LogicException;
-
 final class Route implements RouteInterface
 {
     /**
-     * @var AnnotatedInterface
+     * @var array
      */
     private $annotations;
 
@@ -54,7 +51,7 @@ final class Route implements RouteInterface
      */
     private $middlewareServiceIds = [];
 
-    public function __construct(string $serviceId, string $serviceMethod, AnnotatedInterface $annotations)
+    public function __construct(string $serviceId, string $serviceMethod, array $annotations)
     {
         if ($serviceId) {
             $this->name = $serviceId;
@@ -246,25 +243,40 @@ final class Route implements RouteInterface
 
     public function hasAnnotation(string $annotationId): bool
     {
-        return $this->getWrappedAnnotations()->hasAnnotation($annotationId);
+        foreach ($this->annotations as $annotation) {
+            if ($annotation instanceof $annotationId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getAnnotation(string $annotationId)
     {
-        return $this->getWrappedAnnotations()->getAnnotation($annotationId);
+        foreach ($this->annotations as $annotation) {
+            if ($annotation instanceof $annotationId) {
+                return $annotation;
+            }
+        }
+
+        return null;
     }
 
     public function getAnnotations(string $annotationId = ''): array
     {
-        return $this->getWrappedAnnotations()->getAnnotations($annotationId);
-    }
-
-    private function getWrappedAnnotations(): AnnotatedInterface
-    {
-        if (!isset($this->annotations)) {
-            throw new LogicException('Unserialized route does not contain annotations');
+        if (!$annotationId) {
+            return $this->annotations;
         }
 
-        return $this->annotations;
+        $annotations = [];
+
+        foreach ($this->annotations as $annotation) {
+            if ($annotation instanceof $annotationId) {
+                $annotations[] = $annotation;
+            }
+        }
+
+        return $annotations;
     }
 }

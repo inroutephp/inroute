@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace inroutephp\inroute\Runtime;
 
-use inroutephp\inroute\Exception\ServiceNotFoundException;
+use inroutephp\inroute\Runtime\Exception\ServiceNotFoundException;
 use Psr\Container\ContainerInterface;
 
 final class NaiveContainer implements ContainerInterface

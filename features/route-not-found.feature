@@ -28,7 +28,7 @@ Feature: Handle route not found situations
     class PostController1
     {
         /**
-         * @\inroutephp\inroute\Annotation\Route(
+         * @\inroutephp\inroute\Annotations\Route(
          *     method="POST",
          *     path="/foo"
          * )
@@ -58,7 +58,7 @@ Feature: Handle route not found situations
     class PostController2
     {
         /**
-         * @\inroutephp\inroute\Annotation\Route(
+         * @\inroutephp\inroute\Annotations\Route(
          *     method="POST",
          *     path="/foo"
          * )
