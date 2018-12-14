@@ -4,27 +4,29 @@ declare(strict_types = 1);
 
 namespace inroutephp\inroute\Compiler;
 
-use inroutephp\inroute\Compiler\Aura\CodeGenerator;
-use inroutephp\inroute\Compiler\Doctrine\Bootstrap;
-use inroutephp\inroute\Compiler\Doctrine\RouteFactory;
-use inroutephp\inroute\Compiler\Dsl\RouteCompilerPass;
 use inroutephp\inroute\Compiler\Settings\ArraySettings;
 use inroutephp\inroute\Compiler\Settings\ManagedSettings;
 use inroutephp\inroute\Compiler\Settings\SettingsInterface;
-use inroutephp\inroute\Runtime\NaiveContainer;
 use inroutephp\inroute\Compiler\Exception\CompilerException;
+use inroutephp\inroute\Runtime\NaiveContainer;
 use Psr\Container\ContainerInterface;
 
 final class CompilerFacade
 {
     private const DEFAULT_SETTINGS = [
-        'bootstrap' => Bootstrap::CLASS,
+        'bootstrap' => Doctrine\Bootstrap::CLASS,
         'source-dir' => '',
         'source-prefix' => '',
         'source-classes' => [],
-        'core-compiler-passes' => [RouteCompilerPass::CLASS],
+        'route-factory' => Doctrine\RouteFactory::CLASS,
+        'compiler' => Compiler::CLASS,
+        'core-compiler-passes' => [
+            Dsl\RouteCompilerPass::CLASS,
+            Dsl\BasePathCompilerPass::CLASS,
+            Dsl\PipeCompilerPass::CLASS,
+        ],
         'compiler-passes' => [],
-        'code-generator' => CodeGenerator::CLASS,
+        'code-generator' => Aura\CodeGenerator::CLASS,
         'target-namespace' => '',
         'target-classname' => 'HttpRouter',
     ];
@@ -36,28 +38,18 @@ final class CompilerFacade
         $container = new NaiveContainer;
 
         if ($settings->hasSetting('container')) {
-            $container = $container->get($settings->getSetting('container'));
-
-            if (!$container instanceof ContainerInterface) {
-                throw new CompilerException(
-                    "Service '{$settings->getSetting('container')}' must implement ContainerInterface"
-                );
-            }
+            /** @var ContainerInterface */
+            $container = $this->build('container', ContainerInterface::CLASS, $container, $settings);
         }
 
         if ($container->has($settings->getSetting('bootstrap'))) {
-            $bootstrap = $container->get($settings->getSetting('bootstrap'));
-
-            if (!$bootstrap instanceof BootstrapInterface) {
-                throw new CompilerException(
-                    "Service '{$settings->getSetting('bootstrap')}' must implement BootstrapInterface"
-                );
-            }
-
+            /** @var BootstrapInterface */
+            $bootstrap = $this->build('bootstrap', BootstrapInterface::CLASS, $container, $settings);
             $bootstrap->bootstrap($settings);
         }
 
-        $routeFactory = new RouteFactory;
+        /** @var RouteFactoryInterface */
+        $routeFactory = $this->build('route-factory', RouteFactoryInterface::CLASS, $container, $settings);
 
         /** @var RouteCollectionInterface[] */
         $collections = [];
@@ -77,7 +69,8 @@ final class CompilerFacade
             }
         }
 
-        $compiler = new Compiler;
+        /** @var CompilerInterface */
+        $compiler = $this->build('compiler', CompilerInterface::CLASS, $container, $settings);
 
         foreach (['core-compiler-passes', 'compiler-passes'] as $settingName) {
             foreach ((array)$settings->getSetting($settingName) as $serviceName) {
@@ -93,14 +86,26 @@ final class CompilerFacade
 
         $routes = $compiler->compile(...$collections);
 
-        $generator = $container->get($settings->getSetting('code-generator'));
+        /** @var CodeGeneratorInterface */
+        $generator = $this->build('code-generator', CodeGeneratorInterface::CLASS, $container, $settings);
 
-        if (!$generator instanceof CodeGeneratorInterface) {
+        return $generator->generateRouterCode($settings, $routes);
+    }
+
+    private function build(
+        string $setting,
+        string $requiredClass,
+        ContainerInterface $container,
+        SettingsInterface $settings
+    ) {
+        $obj = $container->get($settings->getSetting($setting));
+
+        if (!$obj instanceof $requiredClass) {
             throw new CompilerException(
-                "Service '{$settings->getSetting('code-generator')}' must implement CodeGeneratorInterface"
+                "Service '{$settings->getSetting($setting)}' must implement $requiredClass"
             );
         }
 
-        return $generator->generateRouterCode($settings, $routes);
+        return $obj;
     }
 }

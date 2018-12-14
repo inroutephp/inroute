@@ -118,6 +118,8 @@ Possible settings include
 * `source-prefix`: psr-4 namespace prefix to use when scanning directory.
 * `source-classes`: Array of source classnames, use instead of or togheter with
    directory scanning.
+* `route-factory`: Classname of route factory, default should normally be fine.
+* `compiler`: Classname of compiler to use, default should normally be fine.
 * `core-compiler-passes`: Array of core compiler passes, default should normally be fine.
 * `compiler-passes`: Array of custom compiler passes.
 * `code-generator`: The code generator to use, default should normally be fine.
