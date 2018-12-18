@@ -32,6 +32,7 @@ composer require inroutephp/inroute:^1.0@beta
 1. [Creating custom annotations](#creating-custom-annotations)
 1. [Processing routes using compiler passes](#processing-routes-using-compiler-passes)
 1. [Handling dependencies with a DI container](#handling-dependencies-with-a-di-container)
+1. [Dealing with routing errors](#dealing-with-routing-errors)
 
 ## Writing routes
 
@@ -379,3 +380,19 @@ $router->setContainer($container);
 
 // continue dispatch...
 ```
+
+## Dealing with routing errors
+
+Route note found (http code `404`) and method not allowed (`405`) situations can
+be handled in one of two ways.
+
+### Using a ResponseFactoryInterface
+
+If you container contains a service `Psr\Http\Message\ResponseFactoryInterface`
+then that factory will be used to create and return a `404` or `405` http response.
+
+### Catching exceptions
+
+If no factory is defined a `inroutephp\inroute\Runtime\Exception\RouteNotFoundException`
+or `inroutephp\inroute\Runtime\Exception\MethodNotAllowedException` will be
+thrown.
