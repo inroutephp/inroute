@@ -6,6 +6,7 @@ namespace inroutephp\inroute\Compiler\Doctrine;
 
 use inroutephp\inroute\Compiler\BootstrapInterface;
 use inroutephp\inroute\Compiler\Settings\SettingsInterface;
+use inroutephp\inroute\Compiler\Exception\CompilerException;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 /**
@@ -15,6 +16,10 @@ final class Bootstrap implements BootstrapInterface
 {
     public function bootstrap(SettingsInterface $settings): void
     {
+        if (!class_exists(AnnotationRegistry::CLASS)) {
+            throw new CompilerException('Doctrine annotations not loaded. Require doctrine/annotations^1.6');
+        }
+
         AnnotationRegistry::registerLoader('class_exists');
     }
 }

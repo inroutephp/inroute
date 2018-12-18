@@ -24,15 +24,16 @@
         "psr/http-server-middleware": "^1.0",
         "mindplay/middleman": "^3.0",
         "aura/router": "^3.0",
-        "doctrine/annotations": "^1.6",
         "symfony/var-exporter": "^4.2"
     },
     "require-dev": {
+        "doctrine/annotations": "^1.6",
         "zircote/swagger-php": "^3.0",
         "zendframework/zend-diactoros": "^2.0",
         "zendframework/zend-httphandlerrunner": "^1.0"
     },
     "suggest": {
+        "doctrine/annotations:1": "For compiling",
         "zircote/swagger-php:3": "For building openapi apps"
     }
 }
