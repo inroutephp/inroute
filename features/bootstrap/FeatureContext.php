@@ -12,6 +12,7 @@ class FeatureContext implements Context
     private $containerClass = \inroutephp\inroute\Runtime\NaiveContainer::CLASS;
     private $controllerClasses = [];
     private $compilerPasses = [];
+    private $router = null;
 
     /** @var ResponseInterface */
     private $response;
@@ -24,7 +25,7 @@ class FeatureContext implements Context
      */
     public function aContainerWithServices(PyStringNode $services)
     {
-        $this->containerClass = uniqid('HttpRouter');
+        $this->containerClass = uniqid('Container');
 
         $code = "
             use Psr\Container\ContainerInterface;
@@ -83,32 +84,44 @@ class FeatureContext implements Context
     }
 
     /**
+     * @Given a router :classname:
+     */
+    public function aRouter($classname, PyStringNode $code)
+    {
+        eval((string)$code);
+        $this->router = new $classname;
+    }
+
+    /**
      * @When I request :method :path
      */
     public function iRequest($method, $path)
     {
-        $routerClass = uniqid('HttpRouter');
+        if (!$this->router) {
+            $routerClass = uniqid('HttpRouter');
 
-        eval(
-            (new CompilerFacade)->compileProject(new ArraySettings([
-                'source-classes' => $this->controllerClasses,
-                'compiler-passes' => $this->compilerPasses,
-                'container' => $this->containerClass,
-                'target-namespace' => '',
-                'target-classname' => $routerClass,
-            ]))
-        );
+            eval(
+                (new CompilerFacade)->compileProject(new ArraySettings([
+                    'source-classes' => $this->controllerClasses,
+                    'compiler-passes' => $this->compilerPasses,
+                    'container' => $this->containerClass,
+                    'target-namespace' => '',
+                    'target-classname' => $routerClass,
+                ]))
+            );
 
-        $router = new $routerClass;
+            $this->router = new $routerClass;
+        }
 
-        $containerClass = $this->containerClass;
-
-        $router->setContainer(new $containerClass);
+        if ($this->containerClass) {
+            $containerClass = $this->containerClass;
+            $this->router->setContainer(new $containerClass);
+        }
 
         $request = (new \Zend\Diactoros\ServerRequestFactory)->createServerRequest($method, $path);
 
         try {
-            $this->response = (new \mindplay\middleman\Dispatcher([$router]))->dispatch($request);
+            $this->response = (new \mindplay\middleman\Dispatcher([$this->router]))->dispatch($request);
         } catch (\Exception $e) {
             $this->exception = $e;
         }
