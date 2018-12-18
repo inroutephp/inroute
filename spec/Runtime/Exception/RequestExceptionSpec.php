@@ -13,7 +13,7 @@ class RequestExceptionSpec extends ObjectBehavior
 {
     function let(ServerRequestInterface $request)
     {
-        $this->beConstructedWith($request, ['context']);
+        $this->beConstructedWith('message', 404, $request, ['context']);
     }
 
     function it_is_initializable()
@@ -29,5 +29,15 @@ class RequestExceptionSpec extends ObjectBehavior
     function it_contains_a_context()
     {
         $this->getContext()->shouldReturn(['context']);
+    }
+
+    function it_contains_a_message()
+    {
+        $this->getMessage()->shouldReturn('message');
+    }
+
+    function it_contains_a_code()
+    {
+        $this->getCode()->shouldReturn(404);
     }
 }
