@@ -12,7 +12,7 @@ Feature: Backwards compatibility
     {
         /**
          * @\inroutephp\inroute\Annotations\GET(path="/action")
-         * @\inroutephp\inroute\Annotations\Pipe(middlewares="BcMiddleware")
+         * @\inroutephp\inroute\Annotations\Pipe(middlewares="BC_1_0_0_beta6\BcMiddleware")
          */
         function action()
         {
