@@ -4,11 +4,12 @@ declare(strict_types = 1);
 
 namespace inroutephp\inroute\Runtime\Aura;
 
-use inroutephp\inroute\Runtime\DispatchingMiddleware;
 use inroutephp\inroute\Runtime\Environment;
 use inroutephp\inroute\Runtime\NaiveContainer;
 use inroutephp\inroute\Runtime\Exception\RouteNotFoundException;
 use inroutephp\inroute\Runtime\Exception\MethodNotAllowedException;
+use inroutephp\inroute\Runtime\Middleware\DispatchingMiddleware;
+use inroutephp\inroute\Runtime\Middleware\Pipeline;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -16,8 +17,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Aura\Router\RouterContainer;
 use Aura\Router\Map;
-use mindplay\middleman\Dispatcher;
-use mindplay\middleman\ContainerResolver;
 
 trait HttpRouterTrait
 {
@@ -79,13 +78,17 @@ trait HttpRouterTrait
             $request = $request->withAttribute($name, $val);
         }
 
-        $middlewares = $route->getMiddlewareServiceIds();
+        $middlewares = [];
+
+        foreach ($route->getMiddlewareServiceIds() as $serviceId) {
+            $middlewares[] = $this->container->get($serviceId);
+        }
 
         $middlewares[] = new DispatchingMiddleware(
             [$this->container->get($route->getServiceId()), $route->getServiceMethod()],
             new Environment($route, new UrlGenerator($router->getGenerator()))
         );
 
-        return (new Dispatcher($middlewares, new ContainerResolver($this->container)))->dispatch($request);
+        return (new Pipeline(...$middlewares))->handle($request);
     }
 }

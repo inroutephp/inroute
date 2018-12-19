@@ -2,8 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace inroutephp\inroute\Runtime;
+namespace inroutephp\inroute\Runtime\Middleware;
 
+use inroutephp\inroute\Runtime\EnvironmentInterface;
+use inroutephp\inroute\Runtime\Exception\DispatchException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -29,6 +31,14 @@ final class DispatchingMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return ($this->target)($request, $this->environment);
+        $response = ($this->target)($request, $this->environment);
+
+        if (!$response instanceof ResponseInterface) {
+            throw new DispatchException(
+                'Dispatcher callable must return a ResponseInterface object. Found: ' . gettype($response)
+            );
+        }
+
+        return $response;
     }
 }

@@ -2,10 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace spec\inroutephp\inroute\Runtime;
+namespace spec\inroutephp\inroute\Runtime\Middleware;
 
-use inroutephp\inroute\Runtime\DispatchingMiddleware;
+use inroutephp\inroute\Runtime\Middleware\DispatchingMiddleware;
 use inroutephp\inroute\Runtime\EnvironmentInterface;
+use inroutephp\inroute\Runtime\Exception\DispatchException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -15,23 +16,30 @@ use Prophecy\Argument;
 
 class DispatchingMiddlewareSpec extends ObjectBehavior
 {
-    function it_is_initializable(EnvironmentInterface $env)
+    function let(EnvironmentInterface $env)
     {
-        $this->beConstructedWith('printf', $env);
+        $this->beConstructedWith(
+            function () {
+            },
+            $env
+        );
+    }
+
+    function it_is_initializable()
+    {
         $this->shouldHaveType(DispatchingMiddleware::CLASS);
     }
 
-    function it_is_a_middleware(EnvironmentInterface $env)
+    function it_is_a_middleware()
     {
-        $this->beConstructedWith('printf', $env);
         $this->shouldHaveType(MiddlewareInterface::CLASS);
     }
 
     function it_can_dispatch(
-        EnvironmentInterface $env,
         ServerRequestInterface $request,
         RequestHandlerInterface $handler,
-        ResponseInterface $response
+        ResponseInterface $response,
+        $env
     ) {
         $target = function ($passedRequest, $passedEnv) use ($request, $env, $response) {
             if ($passedRequest !== $request->getWrappedObject()) {
@@ -47,5 +55,10 @@ class DispatchingMiddlewareSpec extends ObjectBehavior
 
         $this->beConstructedWith($target, $env);
         $this->process($request, $handler)->shouldReturn($response);
+    }
+
+    function it_throws_on_no_response(ServerRequestInterface $request, RequestHandlerInterface $handler, $env)
+    {
+        $this->shouldThrow(DispatchException::CLASS)->during('process', [$request, $handler]);
     }
 }

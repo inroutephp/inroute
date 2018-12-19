@@ -205,11 +205,10 @@ complete middleware pipeline for maximum power).
 In this simple example we use
 
 * [zend-diactoros](https://github.com/zendframework/zend-diactoros) as PSR-15
-  implementation and
+  implementation.
 * [zend-httphandlerrunner](https://github.com/zendframework/zend-httphandlerrunner)
   for emitting responses.
-* [middleman](https://github.com/mindplay-dk/middleman) for dispatching the
-  middleware pipeline.
+* The built in middleware pipeline for dispatching.
 
 <!--
     @example Dispatching
@@ -217,12 +216,12 @@ In this simple example we use
     @expectOutput foovalue
 -->
 ```php
+use inroutephp\inroute\Runtime\Middleware\Pipeline;
 use Zend\Diactoros\ServerRequestFactory;
-use mindplay\middleman\Dispatcher;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 // create a simple middleware pipeline for the entire application
-$dispatcher = new Dispatcher([$router]);
+$pipeline = new Pipeline($router);
 
 // create a psr-7 compliant response emitter
 $emitter = new SapiEmitter;
@@ -234,7 +233,7 @@ $request = (new ServerRequestFactory)->createServerRequest('GET', '/users/foo');
 // $request = ServerRequestFactory::fromGlobals();
 
 // create the response
-$response = $dispatcher->dispatch($request);
+$response = $pipeline->handle($request);
 
 // send it
 $emitter->emit($response);
@@ -248,12 +247,12 @@ Or to send to piped example from above
     @expectOutput Controller::Middleware
 -->
 ```php
+use inroutephp\inroute\Runtime\Middleware\Pipeline;
 use Zend\Diactoros\ServerRequestFactory;
-use mindplay\middleman\Dispatcher;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 (new SapiEmitter)->emit(
-    (new Dispatcher([$router]))->dispatch(
+    (new Pipeline($router))->handle(
         (new ServerRequestFactory)->createServerRequest('GET', '/piped')
     )
 );

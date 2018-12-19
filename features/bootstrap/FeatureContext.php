@@ -2,6 +2,7 @@
 
 use inroutephp\inroute\Compiler\CompilerFacade;
 use inroutephp\inroute\Compiler\Settings\ArraySettings;
+use inroutephp\inroute\Runtime\Middleware\Pipeline;
 use Psr\Http\Message\ResponseInterface;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
@@ -121,7 +122,7 @@ class FeatureContext implements Context
         $request = (new \Zend\Diactoros\ServerRequestFactory)->createServerRequest($method, $path);
 
         try {
-            $this->response = (new \mindplay\middleman\Dispatcher([$this->router]))->dispatch($request);
+            $this->response = (new Pipeline($this->router))->handle($request);
         } catch (\Exception $e) {
             $this->exception = $e;
         }
