@@ -15,8 +15,11 @@ final class RouteCompilerPass implements CompilerPassInterface
         foreach ($route->getAnnotations(Route::CLASS) as $annotation) {
             $route = $route
                 ->withRoutable(true)
-                ->withHttpMethod($annotation->method)
-                ->withPath($annotation->path);
+                ->withHttpMethod($annotation->method);
+
+            if ($annotation->path) {
+                $route = $route->withPath($annotation->path);
+            }
 
             if ($annotation->name) {
                 $route = $route->withName($annotation->name);

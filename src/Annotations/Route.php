@@ -21,7 +21,6 @@ class Route
     public $method;
 
     /**
-     * @Required
      * @var string
      */
     public $path;

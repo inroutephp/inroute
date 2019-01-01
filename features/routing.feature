@@ -53,7 +53,7 @@ Feature: Basic routing
     class BasePathController
     {
         /**
-         * @\inroutephp\inroute\Annotations\GET(path="/action")
+         * @\inroutephp\inroute\Annotations\GET
          */
         function action()
         {
@@ -61,5 +61,24 @@ Feature: Basic routing
         }
     }
     """
-    When I request "GET" "/base/action"
+    When I request "GET" "/base"
+    Then the response body is "ACTION"
+
+  Scenario: I omit the route path
+    Given a controller "NoPathController":
+    """
+    use Zend\Diactoros\Response\TextResponse;
+
+    class NoPathController
+    {
+        /**
+         * @\inroutephp\inroute\Annotations\GET
+         */
+        function action()
+        {
+            return new TextResponse('ACTION');
+        }
+    }
+    """
+    When I request "GET" ""
     Then the response body is "ACTION"
