@@ -53,7 +53,7 @@ trait HttpRouterTrait
             if ($failedRoute && $failedRoute->failedRule == 'Aura\Router\Rule\Allows') {
                 if ($this->container->has(ResponseFactoryInterface::CLASS)) {
                     return $this->container->get(ResponseFactoryInterface::CLASS)
-                        ->createResponse(405)
+                        ->createResponse(405, 'Method Not Allowed')
                         ->withHeader('Allow', implode(', ', $failedRoute->allows));
                 }
 
@@ -61,7 +61,7 @@ trait HttpRouterTrait
             }
 
             if ($this->container->has(ResponseFactoryInterface::CLASS)) {
-                return $this->container->get(ResponseFactoryInterface::CLASS)->createResponse(404);
+                return $this->container->get(ResponseFactoryInterface::CLASS)->createResponse(404, 'Not Found');
             }
 
             throw new RouteNotFoundException($request);
