@@ -11,7 +11,7 @@ final class Package
     /**
      * Current package version number
      */
-    const VERSION = "1.0.0-beta7";
+    const VERSION = "1.0.0";
 
     /**
      * The lowest version number this runtime is compatible with

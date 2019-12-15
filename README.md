@@ -19,7 +19,7 @@ making it easy to add behaviour at compile time based on custom annotations.
 ## Installation
 
 ```shell
-composer require inroutephp/inroute:^1.0@beta
+composer require inroutephp/inroute
 ```
 
 ## Table of contents
