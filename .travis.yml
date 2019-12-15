@@ -1,3 +1,5 @@
+sudo: false
+
 language: php
 
 php:
@@ -6,11 +8,7 @@ php:
     - 7.2
 
 install:
-    - composer install
-    - composer global require chh/bob:^1@alpha
-    - export PATH=$PATH:$HOME/.config/composer/vendor/bin/:$HOME/.composer/vendor/bin/
-    - bob install_dev_tools
+    - make vendor-bin/installed
 
 script:
-    - phpspec run
-    - behat
+    - make test
