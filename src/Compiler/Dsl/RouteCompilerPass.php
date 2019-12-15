@@ -12,6 +12,7 @@ final class RouteCompilerPass implements CompilerPassInterface
 {
     public function processRoute(RouteInterface $route): RouteInterface
     {
+        /** @var Route $annotation */
         foreach ($route->getAnnotations(Route::CLASS) as $annotation) {
             $route = $route
                 ->withRoutable(true)

@@ -12,7 +12,10 @@ final class BasePathCompilerPass implements CompilerPassInterface
 {
     public function processRoute(RouteInterface $route): RouteInterface
     {
-        if ($basePath = $route->getAnnotation(BasePath::CLASS)) {
+        /** @var ?BasePath $basePath */
+        $basePath = $route->getAnnotation(BasePath::CLASS);
+
+        if ($basePath) {
             $route = $route->withPath(
                 $basePath->path . $route->getPath()
             );

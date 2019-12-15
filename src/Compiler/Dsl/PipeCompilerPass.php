@@ -12,6 +12,7 @@ final class PipeCompilerPass implements CompilerPassInterface
 {
     public function processRoute(RouteInterface $route): RouteInterface
     {
+        /** @var Pipe $pipe */
         foreach ($route->getAnnotations(Pipe::CLASS) as $pipe) {
             foreach ((array)$pipe->middlewares as $middleware) {
                 $route = $route->withMiddleware($middleware);

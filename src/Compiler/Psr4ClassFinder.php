@@ -27,6 +27,7 @@ final class Psr4ClassFinder implements \IteratorAggregate
         $this->prefix = $prefix;
     }
 
+    /** @return \Generator<string> */
     public function getIterator(): \Generator
     {
         foreach (new \DirectoryIterator($this->directory) as $fileInfo) {

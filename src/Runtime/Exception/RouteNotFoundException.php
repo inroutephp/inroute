@@ -8,6 +8,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RouteNotFoundException extends RequestException
 {
+    /**
+     * @param array<string, mixed> $context
+     */
     public function __construct(ServerRequestInterface $request, array $context = [])
     {
         parent::__construct("Route not found", 404, $request, $context);

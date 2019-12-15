@@ -8,11 +8,10 @@ use inroutephp\inroute\Compiler\Exception\UnknownSettingException;
 
 final class ArraySettings implements SettingsInterface
 {
-    /**
-     * @var array
-     */
+    /** @var array<string, mixed> */
     private $settings;
 
+    /** @param array<string, mixed> $settings */
     public function __construct(array $settings)
     {
         $this->settings = array_change_key_case($settings, CASE_UPPER);

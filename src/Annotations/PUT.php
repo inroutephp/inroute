@@ -6,7 +6,7 @@ namespace inroutephp\inroute\Annotations;
 
 /**
  * @Annotation
- * */
+ */
 class PUT extends Route
 {
     public $method = 'PUT';

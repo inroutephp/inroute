@@ -6,7 +6,7 @@ namespace inroutephp\inroute\Annotations;
 
 /**
  * @Annotation
- * */
+ */
 class HEAD extends Route
 {
     public $method = 'HEAD';

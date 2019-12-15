@@ -15,10 +15,13 @@ class RequestException extends \RuntimeException implements Exception
     private $request;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $context;
 
+    /**
+     * @param array<string, mixed> $context
+     */
     public function __construct(string $message, int $code, ServerRequestInterface $request, array $context = [])
     {
         parent::__construct($message, $code);
@@ -31,6 +34,9 @@ class RequestException extends \RuntimeException implements Exception
         return $this->request;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getContext(): array
     {
         return $this->context;

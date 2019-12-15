@@ -6,7 +6,7 @@ namespace inroutephp\inroute\Annotations;
 
 /**
  * @Annotation
- * */
+ */
 class BasePath
 {
     /**

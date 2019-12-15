@@ -13,7 +13,10 @@ final class OpenApiCompilerPass implements CompilerPassInterface
 {
     public function processRoute(RouteInterface $route): RouteInterface
     {
-        if ($operation = $route->getAnnotation(Operation::CLASS)) {
+        /** @var ?Operation $operation */
+        $operation = $route->getAnnotation(Operation::CLASS);
+
+        if ($operation) {
             $route = $route
                 ->withRoutable(true)
                 ->withHttpMethod($operation->method);

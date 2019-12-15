@@ -6,16 +6,12 @@ namespace inroutephp\inroute\Annotations;
 
 /**
  * @Annotation
- * */
+ */
 class Pipe
 {
-    /**
-     * @var array
-     */
+    /** @var array<string> */
     public $middlewares = [];
 
-    /**
-     * @var array
-     */
+    /** @var array<string, mixed> */
     public $attributes = [];
 }

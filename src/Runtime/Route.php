@@ -7,7 +7,7 @@ namespace inroutephp\inroute\Runtime;
 final class Route implements RouteInterface
 {
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $annotations;
 
@@ -22,7 +22,7 @@ final class Route implements RouteInterface
     private $routable = false;
 
     /**
-     * @var string[]
+     * @var array<string>
      */
     private $httpMethods = [];
 
@@ -32,7 +32,7 @@ final class Route implements RouteInterface
     private $path = '';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $attributes = [];
 
@@ -47,10 +47,13 @@ final class Route implements RouteInterface
     private $serviceMethod = '';
 
     /**
-     * @var string[]
+     * @var array<string>
      */
     private $middlewareServiceIds = [];
 
+    /**
+     * @param array<object> $annotations
+     */
     public function __construct(string $serviceId, string $serviceMethod, array $annotations)
     {
         if ($serviceId) {
@@ -141,6 +144,9 @@ final class Route implements RouteInterface
         return $new;
     }
 
+    /**
+     * @param array<string> $httpMethods
+     */
     private function setHttpMethods(array $httpMethods): void
     {
         $this->httpMethods = array_change_key_case($httpMethods, CASE_UPPER);
@@ -185,6 +191,9 @@ final class Route implements RouteInterface
         return $new;
     }
 
+    /**
+     * @param mixed $value
+     */
     private function setAttribute(string $name, $value): void
     {
         $this->attributes[$name] = $value;
@@ -236,6 +245,9 @@ final class Route implements RouteInterface
         return $new;
     }
 
+    /**
+     * @param array<string> $serviceIds
+     */
     private function setMiddlewareServiceIds(array $serviceIds): void
     {
         $this->middlewareServiceIds = $serviceIds;

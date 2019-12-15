@@ -10,7 +10,7 @@ use Psr\Container\ContainerInterface;
 final class NaiveContainer implements ContainerInterface
 {
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $services = [];
 

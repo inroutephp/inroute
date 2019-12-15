@@ -69,6 +69,8 @@ interface RouteInterface
 
     /**
      * Get all loaded route attributes
+     *
+     * @return array<string, mixed>
      */
     public function getAttributes(): array;
 
@@ -119,11 +121,15 @@ interface RouteInterface
 
     /**
      * Get first instance of annotation id
+     *
+     * @return ?object
      */
     public function getAnnotation(string $annotationId);
 
     /**
      * Get set of annotations, possibly filtered by id
+     *
+     * @return array<object>
      */
     public function getAnnotations(string $annotationId = ''): array;
 }

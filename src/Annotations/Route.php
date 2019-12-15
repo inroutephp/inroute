@@ -6,7 +6,7 @@ namespace inroutephp\inroute\Annotations;
 
 /**
  * @Annotation
- * */
+ */
 class Route
 {
     /**
@@ -26,7 +26,7 @@ class Route
     public $path;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     public $attributes = [];
 }

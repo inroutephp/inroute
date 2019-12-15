@@ -92,6 +92,7 @@ final class CompilerFacade
         return $generator->generateRouterCode($settings, $routes);
     }
 
+    /** @return object */
     private function build(
         string $setting,
         string $requiredClass,
