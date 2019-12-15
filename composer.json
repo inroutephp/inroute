@@ -17,19 +17,19 @@
         }
     },
     "require": {
-        "php": "^7.1",
-        "psr/container": "^1.0",
-        "psr/http-factory": "^1.0",
-        "psr/http-message": "^1.0",
-        "psr/http-server-middleware": "^1.0",
-        "aura/router": "^3.0",
-        "symfony/var-exporter": "^4.2"
+        "php": ">=7.2",
+        "psr/container": "^1",
+        "psr/http-factory": "^1",
+        "psr/http-message": "^1",
+        "psr/http-server-middleware": "^1",
+        "aura/router": "^3",
+        "symfony/var-exporter": "^5"
     },
     "require-dev": {
         "doctrine/annotations": "^1.6",
-        "zircote/swagger-php": "^3.0",
-        "zendframework/zend-diactoros": "^2.0",
-        "zendframework/zend-httphandlerrunner": "^1.0"
+        "zircote/swagger-php": "^3",
+        "zendframework/zend-diactoros": "^2",
+        "zendframework/zend-httphandlerrunner": "^1"
     },
     "suggest": {
         "doctrine/annotations:1": "For compiling",

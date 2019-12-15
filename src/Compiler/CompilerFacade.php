@@ -92,13 +92,12 @@ final class CompilerFacade
         return $generator->generateRouterCode($settings, $routes);
     }
 
-    /** @return object */
     private function build(
         string $setting,
         string $requiredClass,
         ContainerInterface $container,
         SettingsInterface $settings
-    ) {
+    ): object {
         $obj = $container->get($settings->getSetting($setting));
 
         if (!$obj instanceof $requiredClass) {

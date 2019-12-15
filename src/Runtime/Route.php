@@ -264,7 +264,7 @@ final class Route implements RouteInterface
         return false;
     }
 
-    public function getAnnotation(string $annotationId)
+    public function getAnnotation(string $annotationId): ?object
     {
         foreach ($this->annotations as $annotation) {
             if ($annotation instanceof $annotationId) {

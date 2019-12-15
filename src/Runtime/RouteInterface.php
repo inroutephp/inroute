@@ -121,10 +121,8 @@ interface RouteInterface
 
     /**
      * Get first instance of annotation id
-     *
-     * @return ?object
      */
-    public function getAnnotation(string $annotationId);
+    public function getAnnotation(string $annotationId): ?object;
 
     /**
      * Get set of annotations, possibly filtered by id
