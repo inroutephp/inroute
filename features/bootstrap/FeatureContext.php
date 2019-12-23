@@ -1,7 +1,7 @@
 <?php
 
 use inroutephp\inroute\Compiler\CompilerFacade;
-use inroutephp\inroute\Compiler\Settings\ArraySettings;
+use inroutephp\inroute\Compiler\Settings;
 use inroutephp\inroute\Runtime\Middleware\Pipeline;
 use Psr\Http\Message\ResponseInterface;
 use Behat\Behat\Context\Context;
@@ -20,6 +20,18 @@ class FeatureContext implements Context
 
     /** @var \Exception */
     private $exception;
+
+    /** @var Settings\SettingsInterface */
+    private $compilerSettings;
+
+    private function buildCompilerSettings(Settings\SettingsInterface $settings): Settings\SettingsInterface
+    {
+        if ($this->compilerSettings) {
+            $settings = new Settings\ManagedSettings($this->compilerSettings, $settings);
+        }
+
+        return $settings;
+    }
 
     /**
      * @Given a container with services:
@@ -94,6 +106,14 @@ class FeatureContext implements Context
     }
 
     /**
+     * @Given compiler settings:
+     */
+    public function compilerSettings(PyStringNode $code)
+    {
+        $this->compilerSettings = eval((string)$code);
+    }
+
+    /**
      * @When I request :method :path
      */
     public function iRequest($method, $path)
@@ -102,13 +122,17 @@ class FeatureContext implements Context
             $routerClass = uniqid('HttpRouter');
 
             eval(
-                (new CompilerFacade)->compileProject(new ArraySettings([
-                    'source-classes' => $this->controllerClasses,
-                    'compiler-passes' => $this->compilerPasses,
-                    'container' => $this->containerClass,
-                    'target-namespace' => '',
-                    'target-classname' => $routerClass,
-                ]))
+                (new CompilerFacade)->compileProject(
+                    $this->buildCompilerSettings(
+                        new Settings\ArraySettings([
+                            'source-classes' => $this->controllerClasses,
+                            'compiler-passes' => $this->compilerPasses,
+                            'container' => $this->containerClass,
+                            'target-namespace' => '',
+                            'target-classname' => $routerClass,
+                        ])
+                    )
+                )
             );
 
             $this->router = new $routerClass;

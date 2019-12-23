@@ -18,6 +18,7 @@ final class CompilerFacade
         'source-dir' => '',
         'source-prefix' => '',
         'source-classes' => [],
+        'ignore-annotations' => [],
         'route-factory' => Doctrine\RouteFactory::CLASS,
         'compiler' => Compiler::CLASS,
         'core-compiler-passes' => [
@@ -34,6 +35,10 @@ final class CompilerFacade
     public function compileProject(SettingsInterface $settings, RouteCollectionInterface &$routes = null): string
     {
         $settings = new ManagedSettings($settings, new ArraySettings(self::DEFAULT_SETTINGS));
+
+        foreach ((array)$settings->getSetting('ignore-annotations') as $annotation) {
+            \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName((string)$annotation);
+        }
 
         $container = new NaiveContainer;
 
