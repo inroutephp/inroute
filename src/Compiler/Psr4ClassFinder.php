@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace inroutephp\inroute\Compiler;
 
+/**
+ * @implements \IteratorAggregate<string>
+ */
 final class Psr4ClassFinder implements \IteratorAggregate
 {
     /**

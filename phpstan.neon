@@ -1,4 +1,3 @@
 parameters:
 	excludes_analyse:
 		- src/Compiler/Aura/router_template.php
-	checkGenericClassInNonGenericObjectType: false
