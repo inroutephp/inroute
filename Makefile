@@ -1,48 +1,49 @@
-PHPSPEC=vendor/bin/phpspec
-BEHAT=vendor/bin/behat
-README_TESTER=vendor/bin/readme-tester
-PHPSTAN=vendor/bin/phpstan
-PHPCS=vendor/bin/phpcs
-
 COMPOSER_CMD=composer
+PHIVE_CMD=phive
+
+PHPSPEC_CMD=tools/phpspec
+BEHAT_CMD=tools/behat
+README_TESTER_CMD=tools/readme-tester
+PHPSTAN_CMD=tools/phpstan
+PHPCS_CMD=tools/phpcs
 
 .DEFAULT_GOAL=all
 
 .PHONY: all
-all: test docs analyze
+all: test analyze
 
 .PHONY: clean
 clean:
 	rm composer.lock
 	rm -rf vendor
-	rm -rf vendor-bin
+	rm -rf tools
 
 .PHONY: test
-test: phpspec behat
+test: phpspec behat docs
 
 .PHONY: phpspec
-phpspec: vendor-bin/installed
-	$(PHPSPEC) run
+phpspec: vendor/installed $(PHPSPEC_CMD)
+	$(PHPSPEC_CMD) run
 
 .PHONY: behat
-behat: vendor-bin/installed
-	$(BEHAT) --stop-on-failure
+behat: vendor/installed $(BEHAT_CMD)
+	$(BEHAT_CMD) --stop-on-failure
 
 .PHONY: docs
-docs: vendor-bin/installed
-	$(README_TESTER) README.md
+docs: vendor/installed $(README_TESTER_CMD)
+	$(README_TESTER_CMD) README.md
 
 .PHONY: analyze
 analyze: phpstan phpcs
 
 .PHONY: phpstan
-phpstan: vendor-bin/installed
-	$(PHPSTAN) analyze -c phpstan.neon -l 7 src
+phpstan: vendor/installed $(PHPSTAN_CMD)
+	$(PHPSTAN_CMD) analyze -c phpstan.neon -l 7 src
 
 .PHONY: phpcs
-phpcs: vendor-bin/installed
-	$(PHPCS) src --standard=PSR2 --ignore=router_template.php
-	$(PHPCS) spec --standard=spec/ruleset.xml
+phpcs: $(PHPCS_CMD)
+	$(PHPCS_CMD) src --standard=PSR2 --ignore=router_template.php
+	$(PHPCS_CMD) spec --standard=spec/ruleset.xml
 
 composer.lock: composer.json
 	@echo composer.lock is not up to date
@@ -51,10 +52,17 @@ vendor/installed: composer.lock
 	$(COMPOSER_CMD) install
 	touch $@
 
-vendor-bin/installed: vendor/installed
-	$(COMPOSER_CMD) bin phpspec require phpspec/phpspec:">=5"
-	$(COMPOSER_CMD) bin behat require behat/behat:^3
-	$(COMPOSER_CMD) bin readme-tester require hanneskod/readme-tester:^1.0@beta
-	$(COMPOSER_CMD) bin phpstan require "phpstan/phpstan:<2"
-	$(COMPOSER_CMD) bin phpcs require squizlabs/php_codesniffer:^3
-	touch $@
+$(PHPSPEC_CMD):
+	$(PHIVE_CMD) install phpspec/phpspec:6 --force-accept-unsigned
+
+$(BEHAT_CMD):
+	$(PHIVE_CMD) install behat/behat:3 --force-accept-unsigned
+
+$(README_TESTER_CMD):
+	$(PHIVE_CMD) install hanneskod/readme-tester:1 --force-accept-unsigned
+
+$(PHPSTAN_CMD):
+	$(PHIVE_CMD) install phpstan
+
+$(PHPCS_CMD):
+	$(PHIVE_CMD) install phpcs
