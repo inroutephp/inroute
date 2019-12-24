@@ -1,7 +1,7 @@
 Feature: Ignore unknown annotations while compiling
 
   Scenario: I ignore unknown annotation
-    Given a controller "RouteWithUnknownAnnotation":
+    Given code:
     """
     class RouteWithUnknownAnnotation
     {
@@ -23,9 +23,11 @@ Feature: Ignore unknown annotations while compiling
     """
     And compiler settings:
     """
-    return new \inroutephp\inroute\Compiler\Settings\ArraySettings([
-        "ignore-annotations" => ["required"]
-    ]);
+    {
+        "source-classes": ["RouteWithUnknownAnnotation"],
+        "ignore-annotations": ["required"]
+    }
     """
-    When I request "GET" "/action"
+    When I build application
+    And I request "GET" "/action"
     Then the response body is "FOO"

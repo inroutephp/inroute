@@ -1,12 +1,9 @@
 Feature: Handle route middleware pipelines
-  In order to create http applications
-  As a user
-  I need to handle middleware pipelines
 
   Scenario: I add a route middleware
-    Given a controller "ActionController":
+    Given code:
     """
-    class ActionController
+    class EmptyRoute
     {
         /**
          * @\inroutephp\inroute\Annotations\GET(path="/action")
@@ -17,31 +14,35 @@ Feature: Handle route middleware pipelines
         }
     }
     """
-    And a middleware "Middleware":
+    And code:
     """
     use Psr\Http\Server\MiddlewareInterface;
     use Psr\Http\Server\RequestHandlerInterface;
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
-    use Zend\Diactoros\Response\TextResponse;
 
     class Middleware implements MiddlewareInterface
     {
         public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
         {
-            return new TextResponse('MIDDLEWARE');
+            return new \Zend\Diactoros\Response\TextResponse('MIDDLEWARE');
         }
     }
     """
-    When I request "GET" "/action"
+    And compiler settings:
+    """
+    {
+        "source-classes": ["EmptyRoute"]
+    }
+    """
+    When I build application
+    And I request "GET" "/action"
     Then the response body is "MIDDLEWARE"
 
   Scenario: I add multiple route middlewares
-    Given a controller "MultiplePipeController":
+    Given code:
     """
-    use Zend\Diactoros\Response\TextResponse;
-
-    class MultiplePipeController
+    class MultiplePipeRoute
     {
         /**
          * @\inroutephp\inroute\Annotations\GET(path="/action")
@@ -50,34 +51,45 @@ Feature: Handle route middleware pipelines
          */
         function action()
         {
-            return new TextResponse('C');
+            return new \Zend\Diactoros\Response\TextResponse('C');
         }
     }
     """
-    And a middleware "MultiplePipeMiddleware":
+    And code:
     """
     use Psr\Http\Server\MiddlewareInterface;
     use Psr\Http\Server\RequestHandlerInterface;
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
-    use Zend\Diactoros\Response\TextResponse;
 
     class MultiplePipeMiddleware implements MiddlewareInterface
     {
         public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
         {
-            return new TextResponse(
+            return new \Zend\Diactoros\Response\TextResponse(
                 $handler->handle($request)->getBody()->getContents() . ":M"
             );
         }
     }
     """
-    When I request "GET" "/action"
+    And compiler settings:
+    """
+    {
+        "source-classes": ["MultiplePipeRoute"]
+    }
+    """
+    When I build application
+    And I request "GET" "/action"
     Then the response body is "C:M:M"
 
   Scenario: I add middleware using a custom annotation
-    Given a controller "CustomAnnotationController":
+    Given code:
     """
+    use Psr\Http\Server\MiddlewareInterface;
+    use Psr\Http\Server\RequestHandlerInterface;
+    use Psr\Http\Message\ResponseInterface;
+    use Psr\Http\Message\ServerRequestInterface;
+
     /** @Annotation */
     class CustomAnnotation extends inroutephp\inroute\Annotations\Pipe
     {
@@ -85,7 +97,7 @@ Feature: Handle route middleware pipelines
         public $attributes = ['custom_attribute' => 'ATTRIBUTE'];
     }
 
-    class CustomAnnotationController
+    class CustomAnnotationRoute
     {
         /**
          * @\inroutephp\inroute\Annotations\GET(path="/action")
@@ -95,22 +107,21 @@ Feature: Handle route middleware pipelines
         {
         }
     }
-    """
-    And a middleware "CustomAnnotationMiddleware":
-    """
-    use Psr\Http\Server\MiddlewareInterface;
-    use Psr\Http\Server\RequestHandlerInterface;
-    use Psr\Http\Message\ResponseInterface;
-    use Psr\Http\Message\ServerRequestInterface;
-    use Zend\Diactoros\Response\TextResponse;
 
     class CustomAnnotationMiddleware implements MiddlewareInterface
     {
         public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
         {
-            return new TextResponse($request->getAttribute('custom_attribute'));
+            return new \Zend\Diactoros\Response\TextResponse($request->getAttribute('custom_attribute'));
         }
     }
     """
-    When I request "GET" "/action"
+    And compiler settings:
+    """
+    {
+        "source-classes": ["CustomAnnotationRoute"]
+    }
+    """
+    When I build application
+    And I request "GET" "/action"
     Then the response body is "ATTRIBUTE"

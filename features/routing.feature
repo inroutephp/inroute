@@ -1,33 +1,33 @@
 Feature: Basic routing
-  In order to create http applications
-  As a user
-  I need to be able to rout http requests
 
   Scenario: I route to action
-    Given a controller "RouteController":
+    Given code:
     """
-    use Zend\Diactoros\Response\TextResponse;
-
-    class RouteController
+    class ActionRoute
     {
         /**
          * @\inroutephp\inroute\Annotations\GET(path="/action")
          */
         function action()
         {
-            return new TextResponse('ACTION');
+            return new \Zend\Diactoros\Response\TextResponse('ACTION');
         }
     }
     """
-    When I request "GET" "/action"
+    And compiler settings:
+    """
+    {
+        "source-classes": ["ActionRoute"]
+    }
+    """
+    When I build application
+    And I request "GET" "/action"
     Then the response body is "ACTION"
 
-  Scenario: I specify multiple routes to the same controller
-    Given a controller "MultipleController":
+  Scenario: I specify multiple routes to the same method
+    Given code:
     """
-    use Zend\Diactoros\Response\TextResponse;
-
-    class MultipleController
+    class MultipleRoutes
     {
         /**
          * @\inroutephp\inroute\Annotations\GET(path="/action")
@@ -35,50 +35,67 @@ Feature: Basic routing
          */
         function action()
         {
-            return new TextResponse('ACTION');
+            return new \Zend\Diactoros\Response\TextResponse('ACTION');
         }
     }
     """
-    When I request "PUT" "/action"
+    And compiler settings:
+    """
+    {
+        "source-classes": ["MultipleRoutes"]
+    }
+    """
+    When I build application
+    And I request "PUT" "/action"
     Then the response body is "ACTION"
 
   Scenario: I set the base path as a class annotation
-    Given a controller "BasePathController":
+    Given code:
     """
-    use Zend\Diactoros\Response\TextResponse;
-
     /**
      * @\inroutephp\inroute\Annotations\BasePath(path="/base")
      */
-    class BasePathController
+    class BasePathRoute
     {
         /**
          * @\inroutephp\inroute\Annotations\GET
          */
         function action()
         {
-            return new TextResponse('ACTION');
+            return new \Zend\Diactoros\Response\TextResponse('ACTION');
         }
     }
     """
-    When I request "GET" "/base"
+    And compiler settings:
+    """
+    {
+        "source-classes": ["BasePathRoute"]
+    }
+    """
+    When I build application
+    And I request "GET" "/base"
     Then the response body is "ACTION"
 
   Scenario: I omit the route path
-    Given a controller "NoPathController":
+    Given code:
     """
-    use Zend\Diactoros\Response\TextResponse;
-
-    class NoPathController
+    class NoPathRoute
     {
         /**
          * @\inroutephp\inroute\Annotations\GET
          */
         function action()
         {
-            return new TextResponse('ACTION');
+            return new \Zend\Diactoros\Response\TextResponse('ACTION');
         }
     }
     """
-    When I request "GET" ""
+    And compiler settings:
+    """
+    {
+        "source-classes": ["NoPathRoute"]
+    }
+    """
+    When I build application
+    And I request "GET" ""
     Then the response body is "ACTION"

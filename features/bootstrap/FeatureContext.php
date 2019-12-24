@@ -1,8 +1,12 @@
 <?php
 
 use inroutephp\inroute\Compiler\CompilerFacade;
-use inroutephp\inroute\Compiler\Settings;
+use inroutephp\inroute\Compiler\Settings\ArraySettings;
+use inroutephp\inroute\Compiler\Settings\ManagedSettings;
+use inroutephp\inroute\Compiler\Settings\SettingsInterface;
+use inroutephp\inroute\Runtime\HttpRouterInterface;
 use inroutephp\inroute\Runtime\Middleware\Pipeline;
+use inroutephp\inroute\Runtime\NaiveContainer;
 use Psr\Http\Message\ResponseInterface;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
@@ -10,10 +14,14 @@ use Behat\Gherkin\Node\TableNode;
 
 class FeatureContext implements Context
 {
-    private $containerClass = \inroutephp\inroute\Runtime\NaiveContainer::CLASS;
-    private $controllerClasses = [];
-    private $compilerPasses = [];
-    private $router = null;
+    /** @var string */
+    private $containerClass = NaiveContainer::class;
+
+    /** @var HttpRouterInterface */
+    private $router;
+
+    /** @var SettingsInterface */
+    private $settings;
 
     /** @var ResponseInterface */
     private $response;
@@ -21,16 +29,17 @@ class FeatureContext implements Context
     /** @var \Exception */
     private $exception;
 
-    /** @var Settings\SettingsInterface */
-    private $compilerSettings;
-
-    private function buildCompilerSettings(Settings\SettingsInterface $settings): Settings\SettingsInterface
+    public function __construct(array $defaultSettings = [])
     {
-        if ($this->compilerSettings) {
-            $settings = new Settings\ManagedSettings($this->compilerSettings, $settings);
-        }
+        $this->settings = new ArraySettings($defaultSettings);
+    }
 
-        return $settings;
+    /**
+     * @Given code:
+     */
+    public function code(PyStringNode $code)
+    {
+        eval((string)$code);
     }
 
     /**
@@ -71,46 +80,47 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given a controller :classname:
+     * @Given a router:
      */
-    public function aController($classname, PyStringNode $code)
+    public function aRouter(PyStringNode $code)
     {
-        eval((string)$code);
-        $this->controllerClasses[] = $classname;
-    }
-
-    /**
-     * @Given a middleware :classname:
-     */
-    public function aMiddleware($classname, PyStringNode $code)
-    {
-        eval((string)$code);
-    }
-
-    /**
-     * @Given a compiler pass :classname:
-     */
-    public function aCompilerPass($classname, PyStringNode $code)
-    {
-        eval((string)$code);
-        $this->compilerPasses[] = $classname;
-    }
-
-    /**
-     * @Given a router :classname:
-     */
-    public function aRouter($classname, PyStringNode $code)
-    {
-        eval((string)$code);
-        $this->router = new $classname;
+        $this->router = eval((string)$code);
     }
 
     /**
      * @Given compiler settings:
      */
-    public function compilerSettings(PyStringNode $code)
+    public function compilerSettings(PyStringNode $json)
     {
-        $this->compilerSettings = eval((string)$code);
+        $this->settings = new ManagedSettings(
+            new ArraySettings(json_decode((string)$json, true)),
+            $this->settings
+        );
+    }
+
+    /**
+     * @When I build application
+     */
+    public function iBuildApplication()
+    {
+        $routerClass = uniqid('HttpRouter');
+        $containerClass = $this->containerClass;
+
+        eval(
+            (new CompilerFacade)->compileProject(
+                new ManagedSettings(
+                    $this->settings,
+                    new ArraySettings([
+                        'container' => $containerClass,
+                        'target-namespace' => '',
+                        'target-classname' => $routerClass,
+                    ])
+                )
+            )
+        );
+
+        $this->router = new $routerClass;
+        $this->router->setContainer(new $containerClass);
     }
 
     /**
@@ -118,31 +128,6 @@ class FeatureContext implements Context
      */
     public function iRequest($method, $path)
     {
-        if (!$this->router) {
-            $routerClass = uniqid('HttpRouter');
-
-            eval(
-                (new CompilerFacade)->compileProject(
-                    $this->buildCompilerSettings(
-                        new Settings\ArraySettings([
-                            'source-classes' => $this->controllerClasses,
-                            'compiler-passes' => $this->compilerPasses,
-                            'container' => $this->containerClass,
-                            'target-namespace' => '',
-                            'target-classname' => $routerClass,
-                        ])
-                    )
-                )
-            );
-
-            $this->router = new $routerClass;
-        }
-
-        if ($this->containerClass) {
-            $containerClass = $this->containerClass;
-            $this->router->setContainer(new $containerClass);
-        }
-
         $request = (new \Zend\Diactoros\ServerRequestFactory)->createServerRequest($method, $path);
 
         try {

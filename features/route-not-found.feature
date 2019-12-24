@@ -1,10 +1,8 @@
 Feature: Handle route not found situations
-  In order to create http applications
-  As a user
-  I need to handle route not found situations
 
   Scenario: I catch route not found exception
-    When I request "GET" "/foo"
+    When I build application
+    And I request "GET" "/foo"
     Then a "RouteNotFoundException" exception is thrown
 
   Scenario: I generate a route not found response using a response factory
@@ -19,13 +17,14 @@ Feature: Handle route not found situations
         }
     ]
     """
-    When I request "GET" "/foo"
+    When I build application
+    And I request "GET" "/foo"
     Then the response code is "404"
 
   Scenario: I catch route method not allowed exception
-    Given a controller "PostController1":
+    Given code:
     """
-    class PostController1
+    class PostRoute1
     {
         /**
          * @\inroutephp\inroute\Annotations\Route(
@@ -38,7 +37,14 @@ Feature: Handle route not found situations
         }
     }
     """
-    When I request "GET" "/foo"
+    And compiler settings:
+    """
+    {
+        "source-classes": ["PostRoute1"]
+    }
+    """
+    When I build application
+    And I request "GET" "/foo"
     Then a "MethodNotAllowedException" exception is thrown
 
   Scenario: I generate a method not allowed response using a response factory
@@ -53,9 +59,9 @@ Feature: Handle route not found situations
         }
     ]
     """
-    And a controller "PostController2":
+    And code:
     """
-    class PostController2
+    class PostRoute2
     {
         /**
          * @\inroutephp\inroute\Annotations\Route(
@@ -68,5 +74,12 @@ Feature: Handle route not found situations
         }
     }
     """
-    When I request "GET" "/foo"
+    And compiler settings:
+    """
+    {
+        "source-classes": ["PostRoute2"]
+    }
+    """
+    When I build application
+    And I request "GET" "/foo"
     Then the response code is "405"

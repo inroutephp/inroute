@@ -1,10 +1,7 @@
 Feature: Backwards compatibility
-  In order to create http applications
-  As a user
-  I need to be able run my compiled router after an upgrade
 
   Scenario: I run a version 1.0.0-beta6 router
-    Given a router "BC_1_0_0_beta6\HttpRouter":
+    Given a router:
     """
     namespace BC_1_0_0_beta6;
 
@@ -84,6 +81,8 @@ Feature: Backwards compatibility
     ));
         }
     }
+
+    return new HttpRouter;
     """
     When I request "GET" "/action"
     Then the response body is "ACTION"

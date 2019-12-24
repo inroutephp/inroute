@@ -1,12 +1,9 @@
 Feature: Add a custom compiler pass
-  In order to create http applications
-  As a user
-  I need to be able to write custom compiler passes
 
   Scenario: I create a custom compiler pass
-    Given a controller "CompilerPassController":
+    Given code:
     """
-    class CompilerPassController
+    class CompilerPassRoute
     {
         /**
          * @\inroutephp\inroute\Annotations\GET(path="/action")
@@ -15,25 +12,20 @@ Feature: Add a custom compiler pass
         {
         }
     }
-    """
-    And a middleware "CompilerPassMiddleware":
-    """
+
     use Psr\Http\Server\MiddlewareInterface;
     use Psr\Http\Server\RequestHandlerInterface;
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
-    use Zend\Diactoros\Response\TextResponse;
 
     class CompilerPassMiddleware implements MiddlewareInterface
     {
         public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
         {
-            return new TextResponse('MIDDLEWARE');
+            return new \Zend\Diactoros\Response\TextResponse('MIDDLEWARE');
         }
     }
-    """
-    And a compiler pass "CompilerPass":
-    """
+
     use inroutephp\inroute\Compiler\CompilerPassInterface;
     use inroutephp\inroute\Runtime\RouteInterface;
 
@@ -45,5 +37,13 @@ Feature: Add a custom compiler pass
         }
     }
     """
-    When I request "GET" "/action"
+    And compiler settings:
+    """
+    {
+        "source-classes": ["CompilerPassRoute"],
+        "compiler-passes": ["CompilerPass"]
+    }
+    """
+    When I build application
+    And I request "GET" "/action"
     Then the response body is "MIDDLEWARE"
