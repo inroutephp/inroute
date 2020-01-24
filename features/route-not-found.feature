@@ -12,7 +12,7 @@ Feature: Handle route not found situations
         ResponseFactoryInterface::CLASS => new class implements ResponseFactoryInterface {
             public function createResponse(int $code = 200, string $phrase = ''): ResponseInterface
             {
-                return (new \Zend\Diactoros\Response)->withStatus($code);
+                return (new \Laminas\Diactoros\Response)->withStatus($code);
             }
         }
     ]
@@ -54,7 +54,7 @@ Feature: Handle route not found situations
         ResponseFactoryInterface::CLASS => new class implements ResponseFactoryInterface {
             public function createResponse(int $code = 200, string $phrase = ''): ResponseInterface
             {
-                return (new \Zend\Diactoros\Response)->withStatus($code);
+                return (new \Laminas\Diactoros\Response)->withStatus($code);
             }
         }
     ]

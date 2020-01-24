@@ -128,7 +128,7 @@ class FeatureContext implements Context
      */
     public function iRequest($method, $path)
     {
-        $request = (new \Zend\Diactoros\ServerRequestFactory)->createServerRequest($method, $path);
+        $request = (new \Laminas\Diactoros\ServerRequestFactory)->createServerRequest($method, $path);
 
         try {
             $this->response = (new Pipeline($this->router))->handle($request);

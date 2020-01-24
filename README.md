@@ -48,7 +48,7 @@ use inroutephp\inroute\Annotations\GET;
 use inroutephp\inroute\Runtime\EnvironmentInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response\TextResponse;
+use Laminas\Diactoros\Response\TextResponse;
 
 /**
  * @BasePath(path="/users")
@@ -85,7 +85,7 @@ class UserController
   `UserController:getUser`).
 * `Attributes` are custom values that can be accessed at runtime through the
   request object.
-* Note that the use of zend diactoros as a psr-7 response implementation is
+* Note that the use of Laminas diactoros as a psr-7 response implementation is
   used in this example, you may of course use  another psr-7 implementation.
 
 ## Piping a route through a middleware
@@ -205,9 +205,9 @@ complete middleware pipeline for maximum power).
 
 In this simple example we use
 
-* [zend-diactoros](https://github.com/zendframework/zend-diactoros) as PSR-15
+* [laminas-diactoros](https://github.com/laminas/laminas-diactoros) as PSR-15
   implementation.
-* [zend-httphandlerrunner](https://github.com/zendframework/zend-httphandlerrunner)
+* [laminas-httphandlerrunner](https://github.com/laminas/laminas-httphandlerrunner)
   for emitting responses.
 * The built in middleware pipeline for dispatching.
 
@@ -218,8 +218,8 @@ In this simple example we use
 -->
 ```php
 use inroutephp\inroute\Runtime\Middleware\Pipeline;
-use Zend\Diactoros\ServerRequestFactory;
-use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 // create a simple middleware pipeline for the entire application
 $pipeline = new Pipeline($router);
@@ -249,8 +249,8 @@ Or to send to piped example from above
 -->
 ```php
 use inroutephp\inroute\Runtime\Middleware\Pipeline;
-use Zend\Diactoros\ServerRequestFactory;
-use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 (new SapiEmitter)->emit(
     (new Pipeline($router))->handle(

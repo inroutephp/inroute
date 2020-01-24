@@ -17,7 +17,7 @@ Feature: Ignore unknown annotations while compiling
          */
         function action()
         {
-            return new \Zend\Diactoros\Response\TextResponse('FOO');
+            return new \Laminas\Diactoros\Response\TextResponse('FOO');
         }
     }
     """

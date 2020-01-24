@@ -10,7 +10,7 @@ Feature: Basic routing
          */
         function action()
         {
-            return new \Zend\Diactoros\Response\TextResponse('ACTION');
+            return new \Laminas\Diactoros\Response\TextResponse('ACTION');
         }
     }
     """
@@ -35,7 +35,7 @@ Feature: Basic routing
          */
         function action()
         {
-            return new \Zend\Diactoros\Response\TextResponse('ACTION');
+            return new \Laminas\Diactoros\Response\TextResponse('ACTION');
         }
     }
     """
@@ -62,7 +62,7 @@ Feature: Basic routing
          */
         function action()
         {
-            return new \Zend\Diactoros\Response\TextResponse('ACTION');
+            return new \Laminas\Diactoros\Response\TextResponse('ACTION');
         }
     }
     """
@@ -86,7 +86,7 @@ Feature: Basic routing
          */
         function action()
         {
-            return new \Zend\Diactoros\Response\TextResponse('ACTION');
+            return new \Laminas\Diactoros\Response\TextResponse('ACTION');
         }
     }
     """

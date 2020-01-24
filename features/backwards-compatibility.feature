@@ -13,7 +13,7 @@ Feature: Backwards compatibility
          */
         function action()
         {
-            return new \Zend\Diactoros\Response\TextResponse('action');
+            return new \Laminas\Diactoros\Response\TextResponse('action');
         }
     }
 
@@ -23,7 +23,7 @@ Feature: Backwards compatibility
             \Psr\Http\Message\ServerRequestInterface $request,
             \Psr\Http\Server\RequestHandlerInterface $handler
         ): \Psr\Http\Message\ResponseInterface {
-            return new \Zend\Diactoros\Response\TextResponse(
+            return new \Laminas\Diactoros\Response\TextResponse(
                 strtoupper($handler->handle($request)->getBody()->getContents())
             );
         }

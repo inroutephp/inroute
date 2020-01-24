@@ -25,7 +25,7 @@ Feature: Handle route middleware pipelines
     {
         public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
         {
-            return new \Zend\Diactoros\Response\TextResponse('MIDDLEWARE');
+            return new \Laminas\Diactoros\Response\TextResponse('MIDDLEWARE');
         }
     }
     """
@@ -51,7 +51,7 @@ Feature: Handle route middleware pipelines
          */
         function action()
         {
-            return new \Zend\Diactoros\Response\TextResponse('C');
+            return new \Laminas\Diactoros\Response\TextResponse('C');
         }
     }
     """
@@ -66,7 +66,7 @@ Feature: Handle route middleware pipelines
     {
         public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
         {
-            return new \Zend\Diactoros\Response\TextResponse(
+            return new \Laminas\Diactoros\Response\TextResponse(
                 $handler->handle($request)->getBody()->getContents() . ":M"
             );
         }
@@ -112,7 +112,7 @@ Feature: Handle route middleware pipelines
     {
         public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
         {
-            return new \Zend\Diactoros\Response\TextResponse($request->getAttribute('custom_attribute'));
+            return new \Laminas\Diactoros\Response\TextResponse($request->getAttribute('custom_attribute'));
         }
     }
     """

@@ -22,7 +22,7 @@ Feature: Add a custom compiler pass
     {
         public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
         {
-            return new \Zend\Diactoros\Response\TextResponse('MIDDLEWARE');
+            return new \Laminas\Diactoros\Response\TextResponse('MIDDLEWARE');
         }
     }
 
